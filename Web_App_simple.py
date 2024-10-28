@@ -96,7 +96,7 @@ if flag_gh:
 	st.download_button(label ="Download Figure",
 	        data=fn,
 	        file_name="FigureName.png",
-	        mime="image/png", key = "Download_figure" )
+	        mime="image/png", key = "Download_figure1" )
 
 ## 3
 fig.set_size_inches(3,1)
@@ -112,7 +112,7 @@ fig.savefig(buf, format="png")
 st.download_button(label ="Download Figure",
         data=buf,
         file_name="FigureName.png",
-        mime="image/png", key = "Download_figure" )
+        mime="image/png", key = "Download_figure2" )
 
 #### Other files you may want to display
 
