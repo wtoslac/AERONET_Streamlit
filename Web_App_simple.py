@@ -14,14 +14,15 @@ st.set_page_config(initial_sidebar_state="collapsed")
 
 # I would change this flag based on whether I was working locally (flag_gh = False) or if I was about to push to GH and check if it works remotely. Technically the local streamlit could read this file from GH (flag_gh = True), and still work, you just need internet.
 flag_gh = True
-path_to_gh_repo = r"https://github.com/narvhal/SoilsMassBalance" 			#change
-gh_branch = r"SoilsMassBalance_Poster_appx"   								#change
+repository_name = r"Streamlit_Tutorial"
+path_to_gh_repo = r"https://github.com/narvhal/"+ repository_name 			#change
+gh_branch = r"main"   								#change
 path_to_df = r"data_sources/df_initialize.xlsx"					 			#change
 if flag_gh:
     fn = path_to_gh_repo + r"/raw/refs/heads/" + gh_branch + "/" + path_to_df
 else:
 	# use os.join, parent dir etc.
-    fn = r"C:\Users" +etc+  r"\SoilsMassBalance\data_sources\df_initialize.xlsx"   			#change
+    fn = r"C:\Users" +etc+  r"\\" +repository_name+r"\data_sources\df_initialize.xlsx"   			#change
 
 
 ## Read Dataframe
@@ -69,7 +70,7 @@ keystr = "selbox_xdata"
 x_col = st.select_slider("Choose the data to plot on the x-axis: ", options = xvals,value = xvals[2],     			#change
 	on_change=proc, key = keystr, args = (keystr,))
 keystr = "selbox_ydata"
-y_col = st.selectbox("Choose the data to plot on the y-axis: ", options = yvals,value = yvals[2],       			#change
+y_col = st.select_slider("Choose the data to plot on the y-axis: ", options = yvals,value = yvals[2],       			#change
 	on_change=proc, key = keystr, args = (keystr,))
 
 
@@ -82,13 +83,15 @@ plt.ylabel(ycol)
 
 ## THREE WAYS to display
 # 1
-use_container_width = st.checkbox("use_container_width?", on_change=proc, key = keystr, args = (keystr,))
+keystr = "checkbox_width"
+use_container_width = st.checkbox("Use container width?", on_change=proc, key = keystr, args = (keystr,))
 st.pyplot(fig, use_container_width = use_container_width) # instead of plt.show()
 
 # 2 
-fn = r"/mount/src/"+gh_branch+"/temp_img.svg"
-fig.savefig(fn, format="svg")
-st.image(fn, width = 500)
+if flag_gh:
+	fn = r"/mount/src/"+repository_name+"/temp_img.svg"     # only for github hosted repositories (not local)
+	fig.savefig(fn, format="svg")
+	st.image(fn, width = 500)
 
 
 ## 3
@@ -111,14 +114,14 @@ st.download_button(label ="Download Figure",
 
 if st.checkbox("Show examples of other file displays"):
    	# Show png that is in gh repository
-    st.image(r"/mount/src/"+gh_branch+"something.png")       			#change
+	st.image( r"/mount/src/"+repository_name+"/something.png")       			#change to path to actual png
 	
 	# Allow download of pdf in gh repository
-	url = r"/mount/src/"+gh_branch+"something.pdf"       			#change
-    with open(url, "rb") as pdf_file:
-        PDFbyte = pdf_file.read()
+	url = r"/mount/src/"+repository_name+"/something.pdf"       			#change to path to actual pdf
+	with open(url, "rb") as pdf_file:
+		PDFbyte = pdf_file.read()
 
-    st.download_button(label ="Download pdf",       			
+	st.download_button(label ="Download pdf",       			
                         data=PDFbyte,
                         file_name="Namefordownloadfile.pdf",       			
                         mime='application/octet-stream')    
