@@ -93,7 +93,10 @@ if flag_gh:
 	fn = r"/mount/src/"+repository_name_st+"/temp_img.svg"     # only for github hosted repositories (not local)
 	fig.savefig(fn, format="svg")
 	st.image(fn, width = 500)
-
+	st.download_button(label ="Download Figure",
+	        data=fn,
+	        file_name="FigureName.png",
+	        mime="image/png", key = "Download_figure" )
 
 ## 3
 fig.set_size_inches(3,1)
