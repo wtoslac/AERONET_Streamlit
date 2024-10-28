@@ -15,7 +15,7 @@ st.set_page_config(initial_sidebar_state="collapsed")
 # I would change this flag based on whether I was working locally (flag_gh = False) or if I was about to push to GH and check if it works remotely. Technically the local streamlit could read this file from GH (flag_gh = True), and still work, you just need internet.
 flag_gh = True
 repository_name = r"Streamlit_Tutorial"
-repository_name_st = r"/mount/src/streamlit_tutorial"
+repository_name_st = r"streamlit_tutorial"
 path_to_gh_repo = r"https://github.com/narvhal/"+ repository_name 			#change
 gh_branch = r"main"   								#change
 path_to_df = r"data_sources/df_initialize.xlsx"					 			#change
