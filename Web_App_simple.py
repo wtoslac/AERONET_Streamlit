@@ -15,6 +15,7 @@ st.set_page_config(initial_sidebar_state="collapsed")
 # I would change this flag based on whether I was working locally (flag_gh = False) or if I was about to push to GH and check if it works remotely. Technically the local streamlit could read this file from GH (flag_gh = True), and still work, you just need internet.
 flag_gh = True
 repository_name = r"Streamlit_Tutorial"
+repository_name_st = r"/mount/src/streamlit_tutorial"
 path_to_gh_repo = r"https://github.com/narvhal/"+ repository_name 			#change
 gh_branch = r"main"   								#change
 path_to_df = r"data_sources/df_initialize.xlsx"					 			#change
@@ -89,7 +90,7 @@ st.pyplot(fig, use_container_width = use_container_width) # instead of plt.show(
 
 # 2 
 if flag_gh:
-	fn = r"/mount/src/"+repository_name+"/temp_img.svg"     # only for github hosted repositories (not local)
+	fn = r"/mount/src/"+repository_name_st+"/temp_img.svg"     # only for github hosted repositories (not local)
 	fig.savefig(fn, format="svg")
 	st.image(fn, width = 500)
 
@@ -114,10 +115,10 @@ st.download_button(label ="Download Figure",
 
 if st.checkbox("Show examples of other file displays"):
    	# Show png that is in gh repository
-	st.image( r"/mount/src/"+repository_name+"/something.png")       			#change to path to actual png
+	st.image( r"/mount/src/"+repository_name_st+"/something.png")       			#change to path to actual png
 	
 	# Allow download of pdf in gh repository
-	url = r"/mount/src/"+repository_name+"/something.pdf"       			#change to path to actual pdf
+	url = r"/mount/src/"+repository_name_st+"/something.pdf"       			#change to path to actual pdf
 	with open(url, "rb") as pdf_file:
 		PDFbyte = pdf_file.read()
 
