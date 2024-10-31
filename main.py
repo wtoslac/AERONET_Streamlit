@@ -18,6 +18,5 @@ if file is not None:
     st.write(df)
 
 plot = px.line(df, x = 'datetime', y = ['AOD_500nm'])
-"""# Plotting app
 st.plotly_chart(plot)
 
