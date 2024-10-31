@@ -14,7 +14,7 @@ EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23,59))
 AOD_min = 0.0
 AOD_max = 0.3
 
-file = st.file_uploader("Upload the Data Download from: https://aeronet.gsfc.nasa.gov/cgi-bin/webtool_aod_v3?stage=3&region=United_States_West&state=California&site=Turlock_CA_USA")
+file = st.file_uploader("Upload the Level 1.5 Data Downloaded from: https://aeronet.gsfc.nasa.gov/cgi-bin/webtool_aod_v3?stage=3&region=United_States_West&state=California&site=Turlock_CA_USA")
 df = pd.read_csv(file,skiprows = 6, parse_dates={'datetime':[0,1]})
 datetime_utc=pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
 datetime_pac= pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
