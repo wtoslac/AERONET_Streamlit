@@ -7,12 +7,10 @@ import matplotlib.dates as mdates
 
 siteName="Turlock CA USA"
 SampleRate = "1h"
-StartDate = st.date_input("StartDate", datetime.date(2023, 1, 6))
-StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0,0,0))
-EndDate = st.date_input("EndDate", datetime.date(2023, 1, 6))
-EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23,59,59))
-
-
+StartDate = st.date_input("StartDate", datetime.date(2024, 10, 1))
+StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0,0))
+EndDate = st.date_input("EndDate", datetime.date(2024, 10, 7))
+EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23,59))
 AOD_min = 0.0
 AOD_max = 0.3
 
@@ -22,10 +20,7 @@ datetime_utc=pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
 datetime_pac= pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 df.set_index(datetime_pac, inplace = True)
 
-#plt.figure(figsize=(20*graphScale,10*graphScale))
-#plt.plot(df.loc[StartDateTime:EndDateTime,"AOD_675nm"].resample(SampleRate).mean(),'.r',label="AOD_675nm-AOD")
-plt.plot(df.loc[StartDateTime:EndDateTime,"AOD_500nm"].resample(SampleRate).mean(),'.k',label="AOD_500nm-AOD")
-#plt.plot(df.loc[StartDateTime:EndDateTime,"AOD_440nm"].resample(SampleRate).mean(),'.b',label="AOD_440nm-AOD")
+plt.plot(df.loc[StartDateTime:EndDateTime,"AOD_500nm"].resample(SampleRate).mean(),'.k',label="AOD_500nm")
 
 plt.gcf().autofmt_xdate()
 plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
