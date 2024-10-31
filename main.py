@@ -11,8 +11,9 @@ StartDate = st.date_input("StartDate", datetime.date(2024, 10, 1))
 StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0,0))
 EndDate = st.date_input("EndDate", datetime.date(2024, 10, 7))
 EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23,59))
-AOD_min = 0.0
-AOD_max = 0.3
+# Add number input fields for ymin and ymax
+AOD_min = st.number_input("Set minimum AOD value (y-min)", value=0.0, step=0.01)
+AOD_max = st.number_input("Set maximum AOD value (y-max)", value=0.3, step=0.01)
 
 file = st.file_uploader("20230101_20241231_Turlock_CA_USA.zip")
 df = pd.read_csv(file,skiprows = 6, parse_dates={'datetime':[0,1]})
