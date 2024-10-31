@@ -6,6 +6,8 @@ import matplotlib.dates as mdates
 
 siteName="Turlock CA USA"
 SampleRate = "1h"
+StartDateTest = st.date_input("When's your birthday", datetime.date(2019, 7, 6))
+print(StartDateTest)
 StartDate='2024-10-01 00:00:00'
 EndDate='2024-10-15 23:59:59'
 AOD_min = 0.0
