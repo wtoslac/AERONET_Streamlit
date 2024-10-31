@@ -9,9 +9,9 @@ st.set_page_config(layout="wide")
 
 @st.cache_data
 def get_tesla_data():
-    df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/tesla-stock-price.csv')
-    df = df.drop(0)
-    df['volume'] = df['volume'].astype(float)
+    df = pd.read_csv('https://github.com/wtoslac/Streamlit_Tutorial/blob/main/20230101_20241231_Turlock_CA_USA.lev15')
+    df = df.drop(-999)
+    df['AOD_500nm'] = df['AOD_500nm'].astype(float)
     return df
 
 tesla_data = get_tesla_data()
