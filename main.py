@@ -1,23 +1,15 @@
 import streamlit as st
-from io import StringIO 
+import numpy as np
 import plotly.express as px
+ 
+x = np.linspace(0, 5)
+ 
+y1 = np.sin(x - 1) + np.cos(x)
+y2 = np.sin(x * x) * np.exp(-0.1 *  x * x)
+y3 = np.cos(x * x) * np.exp(0.1 * x)
+ 
+df = pd.DataFrame(dict(x = x, func1 = y1, func2 = y2, func3 = y3))
+ 
+plot = px.line(df, x = 'x', y = ['func1', 'func2', 'func3'])
 
-#adding a file uploader
-file = st.file_uploader("Please choose a file")
-if file is not None:
-    #To read file as bytes:
-    bytes_data = file.getvalue()
-    st.write(bytes_data)
-    #To convert to a string based IO:
-    stringio = StringIO(file.getvalue().decode("utf-8"))
-    st.write(stringio)
-    #To read file as string:
-    string_data = stringio.read()
-    st.write(string_data)
-    #Can be used wherever a "file-like" object is accepted:
-    df= pd.read_csv(file)
-    st.write(df)
-
-plot = px.line(df, x = 'datetime', y = ['AOD_500nm'])
 st.plotly_chart(plot)
-
