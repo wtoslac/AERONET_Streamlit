@@ -18,9 +18,9 @@ datetime_pac= pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('
 df.set_index(datetime_pac, inplace = True)
 
 #plt.figure(figsize=(20*graphScale,10*graphScale))
-plt.plot(df.loc[StartDate:EndDate,"AOD_675nm"].resample(SampleRate).mean(),'.r',label="AOD_675nm-AOD")
-plt.plot(df.loc[StartDate:EndDate,"AOD_500nm"].resample(SampleRate).mean(),'.g',label="AOD_500nm-AOD")
-plt.plot(df.loc[StartDate:EndDate,"AOD_440nm"].resample(SampleRate).mean(),'.b',label="AOD_440nm-AOD")
+#plt.plot(df.loc[StartDate:EndDate,"AOD_675nm"].resample(SampleRate).mean(),'.r',label="AOD_675nm-AOD")
+plt.plot(df.loc[StartDate:EndDate,"AOD_500nm"].resample(SampleRate).mean(),'.k',label="AOD_500nm-AOD")
+#plt.plot(df.loc[StartDate:EndDate,"AOD_440nm"].resample(SampleRate).mean(),'.b',label="AOD_440nm-AOD")
 
 plt.gcf().autofmt_xdate()
 plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
