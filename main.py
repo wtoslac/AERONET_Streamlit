@@ -1,5 +1,6 @@
 import streamlit as st
 from io import StringIO 
+import plotly.express as px
 
 #adding a file uploader
 file = st.file_uploader("Please choose a file")
