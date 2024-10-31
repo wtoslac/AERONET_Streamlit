@@ -6,8 +6,8 @@ import matplotlib.dates as mdates
 
 siteName="Turlock CA USA"
 SampleRate = "1h"
-StartDate='2023-10-07 00:00:00'
-EndDate='2023-10-15 23:59:59'
+StartDate='2024-10-01 00:00:00'
+EndDate='2024-10-15 23:59:59'
 AOD_min = 0.0
 AOD_max = 0.3
 
