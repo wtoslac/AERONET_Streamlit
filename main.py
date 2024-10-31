@@ -1,15 +1,11 @@
 import streamlit as st
 import numpy as np
-import plotly.express as px
 import pandas as pd
-from io import StringIO 
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import matplotlib.patches as mpatches
-import csv
+
 siteName="Turlock CA USA"
 SampleRate = "1h"
-WindSampleRate = "3h"
 StartDate='2023-10-07 00:00:00'
 EndDate='2023-10-15 23:59:59'
 AOD_min = 0.0
@@ -34,6 +30,3 @@ plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 plt.ylim(AOD_min,AOD_max)
 plt.legend()
 st.pyplot(plt.gcf())
-
-#plot = px.line(df, x = 'datetime', y = ['AOD_500nm'])
-#st.plotly_chart(plot)
