@@ -12,6 +12,7 @@ StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0,0))
 EndDate = st.date_input("EndDate", datetime.date(2024, 10, 7))
 EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23,59))
 st.write(EndDateTime)
+st.write(EndDateTime.stftime('%Y-%m-%d %H:%M:%S'))
 AOD_min = 0.0
 AOD_max = 0.3
 
