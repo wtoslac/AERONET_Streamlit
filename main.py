@@ -33,7 +33,7 @@ plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 #Change the range on Y here if needed
 plt.ylim(AOD_min,AOD_max)
 plt.legend()
-plt.show()
+st.pyplot(plt.gcf())
 
 #plot = px.line(df, x = 'datetime', y = ['AOD_500nm'])
 #st.plotly_chart(plot)
