@@ -11,17 +11,14 @@ StartDate = st.date_input("StartDate", datetime.date(2024, 10, 1))
 StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0,0))
 EndDate = st.date_input("EndDate", datetime.date(2024, 10, 7))
 EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23,59))
-st.write(EndDateTime)
-#st.write(EndDateTime.stftime('%Y-%m-%d %H:%M:%S'))
 AOD_min = 0.0
 AOD_max = 0.3
 
-file = st.file_uploader("Please choose a file")
+file = st.file_uploader("Upload the AERONET Data File Here")
 df = pd.read_csv(file,skiprows = 6, parse_dates={'datetime':[0,1]})
 datetime_utc=pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
 datetime_pac= pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 df.set_index(datetime_pac, inplace = True)
-#t.strftime('%m/%d/%Y')
 plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'),"AOD_500nm"].resample(SampleRate).mean(),'.k',label="AOD_500nm")
 
 plt.gcf().autofmt_xdate()
