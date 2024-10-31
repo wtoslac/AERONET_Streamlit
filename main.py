@@ -8,12 +8,11 @@ import matplotlib.dates as mdates
 siteName="Turlock CA USA"
 SampleRate = "1h"
 StartDate = st.date_input("StartDate", datetime.date(2023, 1, 6))
+StartDateTime = datetime.datetime.combine(StartDate, "00:00:00")
 EndDate = st.date_input("EndDate", datetime.date(2023, 1, 6))
-#DateTime s = ...;
-TimeSpan ts = new TimeSpan(00, 00, 00);
-#s = s.Date + ts;
-StartDate= StartDate+ts
-#EndDate=EndDate+'23:59:59'
+EndDateTime = datetime.datetime.combine(EndDate, "23:59:59")
+
+
 AOD_min = 0.0
 AOD_max = 0.3
 
