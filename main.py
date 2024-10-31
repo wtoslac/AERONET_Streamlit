@@ -24,9 +24,9 @@ df.set_index(datetime_pac, inplace = True)
 
 
 #plt.figure(figsize=(20*graphScale,10*graphScale))
-plt.plot(df.loc[StartDate:EndDate,"AOD_675nm-AOD"].resample(SampleRate).mean(),'.r',label="AOD_675nm-AOD")
-plt.plot(df.loc[StartDate:EndDate,"AOD_500nm-AOD"].resample(SampleRate).mean(),'.g',label="AOD_500nm-AOD")
-plt.plot(df.loc[StartDate:EndDate,"AOD_440nm-AOD"].resample(SampleRate).mean(),'.b',label="AOD_440nm-AOD")
+plt.plot(df.loc[StartDate:EndDate,"AOD_675nm"].resample(SampleRate).mean(),'.r',label="AOD_675nm-AOD")
+plt.plot(df.loc[StartDate:EndDate,"AOD_500nm"].resample(SampleRate).mean(),'.g',label="AOD_500nm-AOD")
+plt.plot(df.loc[StartDate:EndDate,"AOD_440nm"].resample(SampleRate).mean(),'.b',label="AOD_440nm-AOD")
 
 #plot = px.line(df, x = 'datetime', y = ['AOD_500nm'])
 #st.plotly_chart(plot)
