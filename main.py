@@ -21,12 +21,19 @@ datetime_utc=pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
 datetime_pac= pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 df.set_index(datetime_pac, inplace = True)
 
-
-
 #plt.figure(figsize=(20*graphScale,10*graphScale))
 plt.plot(df.loc[StartDate:EndDate,"AOD_675nm"].resample(SampleRate).mean(),'.r',label="AOD_675nm-AOD")
 plt.plot(df.loc[StartDate:EndDate,"AOD_500nm"].resample(SampleRate).mean(),'.g',label="AOD_500nm-AOD")
 plt.plot(df.loc[StartDate:EndDate,"AOD_440nm"].resample(SampleRate).mean(),'.b',label="AOD_440nm-AOD")
+
+plt.gcf().autofmt_xdate()
+plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+#Change the range on Y here if needed
+plt.ylim(AOD_min,AOD_max)
+plt.legend()
+plt.show()
 
 #plot = px.line(df, x = 'datetime', y = ['AOD_500nm'])
 #st.plotly_chart(plot)
