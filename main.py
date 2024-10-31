@@ -7,6 +7,13 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.patches as mpatches
 import csv
+siteName="Turlock CA USA"
+SampleRate = "1h"
+WindSampleRate = "3h"
+StartDate='2023-10-07 00:00:00'
+EndDate='2023-10-15 23:59:59'
+AOD_min = 0.0
+AOD_max = 0.3
 
 file = st.file_uploader("Please choose a file")
 df = pd.read_csv(file,skiprows = 6, parse_dates={'datetime':[0,1]})
