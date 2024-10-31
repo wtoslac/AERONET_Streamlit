@@ -12,14 +12,12 @@ if file is not None:
     st.write(stringio)
     #To read file as string:
     string_data = stringio.read()
-
     st.write(string_data)
-
-
-
     #Can be used wherever a "file-like" object is accepted:
-
     df= pd.read_csv(file)
-
     st.write(df)
+
+plot = px.line(df, x = 'datetime', y = ['AOD_500nm'])
+"""# Plotting app
+st.plotly_chart(plot)
 
