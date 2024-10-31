@@ -16,7 +16,7 @@ st.write(EndDateTime)
 AOD_min = 0.0
 AOD_max = 0.3
 
-#file = st.file_uploader("Please choose a file")
+file = st.file_uploader("Please choose a file")
 df = pd.read_csv(file,skiprows = 6, parse_dates={'datetime':[0,1]})
 datetime_utc=pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
 datetime_pac= pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
