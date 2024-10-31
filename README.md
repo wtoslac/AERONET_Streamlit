@@ -1,4 +1,4 @@
-# Streamlit_Tutorial
+# AERONET Data Viewer Using Streamlit
 Brief examples of how to get streamlit going.
 
 Step 1: Fork this repository (or make your own)
