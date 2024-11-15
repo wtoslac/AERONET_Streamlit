@@ -31,3 +31,46 @@ plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 plt.ylim(AOD_min,AOD_max)
 plt.legend()
 st.pyplot(plt.gcf())
+
+
+# Define colors and wavelengths
+colors = ["blue", "green", "red"]
+wavelengths = [380, 500, 870]
+
+# Create a dictionary to map correct matches
+correct_matches = {
+    "blue": 380,
+    "green": 500,
+    "red": 870
+}
+
+# Display question and collect answers
+st.text("Match the following colors with their corresponding wavelengths (nm):")
+st.text("Options: 380, 500, 870")
+
+# Collect user responses
+user_matches = {}
+for color in colors:
+    while True:
+        try:
+            wavelength = int(input(f"What is the wavelength of {color}? "))
+            if wavelength in wavelengths:
+                user_matches[color] = wavelength
+                break
+            else:
+                st.text("Invalid choice. Please choose one of 380, 500, or 870.")
+        except ValueError:
+           st.text("Please enter a valid number.")
+
+# Check and display results
+correct_count = 0
+st.text("\nResults:")
+for color, user_wavelength in user_matches.items():
+    if user_wavelength == correct_matches[color]:
+       st.text(f"Correct! {color.capitalize()} corresponds to {user_wavelength} nm.")
+        correct_count += 1
+    else:
+        st.text(f"Wrong. {color.capitalize()} does not correspond to {user_wavelength} nm. The correct answer is {correct_matches[color]} nm.")
+
+st.text(f"\nYou got {correct_count}/{len(colors)} correct!")
+
