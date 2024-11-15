@@ -12,7 +12,7 @@ StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0,0))
 EndDate = st.date_input("EndDate", datetime.date(2024, 10, 7))
 EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23,59))
 AOD_min = 0.0
-AOD_max = 0.5
+AOD_max = 0.4
 
 file = st.file_uploader("Upload the Level 1.5 Data Downloaded from: https://aeronet.gsfc.nasa.gov/cgi-bin/webtool_aod_v3?stage=3&region=United_States_West&state=California&site=Turlock_CA_USA")
 df = pd.read_csv(file,skiprows = 6, parse_dates={'datetime':[0,1]})
