@@ -71,6 +71,6 @@ for color, user_wavelength in user_matches.items():
        
     else:
         st.text(f"Wrong. {color.capitalize()} does not correspond to {user_wavelength} nm. The correct answer is {correct_matches[color]} nm.")
-
+  correct_count += 1
 st.text(f"\nYou got {correct_count}/{len(colors)} correct!")
 
