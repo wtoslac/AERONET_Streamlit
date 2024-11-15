@@ -46,29 +46,3 @@ correct_matches = {
 print("Match the following colors with their corresponding wavelengths (nm):")
 print("Options: 380, 500, 870")
 
-# Collect user responses
-user_matches = {}
-for color in colors:
-    while True:
-        try:
-            wavelength = int(input(f"What is the wavelength of {color}? "))
-            if wavelength in wavelengths:
-                user_matches[color] = wavelength
-                break
-            else:
-                print("Invalid choice. Please choose one of 380, 500, or 870.")
-        except ValueError:
-            print("Please enter a valid number.")
-
-# Check and display results
-correct_count = 0
-print("\nResults:")
-for color, user_wavelength in user_matches.items():
-    if user_wavelength == correct_matches[color]:
-        print(f"Correct! {color.capitalize()} corresponds to {user_wavelength} nm.")
-        correct_count += 1
-    else:
-        print(f"Wrong. {color.capitalize()} does not correspond to {user_wavelength} nm. The correct answer is {correct_matches[color]} nm.")
-
-print(f"\nYou got {correct_count}/{len(colors)} correct!")
-
