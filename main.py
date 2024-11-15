@@ -23,6 +23,14 @@ plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime
 plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'),"AOD_500nm"].resample(SampleRate).mean(),'.g',label="AOD_500nm")
 plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'),"AOD_870nm"].resample(SampleRate).mean(),'.r',label="AOD_870nm")
 
+plt.gcf().autofmt_xdate()
+plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+#Change the range on Y here if needed
+plt.ylim(AOD_min,AOD_max)
+plt.legend()
+st.pyplot(plt.gcf())
 # Define colors and wavelengths
 colors = ["blue", "green", "red"]
 wavelengths = [380, 500, 870]
@@ -64,13 +72,3 @@ for color, user_wavelength in user_matches.items():
 
 print(f"\nYou got {correct_count}/{len(colors)} correct!")
 
-
-
-plt.gcf().autofmt_xdate()
-plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-#Change the range on Y here if needed
-plt.ylim(AOD_min,AOD_max)
-plt.legend()
-st.pyplot(plt.gcf())
