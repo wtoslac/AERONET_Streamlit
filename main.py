@@ -19,7 +19,7 @@ df = pd.read_csv(file,skiprows = 6, parse_dates={'datetime':[0,1]})
 datetime_utc=pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
 datetime_pac= pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 df.set_index(datetime_pac, inplace = True)
-plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'),"AOD_500nm","AOD_850nm","AOD_480nm"].resample(SampleRate).mean(),'.k',label="AOD_500nm")
+plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'),"AOD_500nm","AOD_870nm","AOD_380nm"].resample(SampleRate).mean(),'.k',label="AOD_500nm","AOD_870","AOD_380nm")
 
 plt.gcf().autofmt_xdate()
 plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
