@@ -59,7 +59,7 @@ for color in colors:
             continue
         if wavelength in wavelengths:
             user_matches[color] = wavelength
-            st.text(f"Great job this correct!")
+            st.text(f"Great job this is correct! {color} = {correct_matches}")
             break
         elif not error_message_shown:
             st.text(f"Invalid choice for {color}. Please choose one of 380, 500, or 870.")
