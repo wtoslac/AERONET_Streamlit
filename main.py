@@ -31,18 +31,3 @@ plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 plt.ylim(AOD_min,AOD_max)
 plt.legend()
 st.pyplot(plt.gcf())
-# Define colors and wavelengths
-colors = ["blue", "green", "red"]
-wavelengths = [380, 500, 870]
-
-# Create a dictionary to map correct matches
-correct_matches = {
-    "blue": 380,
-    "green": 500,
-    "red": 870
-}
-
-# Display question and collect answers
-print("Match the following colors with their corresponding wavelengths (nm):")
-print("Options: 380, 500, 870")
-
