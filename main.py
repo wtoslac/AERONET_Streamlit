@@ -48,9 +48,14 @@ correct_matches = {
 # Display question and collect answers
 st.text("Match the following colors with their corresponding wavelengths (nm):")
 st.text("Options: 380, 500, 870")
-
+          
 # Collect user responses
 user_matches = {}
+try:
+            wavelength = st.number_input(f"What is the wavelength of {color}?", min_value=0, step=1)
+            if wavelength in wavelengths:
+                user_matches[color] = wavelength
+                break
 for color in colors:
     while True:
         try:
