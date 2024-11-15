@@ -23,6 +23,49 @@ plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime
 plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'),"AOD_500nm"].resample(SampleRate).mean(),'.g',label="AOD_500nm")
 plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'),"AOD_870nm"].resample(SampleRate).mean(),'.r',label="AOD_870nm")
 
+# Define colors and wavelengths
+colors = ["blue", "green", "red"]
+wavelengths = [380, 500, 870]
+
+# Create a dictionary to map correct matches
+correct_matches = {
+    "blue": 380,
+    "green": 500,
+    "red": 870
+}
+
+# Display question and collect answers
+print("Match the following colors with their corresponding wavelengths (nm):")
+print("Options: 380, 500, 870")
+
+# Collect user responses
+user_matches = {}
+for color in colors:
+    while True:
+        try:
+            wavelength = int(input(f"What is the wavelength of {color}? "))
+            if wavelength in wavelengths:
+                user_matches[color] = wavelength
+                break
+            else:
+                print("Invalid choice. Please choose one of 380, 500, or 870.")
+        except ValueError:
+            print("Please enter a valid number.")
+
+# Check and display results
+correct_count = 0
+print("\nResults:")
+for color, user_wavelength in user_matches.items():
+    if user_wavelength == correct_matches[color]:
+        print(f"Correct! {color.capitalize()} corresponds to {user_wavelength} nm.")
+        correct_count += 1
+    else:
+        print(f"Wrong. {color.capitalize()} does not correspond to {user_wavelength} nm. The correct answer is {correct_matches[color]} nm.")
+
+print(f"\nYou got {correct_count}/{len(colors)} correct!")
+
+
+
 plt.gcf().autofmt_xdate()
 plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
 plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
