@@ -45,23 +45,24 @@ correct_matches = {
     "red": 870
 }
 
-# Display question and collect answers
+# Display question
 st.text("Match the following colors with their corresponding wavelengths (nm):")
 st.text("Options: 380, 500, 870")
-          
+
 # Collect user responses
 user_matches = {}
-
+for color in colors:
+    error_message_shown = False  # Track if an error message has been shown
     while True:
-        try:
-            wavelength = st.number_input(f"What is the wavelength of {color}?", min_value=0, step=1)
-            if wavelength in wavelengths:
-                user_matches[color] = wavelength
-                break
-            else:
-                st.text("Invalid choice. Please choose one of 380, 500, or 870.")
-        except ValueError:
-            st.text("Please enter a valid number.")
+        wavelength = st.number_input(f"What is the wavelength of {color}?", min_value=0, step=1, key=color)
+        if wavelength == 0:  # Default state for `st.number_input`, waiting for user input
+            continue
+        if wavelength in wavelengths:
+            user_matches[color] = wavelength
+            break
+        elif not error_message_shown:
+            st.text(f"Invalid choice for {color}. Please choose one of 380, 500, or 870.")
+            error_message_shown = True
 
 # Check and display results
 correct_count = 0
@@ -74,4 +75,5 @@ for color, user_wavelength in user_matches.items():
         st.text(f"Wrong. {color.capitalize()} does not correspond to {user_wavelength} nm. The correct answer is {correct_matches[color]} nm.")
 
 st.text(f"\nYou got {correct_count}/{len(colors)} correct!")
+
 
