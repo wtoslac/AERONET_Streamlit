@@ -47,7 +47,7 @@ correct_matches = {
 
 # Display question
 st.text("Match the following colors with their corresponding wavelengths (nm):")
-st.text("Options: 380, 500, 870")
+st.text("Options: 500, 870, 380")
 
 # Collect user responses
 user_matches = {}
