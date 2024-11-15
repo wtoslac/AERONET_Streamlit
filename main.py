@@ -32,6 +32,7 @@ plt.ylim(AOD_min,AOD_max)
 plt.legend()
 st.pyplot(plt.gcf())
 
+import streamlit as st
 
 # Define colors and wavelengths
 colors = ["blue", "green", "red"]
@@ -53,24 +54,24 @@ user_matches = {}
 for color in colors:
     while True:
         try:
-            wavelength = int(input(f"What is the wavelength of {color}? "))
+            wavelength = st.number_input(f"What is the wavelength of {color}?", min_value=0, step=1)
             if wavelength in wavelengths:
                 user_matches[color] = wavelength
                 break
             else:
                 st.text("Invalid choice. Please choose one of 380, 500, or 870.")
         except ValueError:
-           st.text("Please enter a valid number.")
+            st.text("Please enter a valid number.")
 
 # Check and display results
 correct_count = 0
 st.text("\nResults:")
 for color, user_wavelength in user_matches.items():
     if user_wavelength == correct_matches[color]:
-       st.text(f"Correct! {color.capitalize()} corresponds to {user_wavelength} nm.")
-       
+        st.text(f"Correct! {color.capitalize()} corresponds to {user_wavelength} nm.")
+        correct_count += 1
     else:
         st.text(f"Wrong. {color.capitalize()} does not correspond to {user_wavelength} nm. The correct answer is {correct_matches[color]} nm.")
-  correct_count += 1
+
 st.text(f"\nYou got {correct_count}/{len(colors)} correct!")
 
