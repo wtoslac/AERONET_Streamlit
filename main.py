@@ -4,11 +4,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import gdown
+import gdown  # Make sure to install the gdown package using pip
 
-# Google Drive file ID for the AOD data
-file_url = "https://drive.google.com/uc?id=12qSh5UWpL_cfsIQU7pnIUV8vouEgHB-V"  # Replace with your actual file ID
-
+# Set up basic information
 siteName = "Turlock CA USA"
 SampleRate = "1h"
 StartDate = st.date_input("StartDate", datetime.date(2024, 10, 1))
@@ -18,16 +16,14 @@ EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59))
 AOD_min = 0.0
 AOD_max = 0.3
 
-# Download the file from Google Drive using gdown
-def download_file_from_drive(file_url):
-    output = "aod_data.csv"
-    gdown.download(file_url, output, quiet=False)
-    return output
+# Google Drive link
+google_drive_link = "https://drive.google.com/uc?export=download&id=12qSh5UWpL_cfsIQU7pnIUV8vouEgHB-V"  # Replace with your actual file ID
 
-# Download the AOD data file
-file_path = download_file_from_drive(file_url)
+# Download the file using gdown
+file_path = "aeronet_data.csv"
+gdown.download(google_drive_link, file_path, quiet=False)
 
-# Read the downloaded AOD data file
+# Read AOD data from the downloaded file
 df = pd.read_csv(file_path, skiprows=6, parse_dates={'datetime': [0, 1]})
 datetime_utc = pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
 datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
@@ -61,3 +57,4 @@ for pos in positions:
 # Allow user to submit their answers
 if st.button("Submit"):
     st.text("Your selections have been recorded. Take a screenshot and submit the answer! You can proceed to the next step.")
+
