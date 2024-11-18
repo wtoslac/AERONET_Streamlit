@@ -37,7 +37,7 @@ if file is not None:
     st.pyplot(plt.gcf())
 
 # Matching wavelengths to positions
-st.text("\nMatch the wavelength to its position:")
+st.text("\nMatch the wavelength to its position:Star by setting the start date of your Data to be 2024/10/01 you will see three diffrent clusters of data plotted now make a prediction on the corresponding wavelength of each cluster")
 positions = ["Top", "Middle", "Bottom"]
 
 # Dropdown menus for user input with no default selection
