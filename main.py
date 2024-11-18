@@ -43,7 +43,7 @@ positions = ["Top", "Middle", "Bottom"]
 # Dropdown menus for user input with no default selection
 user_matches = {}
 for pos in positions:
-    user_matches[pos] = st.selectbox(f"Select the wavelength for {pos} position:", 
+    user_matches[pos] = st.selectbox(f"Select the wavelength you beleive will be {pos} position:", 
                                      options=["Select an option", "450 nm", "500 nm", "870 nm"], 
                                      key=pos)
 
