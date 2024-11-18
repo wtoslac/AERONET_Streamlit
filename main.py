@@ -1,6 +1,5 @@
 import streamlit as st
 import datetime
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -23,10 +22,18 @@ if file is not None:
     datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
     df.set_index(datetime_pac, inplace=True)
 
-    # Plot data
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.k')
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k')
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.k')
+    # Let user select columns to plot on the y-axis
+    y_axis_options = ["AOD_380nm", "AOD_500nm", "AOD_870nm"]
+    selected_y_axes = st.multiselect("Select data to plot on the Y-axis:", y_axis_options, default=y_axis_options)
+
+    # Plot selected data
+    for column in selected_y_axes:
+        plt.plot(
+            df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), column]
+            .resample(SampleRate)
+            .mean(),
+            label=column
+        )
 
     plt.gcf().autofmt_xdate()
     plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
@@ -37,7 +44,7 @@ if file is not None:
     st.pyplot(plt.gcf())
 
 # Matching wavelengths to positions
-st.text("\n Now set start date to 2024/10/01 you can see three diffrent data clusters for 10/01.Now Match the wavelength to its position:")
+st.text("\nNow set the start date to 2024/10/01. You can see three different data clusters for 10/01. Now match the wavelength to its position:")
 positions = ["Top", "Middle", "Bottom"]
 
 # Dropdown menus for user input with no default selection
@@ -49,6 +56,4 @@ for pos in positions:
 
 # Allow user to proceed without showing correctness
 if st.button("Submit"):
-    st.text("Your selections have been recorded.Take screenshot and submit answer!.You can proceed to the next step.")
-
-
+    st.text("Your selections have been recorded. Take a screenshot and submit your answer! You can proceed to the next step.")
