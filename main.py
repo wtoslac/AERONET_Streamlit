@@ -75,7 +75,7 @@ if file is not None:
             df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"]
             .resample(SampleRate)
             .mean(),
-            '.b',
+            '.v',
             label="AOD_380nm"
         )
         plt.plot(
