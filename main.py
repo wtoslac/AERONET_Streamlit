@@ -18,7 +18,7 @@ AOD_min = 0.0
 AOD_max = 0.3
 
 # Google Drive link
-google_drive_link = "https://drive.google.com/uc?export=download&id=12qSh5UWpL_cfsIQU7pnIUV8vouEgHB-V"  # Replace with your actual file ID
+google_drive_link = "https://drive.google.com/file/d/12qSh5UWpL_cfsIQU7pnIUV8vouEgHB-V/view?usp=sharing"  # Replace with your actual file ID
 
 # Download the file using gdown
 file_path = "aeronet_data.csv"
