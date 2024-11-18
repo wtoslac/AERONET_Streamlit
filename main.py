@@ -1,4 +1,4 @@
-import streamlit as st
+ import streamlit as st
 import datetime
 import pytz
 import numpy as np
@@ -32,9 +32,9 @@ if aod_file is not None and wind_file is not None:
     df_aod.set_index(datetime_pac, inplace=True)
 
     # Read Wind data
-    df_wind = pd.read_csv(wind_file, parse_dates=['date'])
-    df_wind['datetime'] = pd.to_datetime(df_wind['date']).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-    df_wind.set_index('date', inplace=True)
+    df_wind = pd.read_csv(wind_file, parse_dates=['Date'])  # Corrected column name
+    df_wind['datetime'] = pd.to_datetime(df_wind['Date']).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')  # Adjusted for 'Date' column
+    df_wind.set_index('datetime', inplace=True)  # Set the datetime column as index
 
     # Plot AOD and wind data
     fig, ax1 = plt.subplots(figsize=(10, 6))
