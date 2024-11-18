@@ -49,5 +49,5 @@ for pos in positions:
 
 # Allow user to proceed without showing correctness
 if st.button("Submit"):
-    st.text("Your selections have been recorded. You can proceed to the next step.")
+    st.text("Your selections have been recorded.Take screenshot and submit answer!.You can proceed to the next step.")
 
