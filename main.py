@@ -37,13 +37,13 @@ if file is not None:
     st.pyplot(plt.gcf())
 
 # Matching wavelengths to positions
-st.text("\nMatch the wavelength to its position:")
+st.text("\n Now set start date to 2024/10/01 you can see three diffrent data clusters for 10/01.Now Match the wavelength to its position:")
 positions = ["Top", "Middle", "Bottom"]
 
 # Dropdown menus for user input with no default selection
 user_matches = {}
 for pos in positions:
-    user_matches[pos] = st.selectbox(f"Now set start date to 2024/10/01 you can see three diffrent data clusters for 10/01.Now Select the wavelength for {pos} position:", 
+    user_matches[pos] = st.selectbox(f"wavelength for {pos} position:", 
                                      options=["Select an option", "450 nm", "500 nm", "870 nm"], 
                                      key=pos)
 
