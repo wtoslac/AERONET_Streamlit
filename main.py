@@ -24,6 +24,37 @@ if file is not None:
     datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
     df.set_index(datetime_pac, inplace=True)
 
+    # Plot initial black-and-white graph
+    plt.plot(
+        df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"]
+        .resample(SampleRate)
+        .mean(),
+        '.k',
+        label="AOD_380nm"
+    )
+    plt.plot(
+        df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"]
+        .resample(SampleRate)
+        .mean(),
+        '.k',
+        label="AOD_500nm"
+    )
+    plt.plot(
+        df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"]
+        .resample(SampleRate)
+        .mean(),
+        '.k',
+        label="AOD_870nm"
+    )
+
+    plt.gcf().autofmt_xdate()
+    plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+    plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+    plt.ylim(AOD_min, AOD_max)
+    plt.legend()
+    st.pyplot(plt.gcf())
+
     # Matching wavelengths to positions
     st.text("\nNow set the start date to 2024/10/01. You can see three different data clusters for 10/01. Now match the wavelength to its position:")
     positions = ["Top", "Middle", "Bottom"]
@@ -35,11 +66,11 @@ if file is not None:
             f"wavelength for {pos} position:", options=["Select an option", "450 nm", "500 nm", "870 nm"], key=pos
         )
 
-    # Allow user to proceed and display graph after submission
+    # Allow user to proceed and display colored graph after submission
     if st.button("Submit"):
-        st.text("Your selections have been recorded. The graph will now be displayed below!")
+        st.text("Your selections have been recorded. The colored graph is displayed below!")
 
-        # Plot data
+        # Plot colored graph
         plt.plot(
             df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"]
             .resample(SampleRate)
