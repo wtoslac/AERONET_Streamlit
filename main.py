@@ -1,8 +1,3 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-import streamlit as st
-
 if aod_file is not None and wind_file is not None:
     # Read AOD data
     df_aod = pd.read_csv(aod_file, skiprows=6, parse_dates={'datetime': [0, 1]})
@@ -13,11 +8,11 @@ if aod_file is not None and wind_file is not None:
     # Read Wind data and check column names
     df_wind = pd.read_csv(wind_file)
     st.write("Wind data columns:", df_wind.columns)  # Debug: Display column names
-    if 'date' in df_wind.columns:
-        df_wind['date'] = pd.to_datetime(df_wind['date']).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-        df_wind.set_index('date', inplace=True)
+    if 'datetime' in df_wind.columns:
+        df_wind['datetime'] = pd.to_datetime(df_wind['datetime']).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
+        df_wind.set_index('datetime', inplace=True)
     else:
-        st.error("No 'date' column found in the wind data file.")
+        st.error("No 'datetime' column found in the wind data file.")
 
     # Plot AOD and wind data
     fig, ax1 = plt.subplots(figsize=(10, 6))
@@ -56,4 +51,3 @@ if aod_file is not None and wind_file is not None:
     plt.gcf().autofmt_xdate()
 
     st.pyplot(fig)
-
