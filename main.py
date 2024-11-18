@@ -27,21 +27,14 @@ wind_file = st.file_uploader("Upload Wind Data (CSV)")
 if aod_file is not None and wind_file is not None:
     # Read AOD data
     df_aod = pd.read_csv(aod_file, skiprows=6, parse_dates={'datetime': [0, 1]})
-    st.write("AOD Data", df_aod.head())  # Debug: check the first few rows of AOD data
-
     datetime_utc = pd.to_datetime(df_aod["datetime"], format='%d:%m:%Y %H:%M:%S')
     datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
     df_aod.set_index(datetime_pac, inplace=True)
 
     # Read Wind data
     df_wind = pd.read_csv(wind_file, parse_dates=['Date'])  # Corrected column name
-    st.write("Wind Data", df_wind.head())  # Debug: check the first few rows of wind data
-    df_wind['datetime'] = pd.to_datetime(df_wind['Date']).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-    df_wind.set_index('datetime', inplace=True)
-
-    # Check the date range
-    st.write("StartDateTime:", StartDateTime)
-    st.write("EndDateTime:", EndDateTime)
+    df_wind['datetime'] = pd.to_datetime(df_wind['Date']).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')  # Adjusted for 'Date' column
+    df_wind.set_index('datetime', inplace=True)  # Set the datetime column as index
 
     # Plot AOD and wind data
     fig, ax1 = plt.subplots(figsize=(10, 6))
@@ -79,7 +72,6 @@ if aod_file is not None and wind_file is not None:
     ax1.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
     plt.gcf().autofmt_xdate()
 
-    # Ensure plot is rendered
     st.pyplot(fig)
 
 # Matching wavelengths to positions
