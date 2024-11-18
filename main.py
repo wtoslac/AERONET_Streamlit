@@ -7,9 +7,9 @@ import matplotlib.dates as mdates
 # Set up basic information
 siteName = "Turlock CA USA"
 SampleRate = "1h"
-StartDate = st.date_input("Start Date", datetime.date(2024, 10, 1))
+StartDate = st.date_input("StartDate", datetime.date(2024, 10, 1))
 StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0))
-EndDate = st.date_input("End Date", datetime.date(2024, 10, 7))
+EndDate = st.date_input("EndDate", datetime.date(2024, 10, 7))
 EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59))
 
 # User inputs for Y-axis limits
@@ -25,35 +25,32 @@ if file is not None:
     df.set_index(datetime_pac, inplace=True)
 
     # Plot initial black-and-white graph
-    st.subheader("Initial Black-and-White Graph")
-    fig, ax = plt.subplots(figsize=(10, 6))
-
-    ax.plot(
+    plt.plot(
         df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"]
         .resample(SampleRate)
         .mean(),
         '.k',
     )
-    ax.plot(
+    plt.plot(
         df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"]
         .resample(SampleRate)
         .mean(),
         '.k',
     )
-    ax.plot(
+    plt.plot(
         df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"]
         .resample(SampleRate)
         .mean(),
         '.k',
     )
 
-    ax.gcf().autofmt_xdate()
-    ax.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-    ax.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
-    ax.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-    ax.set_ylim(AOD_min, AOD_max)
-    ax.legend(["AOD_380nm", "AOD_500nm", "AOD_870nm"])
-    st.pyplot(fig)
+    plt.gcf().autofmt_xdate()
+    plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+    plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+    plt.ylim(AOD_min, AOD_max)
+    plt.legend()
+    st.pyplot(plt.gcf())
 
     # Matching wavelengths to positions
     st.text("\nNow set the start date to 2024/10/01. You can see three different data clusters for 10/01. Now match the wavelength to its position:")
@@ -71,31 +68,29 @@ if file is not None:
         st.text("Your selections have been recorded. The colored graph is displayed below!")
 
         # Plot colored graph
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.plot(
+        plt.plot(
             df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"]
             .resample(SampleRate)
             .mean(),
             marker='o', linestyle='', color='purple', label="AOD_380nm"  # Purple dots only
         )
-        ax.plot(
+        plt.plot(
             df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"]
             .resample(SampleRate)
             .mean(),
             marker='o', linestyle='', color='green', label="AOD_500nm"  # Green dots only
         )
-        ax.plot(
+        plt.plot(
             df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"]
             .resample(SampleRate)
             .mean(),
             marker='o', linestyle='', color='red', label="AOD_870nm"  # Red dots only
         )
 
-        ax.gcf().autofmt_xdate()
-        ax.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-        ax.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
-        ax.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-        ax.set_ylim(AOD_min, AOD_max)
-        ax.legend()
-        st.pyplot(fig)
-  
+        plt.gcf().autofmt_xdate()
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+        plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+        plt.ylim(AOD_min, AOD_max)
+        plt.legend()
+        st.pyplot(plt.gcf())
