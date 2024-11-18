@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-pip install gdown
 import gdown  # Make sure to install the gdown package using pip
 
 # Set up basic information
