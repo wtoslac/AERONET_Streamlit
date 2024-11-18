@@ -34,47 +34,46 @@ st.pyplot(plt.gcf())
 
 import streamlit as st
 
-# Define colors and wavelengths
-colors = ["blue", "green", "red"]
+# Define Position and wavelengths
+Position = ["Top", "Middle", "Bottom"]
 wavelengths = [380, 500, 870]
 
 # Create a dictionary to map correct matches
 correct_matches = {
-    "blue": 380,
-    "green": 500,
-    "red": 870
+    "Top": 380,
+    "Middle": 500,
+    "Bottom": 870
 }
 
 # Display question
-st.text("Match the following colors with their corresponding wavelengths (nm):")
+st.text("Match the following wavelength (nm) with there [redicted place on the graph")
 st.text("Options: 500, 870, 380")
 
 # Collect user responses
 user_matches = {}
-for color in colors:
+for position in potisions:
     error_message_shown = False  # Track if an error message has been shown
     while True:
-        wavelength = st.number_input(f"What is the wavelength of {color}?", min_value=0, step=1, key=color)
+        wavelength = st.number_input(f"What is the wavelength of {position}?", min_value=0, step=1, key=color)
         if wavelength == 0:  # Default state for `st.number_input`, waiting for user input
             continue
         if wavelength in wavelengths:
-            user_matches[color] = wavelength
-            st.text(f"Great job! This is correct: {color} = {correct_matches[color]} nm")
+            user_matches[position] = wavelength
+            st.text(f"Great job! This is correct: {position} = {correct_matches[position]} nm")
             break
         elif not error_message_shown:
-            st.text(f"Invalid choice for {color}. Please choose one of 380, 500, or 870.")
+            st.text(f"Invalid choice for {position}. Please choose one of 380, 500, or 870.")
             error_message_shown = True
 
 # Check and display results
 correct_count = 0
 st.text("\nResults:")
-for color, user_wavelength in user_matches.items():
-    if user_wavelength == correct_matches[color]:
-        st.text(f"Correct! {color.capitalize()} corresponds to {user_wavelength} nm.")
+for position, user_wavelength in user_matches.items():
+    if user_wavelength == correct_matches[position]:
+        st.text(f"Correct! {position.capitalize()} corresponds to {user_wavelength} nm.")
         correct_count += 1
     else:
-        st.text(f"Wrong. {color.capitalize()} does not correspond to {user_wavelength} nm. The correct answer is {correct_matches[color]} nm.")
+        st.text(f"Wrong. {position.capitalize()} does not correspond to {user_wavelength} nm. The correct answer is {correct_matches[color]} nm.")
 
-st.text(f"\nYou got {correct_count}/{len(colors)} correct!")
-
+st.text(f"\nYou got {correct_count}/{len(position)} correct!")
 
