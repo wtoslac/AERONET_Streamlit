@@ -66,28 +66,25 @@ if file is not None:
     # Allow user to proceed and display colored graph after submission
     if st.button("Submit"):
         st.text("Your selections have been recorded. The colored graph is displayed below!")
-    
+
         # Plot colored graph
-        violet=violet = (238, 130, 238)  # RGB values for violet
         plt.plot(
             df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"]
             .resample(SampleRate)
             .mean(),
-            '.violet', label="AOD_380nm"  # Violet dots only
+            marker='o', linestyle='', color='violet', label="AOD_380nm"  # Violet dots only
         )
         plt.plot(
             df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"]
             .resample(SampleRate)
             .mean(),
-            '.g',
-            label="AOD_500nm"
+            marker='o', linestyle='', color='green', label="AOD_500nm"  # Green dots only
         )
         plt.plot(
             df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"]
             .resample(SampleRate)
             .mean(),
-            '.r',
-            label="AOD_870nm"
+            marker='o', linestyle='', color='red', label="AOD_870nm"  # Red dots only
         )
 
         plt.gcf().autofmt_xdate()
