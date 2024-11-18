@@ -12,11 +12,11 @@ StartDate = st.date_input("StartDate", datetime.date(2024, 10, 1))
 StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0))
 EndDate = st.date_input("EndDate", datetime.date(2024, 10, 7))
 EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59))
-
-
+AOD_min = 0.0
+AOD_max = 0.4
 
 # Upload file
-file = st.file_uploader("Upload the Level 1.5 Data Downloaded from: https://aeronet.gsfc.nasa.gov/cgi-bin/webtool_aod_v3?stage=3&region=United_States_West&state=California&site=Turlock_CA_USA")
+file = st.file_uploader("Upload the Level 1.5 Data from AERONET")
 if file is not None:
     df = pd.read_csv(file, skiprows=6, parse_dates={'datetime': [0, 1]})
     datetime_utc = pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
@@ -50,6 +50,5 @@ for pos in positions:
 # Allow user to proceed without showing correctness
 if st.button("Submit"):
     st.text("Your selections have been recorded.Take screenshot and submit answer!.You can proceed to the next step.")
-
 
 
