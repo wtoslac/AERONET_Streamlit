@@ -11,8 +11,10 @@ StartDate = st.date_input("StartDate", datetime.date(2024, 10, 1))
 StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0))
 EndDate = st.date_input("EndDate", datetime.date(2024, 10, 7))
 EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59))
-AOD_min = 0.0
-AOD_max = 0.4
+
+# User inputs for Y-axis limits
+AOD_min = st.number_input("Set minimum Y-axis value:", value=0.0, step=0.1)
+AOD_max = st.number_input("Set maximum Y-axis value:", value=0.4, step=0.1)
 
 # Upload file
 file = st.file_uploader("Upload the Level 1.5 Data from AERONET")
@@ -22,18 +24,28 @@ if file is not None:
     datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
     df.set_index(datetime_pac, inplace=True)
 
-    # Let user select columns to plot on the y-axis
-    y_axis_options = ["AOD_380nm", "AOD_500nm", "AOD_870nm"]
-    selected_y_axes = st.multiselect("Select data to plot on the Y-axis:", y_axis_options, default=y_axis_options)
-
-    # Plot selected data
-    for column in selected_y_axes:
-        plt.plot(
-            df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), column]
-            .resample(SampleRate)
-            .mean(),
-            label=column
-        )
+    # Plot data
+    plt.plot(
+        df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"]
+        .resample(SampleRate)
+        .mean(),
+        '.b',
+        label="AOD_380nm"
+    )
+    plt.plot(
+        df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"]
+        .resample(SampleRate)
+        .mean(),
+        '.g',
+        label="AOD_500nm"
+    )
+    plt.plot(
+        df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"]
+        .resample(SampleRate)
+        .mean(),
+        '.r',
+        label="AOD_870nm"
+    )
 
     plt.gcf().autofmt_xdate()
     plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
@@ -50,9 +62,9 @@ positions = ["Top", "Middle", "Bottom"]
 # Dropdown menus for user input with no default selection
 user_matches = {}
 for pos in positions:
-    user_matches[pos] = st.selectbox(f"wavelength for {pos} position:", 
-                                     options=["Select an option", "450 nm", "500 nm", "870 nm"], 
-                                     key=pos)
+    user_matches[pos] = st.selectbox(
+        f"wavelength for {pos} position:", options=["Select an option", "450 nm", "500 nm", "870 nm"], key=pos
+    )
 
 # Allow user to proceed without showing correctness
 if st.button("Submit"):
