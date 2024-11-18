@@ -29,21 +29,21 @@ if file is not None:
         df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"]
         .resample(SampleRate)
         .mean(),
-        '.b',
+        '.k',
         label="AOD_380nm"
     )
     plt.plot(
         df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"]
         .resample(SampleRate)
         .mean(),
-        '.g',
+        '.k',
         label="AOD_500nm"
     )
     plt.plot(
         df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"]
         .resample(SampleRate)
         .mean(),
-        '.r',
+        '.k',
         label="AOD_870nm"
     )
 
