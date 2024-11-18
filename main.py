@@ -39,22 +39,14 @@ if file is not None:
 # Matching wavelengths to positions
 st.text("\nMatch the wavelength to its position:")
 positions = ["Top", "Middle", "Bottom"]
-correct_matches = {"Top": "450 nm", "Middle": "500 nm", "Bottom": "870 nm"}
 
-# Dropdown menus for user input
+# Dropdown menus for user input with no default selection
 user_matches = {}
 for pos in positions:
-    user_matches[pos] = st.selectbox(f"Select the wavelength for {pos} position:", options=["450 nm", "500 nm", "870 nm"], key=pos)
+    user_matches[pos] = st.selectbox(f"Select the wavelength for {pos} position:", 
+                                     options=["Select an option", "450 nm", "500 nm", "870 nm"], 
+                                     key=pos)
 
-# Evaluate user inputs
-correct_count = 0
-st.text("\nResults:")
-for pos, user_wavelength in user_matches.items():
-    if user_wavelength == correct_matches[pos]:
-        st.text(f"Correct! {pos} corresponds to {user_wavelength}.")
-        correct_count += 1
-    else:
-        st.text(f"Wrong. {pos} does not correspond to {user_wavelength}. The correct answer is {correct_matches[pos]}.")
-
-st.text(f"\nYou got {correct_count}/{len(positions)} correct!")
-
+# Allow user to proceed without showing correctness
+if st.button("Submit"):
+    st.text("Your selections have been recorded. You can proceed to the next step.")
