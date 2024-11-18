@@ -1,28 +1,31 @@
-import numpy as np 
-import pandas as pd 
-import matplotlib.pyplot as plt 
+import streamlit as st
+import datetime
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import matplotlib.patches as mpatches
 
-filename = 'AERONET_Data/20190101_20191231_Modesto.tot_lev20'
-windfile = 'Wind_Data/Modesto_Wind_2019_Jan_Dec_72492623258.csv'
-weatherFile = 'Wind_Data/Modesto_Weather_Feb_2019.csv'
-StartDate='2019-06-11 00:00:00'
-EndDate='2019-06-13 23:59:59'
-sampleRate = '1h'
-windSampleRate = sampleRate
+siteName="Turlock CA USA"
+SampleRate = "1h"
+StartDate = st.date_input("StartDate", datetime.date(2024, 10, 1))
+StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0,0))
+EndDate = st.date_input("EndDate", datetime.date(2024, 10, 7))
+EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23,59))
+AOD_min = 0.0
+AOD_max = 0.5
 
-# Load the AERONET data and make US/PAC time its index.
-df = pd.read_csv(filename,skiprows = 6, parse_dates={'datetime':[0,1]})
+file = st.file_uploader("Upload the Level 1.5 Data Downloaded from: https://aeronet.gsfc.nasa.gov/cgi-bin/webtool_aod_v3?stage=3&region=United_States_West&state=California&site=Turlock_CA_USA")
+df = pd.read_csv(file,skiprows = 6, parse_dates={'datetime':[0,1]})
 datetime_utc=pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
 datetime_pac= pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 df.set_index(datetime_pac, inplace = True)
+plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'),"AOD_500nm"].resample(SampleRate).mean(),'.k',label="AOD_500nm")
 
-# Set the Columns that has the AOD Total and replace -999 with nan in visible wavelengths.
-AODTotalColumns=range(3,173,8)
-#for iWaveLength in df.columns[AODTotalColumns]: print(iWaveLength)
-#Replaces all -999 values with nan so invalid entries does not affect resample.mean()
-df['AOD_380nm-Total'].replace(-999.0, np.nan, inplace = True)
-df['AOD_440nm-Total'].replace(-999.0, np.nan, inplace = True)
-df['AOD_500nm-Total'].replace(-999.0, np.nan, inplace = True)
-df['AOD_675nm-Total'].replace(-999.0, np.nan, inplace = True)
+plt.gcf().autofmt_xdate()
+plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+#Change the range on Y here if needed
+plt.ylim(AOD_min,AOD_max)
+plt.legend()
+st.pyplot(plt.gcf())
