@@ -34,7 +34,7 @@ if aod_file is not None and wind_file is not None:
     # Read Wind data
     df_wind = pd.read_csv(wind_file, parse_dates=['Datetime'])
     df_wind['datetime'] = pd.to_datetime(df_wind['Datetime']).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-    df_wind.set_index('Datetime', inplace=True)
+    df_wind.set_index('datetime', inplace=True)
 
     # Plot AOD and wind data
     fig, ax1 = plt.subplots(figsize=(10, 6))
@@ -82,10 +82,9 @@ positions = ["Top", "Middle", "Bottom"]
 user_matches = {}
 for pos in positions:
     user_matches[pos] = st.selectbox(f"wavelength for {pos} position:", 
-                                     options=["Select an option", "450 nm", "500 nm", "870 nm"], 
+                                     options=["450 nm", "500 nm", "870 nm"], 
                                      key=pos)
 
 # Allow user to proceed without showing correctness
 if st.button("Submit"):
     st.text("Your selections have been recorded. Take a screenshot and submit the answer! You can proceed to the next step.")
-
