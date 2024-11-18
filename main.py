@@ -26,8 +26,8 @@ wind_file = st.file_uploader("Upload Wind Data (CSV)")
 
 if aod_file is not None and wind_file is not None:
     # Read AOD data
-    df_aod = pd.read_csv(aod_file, skiprows=6, parse_dates={'datetime': [0, 1]})
-    datetime_utc = pd.to_datetime(df_aod["datetime"], format='%d:%m:%Y %H:%M:%S')
+    df_aod = pd.read_csv(aod_file, skiprows=6, parse_dates={'date': [0, 1]})
+    datetime_utc = pd.to_datetime(df_aod["date"], format='%d:%m:%Y %H:%M:%S')
     datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
     df_aod.set_index(datetime_pac, inplace=True)
 
