@@ -30,21 +30,18 @@ if file is not None:
         .resample(SampleRate)
         .mean(),
         '.k',
-    
     )
     plt.plot(
         df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"]
         .resample(SampleRate)
         .mean(),
         '.k',
-  
     )
     plt.plot(
         df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"]
         .resample(SampleRate)
         .mean(),
         '.k',
-   
     )
 
     plt.gcf().autofmt_xdate()
@@ -67,7 +64,6 @@ if file is not None:
         )
 
     # Allow user to proceed and display colored graph after submission
-    violet = (238, 130, 238)  # RGB values for violet
     if st.button("Submit"):
         st.text("Your selections have been recorded. The colored graph is displayed below!")
 
@@ -76,8 +72,7 @@ if file is not None:
             df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"]
             .resample(SampleRate)
             .mean(),
-            'violet',
-            label="AOD_380nm"
+            marker='o', linestyle='', color='violet', label="AOD_380nm"  # Violet dots only
         )
         plt.plot(
             df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"]
