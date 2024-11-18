@@ -72,19 +72,19 @@ if file is not None:
             df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"]
             .resample(SampleRate)
             .mean(),
-            marker='o', linestyle='', color='violet', label="AOD_380nm"  # Violet dots only
+            marker='.', linestyle='', color='violet', label="AOD_380nm"  # Violet dots only
         )
         plt.plot(
             df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"]
             .resample(SampleRate)
             .mean(),
-            marker='o', linestyle='', color='green', label="AOD_500nm"  # Green dots only
+            marker='.', linestyle='', color='green', label="AOD_500nm"  # Green dots only
         )
         plt.plot(
             df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"]
             .resample(SampleRate)
             .mean(),
-            marker='o', linestyle='', color='red', label="AOD_870nm"  # Red dots only
+            marker='.', linestyle='', color='red', label="AOD_870nm"  # Red dots only
         )
 
         plt.gcf().autofmt_xdate()
