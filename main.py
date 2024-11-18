@@ -67,6 +67,7 @@ if file is not None:
         )
 
     # Allow user to proceed and display colored graph after submission
+    violet = (238, 130, 238)  # RGB values for violet
     if st.button("Submit"):
         st.text("Your selections have been recorded. The colored graph is displayed below!")
 
@@ -75,7 +76,7 @@ if file is not None:
             df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"]
             .resample(SampleRate)
             .mean(),
-            '.v',
+            'violet',
             label="AOD_380nm"
         )
         plt.plot(
