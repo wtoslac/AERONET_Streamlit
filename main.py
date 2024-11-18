@@ -98,4 +98,4 @@ if file is not None:
         ax.set_ylim(AOD_min, AOD_max)
         ax.legend()
         st.pyplot(fig)
-        import numpy as np 
+  
