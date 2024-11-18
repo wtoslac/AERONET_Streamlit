@@ -17,7 +17,7 @@ AOD_min = st.number_input("Set minimum Y-axis value:", value=0.0, step=0.1)
 AOD_max = st.number_input("Set maximum Y-axis value:", value=0.4, step=0.1)
 
 # Upload file
-file = st.file_uploader("Upload the Level 1.5 Data from AERONET")
+file = st.file_uploader("Upload the Level 1.5 Data from AERONET Click this link for the data https://drive.google.com/file/d/12qSh5UWpL_cfsIQU7pnIUV8vouEgHB-V/view?usp=sharing")
 if file is not None:
     df = pd.read_csv(file, skiprows=6, parse_dates={'datetime': [0, 1]})
     datetime_utc = pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
