@@ -24,9 +24,9 @@ if file is not None:
     df.set_index(datetime_pac, inplace=True)
 
     # Plot data
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.k'")
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k'")
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.k'")
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.b', label="AOD_380nm")
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g', label="AOD_500nm")
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.r', label="AOD_870nm")
 
     plt.gcf().autofmt_xdate()
     plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
@@ -37,16 +37,17 @@ if file is not None:
     st.pyplot(plt.gcf())
 
 # Matching wavelengths to positions
-st.text("\nMatch the wavelength to its position:Star by setting the start date of your Data to be 2024/10/01 you will see three diffrent clusters of data plotted now make a prediction on the corresponding wavelength of each cluster")
+st.text("\nMatch the wavelength to its position:")
 positions = ["Top", "Middle", "Bottom"]
 
 # Dropdown menus for user input with no default selection
 user_matches = {}
 for pos in positions:
-    user_matches[pos] = st.selectbox(f"Select the wavelength you beleive will be {pos} position:", 
+    user_matches[pos] = st.selectbox(f"Select the wavelength for {pos} position:", 
                                      options=["Select an option", "450 nm", "500 nm", "870 nm"], 
                                      key=pos)
 
 # Allow user to proceed without showing correctness
 if st.button("Submit"):
     st.text("Your selections have been recorded. You can proceed to the next step.")
+
