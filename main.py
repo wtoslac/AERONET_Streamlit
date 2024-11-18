@@ -16,7 +16,7 @@ AOD_min = 0.0
 AOD_max = 0.4
 
 # Upload file
-file = st.file_uploader("Upload the Level 1.5 Data from AERONET")
+file = st.file_uploader("Upload the Level 1.5 Data Downloaded from: https://aeronet.gsfc.nasa.gov/cgi-bin/webtool_aod_v3?stage=3&region=United_States_West&state=California&site=Turlock_CA_USA")
 if file is not None:
     df = pd.read_csv(file, skiprows=6, parse_dates={'datetime': [0, 1]})
     datetime_utc = pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
