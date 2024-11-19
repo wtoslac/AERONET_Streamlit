@@ -24,7 +24,7 @@ if file is not None:
     datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
     df.set_index(datetime_pac, inplace=True)
 
-    # Plot initial graph in black and white
+    # Plot initial graph in black and white (no color coding)
     plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.k', label="380 nm")
     plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
     plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.k', label="870 nm")
@@ -55,36 +55,19 @@ if file is not None:
     if st.button("Submit"):
         st.text("Your selections have been recorded. Take a screenshot and submit your answer!")
 
-        # Create a new plot after submission based on user's selected wavelength-color mappings
+        # Create a second graph with predefined colors for the wavelengths (independent of user's input)
         wavelength_colors = {
             "380 nm": "r",  # Red
             "500 nm": "g",  # Green
             "870 nm": "b"   # Blue
         }
 
-        # Create a new plot with fixed colors for the wavelengths
-        if user_matches["Top"] != "Select an option":
-            top_wavelength = user_matches["Top"]
-            color = wavelength_colors.get(top_wavelength)
-            if top_wavelength == "380 nm":
-                label = "380 nm"
-                plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.', color=color, label=label)
+        # Create the second graph independently of user input
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.', color=wavelength_colors["380 nm"], label="380 nm")
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.', color=wavelength_colors["500 nm"], label="500 nm")
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.', color=wavelength_colors["870 nm"], label="870 nm")
 
-        if user_matches["Middle"] != "Select an option":
-            middle_wavelength = user_matches["Middle"]
-            color = wavelength_colors.get(middle_wavelength)
-            if middle_wavelength == "500 nm":
-                label = "500 nm"
-                plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.', color=color, label=label)
-
-        if user_matches["Bottom"] != "Select an option":
-            bottom_wavelength = user_matches["Bottom"]
-            color = wavelength_colors.get(bottom_wavelength)
-            if bottom_wavelength == "870 nm":
-                label = "870 nm"
-                plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.', color=color, label=label)
-
-        # Format and display the new plot
+        # Format the second plot
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
         plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
