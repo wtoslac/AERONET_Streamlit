@@ -47,7 +47,7 @@ if file is not None:
     # Create user input dropdowns
     user_matches = {}
     for pos in positions:
-        user_matches[pos] = st.selectbox(f"Where will {pos} be located on the graph?", 
+        user_matches[pos] = st.selectbox(f"What Wavelength will be located on the {pos} position on the graph?", 
                                          options=["Select an option", "380 nm", "500 nm", "870 nm"], 
                                          key=pos)
 
