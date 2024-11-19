@@ -55,15 +55,6 @@ if file is not None:
     if st.button("Submit"):
         st.text("Your selections have been recorded. Take a screenshot and submit your answer!")
 
-# Set up basic information
-siteName = "Turlock CA USA"
-SampleRate = "1h"
-StartDate = st.date_input("StartDate", datetime.date(2024, 10, 1))
-StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0))
-EndDate = st.date_input("EndDate", datetime.date(2024, 10, 7))
-EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59))
-AOD_min = 0.0
-AOD_max = 0.3
 
 # File upload
 file = st.file_uploader("Upload the Level 1.5 Data from AERONET")
