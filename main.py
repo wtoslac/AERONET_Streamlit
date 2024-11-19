@@ -1,6 +1,5 @@
 import streamlit as st
 import datetime
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -25,9 +24,9 @@ if file is not None:
     df.set_index(datetime_pac, inplace=True)
 
     # Plot initial graph in black and white (no color coding)
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_412nm"].resample(SampleRate).mean(), '.k', )
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k', )
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_667nm"].resample(SampleRate).mean(), '.k', )
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_400nm"].resample(SampleRate).mean(), '.k', label="400 nm")
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_779nm"].resample(SampleRate).mean(), '.k', label="779 nm")
 
     # Format the initial plot
     plt.gcf().autofmt_xdate()
@@ -48,7 +47,7 @@ if file is not None:
     user_matches = {}
     for pos in positions:
         user_matches[pos] = st.selectbox(f"What Wavelength will be located on the {pos} position on the graph?", 
-                                         options=["Select an option", "380 nm", "500 nm", "870 nm"], 
+                                         options=["Select an option", "400 nm", "500 nm", "779 nm"], 
                                          key=pos)
 
     # Allow user to submit and display feedback
@@ -57,15 +56,15 @@ if file is not None:
 
         # Create a second graph with predefined colors for the wavelengths (independent of user's input)
         wavelength_colors = {
-            "380 nm": "r",  # Red
+            "400 nm": "r",  # Red
             "500 nm": "g",  # Green
-            "870 nm": "b"   # Blue
+            "779 nm": "b"   # Blue
         }
 
         # Create the second graph independently of user input
-        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_412nm"].resample(SampleRate).mean(), '.b', color=wavelength_colors["412 nm"], label="412 nm")
-        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g', color=wavelength_colors["500 nm"], label="500 nm")
-        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_667nm"].resample(SampleRate).mean(), '.r', color=wavelength_colors["667 nm"], label="667 nm")
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_400nm"].resample(SampleRate).mean(), '.', color=wavelength_colors["400 nm"], label="400 nm")
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.', color=wavelength_colors["500 nm"], label="500 nm")
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_779nm"].resample(SampleRate).mean(), '.', color=wavelength_colors["779 nm"], label="779 nm")
 
         # Format the second plot
         plt.gcf().autofmt_xdate()
@@ -75,3 +74,4 @@ if file is not None:
         plt.ylim(AOD_min, AOD_max)
         plt.legend()
         st.pyplot(plt.gcf())
+
