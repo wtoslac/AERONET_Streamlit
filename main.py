@@ -1,93 +1,108 @@
 import streamlit as st
 import datetime
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import numpy as np
 
-# Streamlit Inputs
+# Streamlit app title
+st.title("AERONET and Wind Data Visualization")
+
+# Inputs for AOD Data
 siteName = "Turlock CA USA"
 SampleRate = "1h"
-StartDate = st.date_input("StartDate", datetime.date(2024, 10, 1))
+StartDate = st.date_input("Start Date", datetime.date(2024, 10, 1))
 StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0))
-EndDate = st.date_input("EndDate", datetime.date(2024, 10, 7))
+EndDate = st.date_input("End Date", datetime.date(2024, 10, 7))
 EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59))
 
-# AOD Y-axis limits
-AOD_min = st.number_input("Set minimum Y-axis value (AOD):", value=0.0, step=0.1)
-AOD_max = st.number_input("Set maximum Y-axis value (AOD):", value=0.4, step=0.1)
+# Y-axis limits for AOD plot
+AOD_min = st.number_input("Set minimum Y-axis value:", value=0.0, step=0.1)
+AOD_max = st.number_input("Set maximum Y-axis value:", value=0.4, step=0.1)
 
-# File uploads
-aodfile = st.file_uploader("Upload AOD Data (e.g., AERONET Level 1.5):")
-windfile = st.file_uploader("Upload Wind Data (NOAA CSV format):")
+# Upload AOD data file
+aod_file = st.file_uploader("Upload AOD Data", type=['csv'])
+if aod_file:
+    df_aod = pd.read_csv(aod_file, skiprows=6, parse_dates={'datetime': [0, 1]})
+    datetime_utc = pd.to_datetime(df_aod["datetime"], format='%d:%m:%Y %H:%M:%S')
+    datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
+    df_aod.set_index(datetime_pac, inplace=True)
 
-if aodfile:
-    # Parse the AOD file
-    df_aod = pd.read_csv(aodfile, skiprows=6, parse_dates={'datetime': [0, 1]})
-    df_aod['datetime'] = pd.to_datetime(df_aod['datetime'], format='%d:%m:%Y %H:%M:%S')
-    datetime_pac_aod = df_aod['datetime'].dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-    df_aod.set_index(datetime_pac_aod, inplace=True)
-
-    # Filter AOD data for the selected range
-    aod_filtered = df_aod.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S')]
-
-if windfile:
-    # Parse wind data
-    Wdf = pd.read_csv(windfile, parse_dates={'datetime': [1]}, low_memory=False)
-    datetime_utc_wind = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
-    datetime_pac_wind = datetime_utc_wind.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-    Wdf.set_index(datetime_pac_wind, inplace=True)
-
-    # Extract wind data and process valid observations
-    WNDdf = Wdf.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), 'WND'].str.split(pat=',', expand=True)
-    WNDdf = WNDdf.loc[WNDdf[4] == '5']  # Only valid observations
-
-    # Calculate Cartesian wind components
-    Xdata, Ydata = [], []
-    for _, row in WNDdf.iterrows():
-        magnitude = np.float64(row[3])  # Wind speed
-        direction = np.float64(row[0])  # Wind direction
-        Xdata.append(magnitude * np.sin(direction * (np.pi / 180)))
-        Ydata.append(magnitude * np.cos(direction * (np.pi / 180)))
-
-    WNDdf[5], WNDdf[6] = Xdata, Ydata
-
-# Plot combined data
-fig, ax = plt.subplots(figsize=(12, 8))
-
-if aodfile:
     # Plot AOD data
-    for column, color, label in zip(["AOD_380nm", "AOD_500nm", "AOD_870nm"], ['purple', 'green', 'red'], ["AOD_380nm", "AOD_500nm", "AOD_870nm"]):
-        if column in aod_filtered.columns:
-            ax.plot(
-                aod_filtered[column].resample(SampleRate).mean(),
-                marker='.',
-                linestyle='',
-                color=color,
-                label=label
-            )
-
-if windfile:
-    # Plot wind vectors
-    ax.quiver(
-        WNDdf[5].resample(SampleRate).mean().index,  # Time index
-        np.zeros(WNDdf[5].resample(SampleRate).mean().shape),  # Baseline Y-axis
-        WNDdf[5].resample(SampleRate).mean().div(10),  # X-component (scaled)
-        WNDdf[6].resample(SampleRate).mean().div(10),  # Y-component (scaled)
-        color='blue',
-        label='Wind Vector'
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(
+        df_aod.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(),
+        marker='.', linestyle='', color='purple', label="AOD_380nm"
     )
+    ax.plot(
+        df_aod.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(),
+        marker='.', linestyle='', color='green', label="AOD_500nm"
+    )
+    ax.plot(
+        df_aod.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(),
+        marker='.', linestyle='', color='red', label="AOD_870nm"
+    )
+    ax.xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+    ax.xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+    ax.set_ylim(AOD_min, AOD_max)
+    ax.set_title("AOD Data")
+    ax.legend()
+    plt.tight_layout()
+    st.pyplot(fig)
 
-# Customize plot
-ax.set_title(f"AOD and Wind Data for {siteName}")
-ax.set_xlabel("Date")
-ax.set_ylabel("AOD / Wind Vector Magnitude")
-ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))
-ax.xaxis.set_minor_locator(mdates.HourLocator(interval=12))
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-ax.set_ylim(AOD_min, AOD_max)
-ax.legend()
-plt.grid()
+# Inputs for Wind Data
+wind_file = st.file_uploader("Upload Wind Data", type=['csv'])
+if wind_file:
+    wind_df = pd.read_csv(wind_file, parse_dates={'datetime': [1]}, low_memory=False)
+    datetime_utc = pd.to_datetime(wind_df["datetime"], format='%d-%m-%Y %H:%M:%S')
+    datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
+    wind_df.set_index(datetime_pac, inplace=True)
 
-# Display plot
-st.pyplot(fig)
+    # Split the WND column into components
+    WNDdf = wind_df.loc[StartDateTime:EndDateTime, 'WND'].str.split(pat=',', expand=True)
+    
+    # Debugging output
+    st.write("Split WND DataFrame:", WNDdf.head())
+
+    # Ensure WNDdf has enough columns
+    if len(WNDdf.columns) >= 5:
+        WNDdf = WNDdf.loc[WNDdf[4] == '5']  # Filter valid observations
+
+        # Convert polar to Cartesian components
+        Xdata, Ydata = [], []
+        for _, row in WNDdf.iterrows():
+            try:
+                magnitude = float(row[3])  # Wind speed
+                direction = float(row[0])  # Wind direction
+                Xdata.append(magnitude * np.sin(np.radians(direction)))
+                Ydata.append(magnitude * np.cos(np.radians(direction)))
+            except ValueError:
+                Xdata.append(np.nan)
+                Ydata.append(np.nan)
+
+        WNDdf['X'], WNDdf['Y'] = Xdata, Ydata
+
+        # Resample data
+        X_resampled = WNDdf['X'].resample(SampleRate).mean()
+        Y_resampled = WNDdf['Y'].resample(SampleRate).mean()
+
+        # Plot wind vectors
+        fig, ax = plt.subplots(figsize=(10, 6))
+        time_index = X_resampled.index
+        ax.quiver(
+            time_index, np.zeros_like(X_resampled),
+            X_resampled.div(10), Y_resampled.div(10),
+            angles='xy', scale_units='xy', scale=1, color='b'
+        )
+        ax.set_title("Wind Vectors")
+        ax.set_xlabel("Time")
+        ax.set_ylabel("Wind Magnitude (scaled)")
+        ax.xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+        ax.xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+        plt.tight_layout()
+        st.pyplot(fig)
+    else:
+        st.error("The wind data format does not match the expected structure.")
+
