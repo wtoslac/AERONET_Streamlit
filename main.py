@@ -21,13 +21,22 @@ AOD_min = st.number_input("Set minimum Y-axis value:", value=0.0, step=0.1)
 AOD_max = st.number_input("Set maximum Y-axis value:", value=0.4, step=0.1)
 
 # Upload AOD data file
-aod_file = st.file_uploader("Upload AOD Data", type=['csv'])
+aod_file = st.file_uploader("Upload AOD Data File", type=['lev15'])
 if aod_file:
-    df_aod = pd.read_csv(aod_file, skiprows=6, parse_dates={'datetime': [0, 1]})
-    datetime_utc = pd.to_datetime(df_aod["datetime"], format='%d:%m:%Y %H:%M:%S')
+    # Read the lev15 file
+    df_aod = pd.read_csv(aod_file, skiprows=6, delim_whitespace=True, engine='python')
+    
+    # Parse the datetime column
+    df_aod['datetime'] = pd.to_datetime(
+        df_aod['Date(dd:mm:yyyy)'] + " " + df_aod['Time(hh:mm:ss)'],
+        format='%d:%m:%Y %H:%M:%S'
+    )
+    
+    # Convert datetime to US/Pacific timezone
+    datetime_utc = pd.to_datetime(df_aod['datetime'])
     datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
     df_aod.set_index(datetime_pac, inplace=True)
-
+    
     # Plot AOD data
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(
@@ -52,7 +61,7 @@ if aod_file:
     st.pyplot(fig)
 
 # Inputs for Wind Data
-wind_file = st.file_uploader("Upload Wind Data", type=['csv'])
+wind_file = st.file_uploader("Upload Wind Data File", type=['csv'])
 if wind_file:
     wind_df = pd.read_csv(wind_file, parse_dates={'datetime': [1]}, low_memory=False)
     datetime_utc = pd.to_datetime(wind_df["datetime"], format='%d-%m-%Y %H:%M:%S')
@@ -105,4 +114,3 @@ if wind_file:
         st.pyplot(fig)
     else:
         st.error("The wind data format does not match the expected structure.")
-
