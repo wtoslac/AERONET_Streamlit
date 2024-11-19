@@ -24,12 +24,12 @@ if file is not None:
     datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
     df.set_index(datetime_pac, inplace=True)
 
-    # Plot data with colors and labels
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.r', label="380 nm (Red)")
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g', label="500 nm (Green)")
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.b', label="870 nm (Blue)")
+    # Plot initial graph in black and white
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.k', label="380 nm")
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.k', label="870 nm")
 
-    # Format the plot
+    # Format the initial plot
     plt.gcf().autofmt_xdate()
     plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
     plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
@@ -37,3 +37,58 @@ if file is not None:
     plt.ylim(AOD_min, AOD_max)
     plt.legend()
     st.pyplot(plt.gcf())
+
+    # Ask user to match wavelengths to positions
+    st.text("\nMatch the wavelengths to the positions on the graph:")
+
+    # Dropdown menus for user input with no default selection
+    positions = ["Top", "Middle", "Bottom"]
+
+    # Create user input dropdowns
+    user_matches = {}
+    for pos in positions:
+        user_matches[pos] = st.selectbox(f"What Wavelength will be located on the {pos} position on the graph?", 
+                                         options=["Select an option", "380 nm", "500 nm", "870 nm"], 
+                                         key=pos)
+
+    # Allow user to submit and display feedback
+    if st.button("Submit"):
+        st.text("Your selections have been recorded. Take a screenshot and submit your answer!")
+
+        # Create a new plot after submission based on user's selected wavelength-color mappings
+        wavelength_colors = {
+            "380 nm": "r",  # Red
+            "500 nm": "g",  # Green
+            "870 nm": "b"   # Blue
+        }
+
+        # Create a new plot with fixed colors for the wavelengths
+        if user_matches["Top"] != "Select an option":
+            top_wavelength = user_matches["Top"]
+            color = wavelength_colors.get(top_wavelength)
+            if top_wavelength == "380 nm":
+                label = "380 nm"
+                plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.', color=color, label=label)
+
+        if user_matches["Middle"] != "Select an option":
+            middle_wavelength = user_matches["Middle"]
+            color = wavelength_colors.get(middle_wavelength)
+            if middle_wavelength == "500 nm":
+                label = "500 nm"
+                plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.', color=color, label=label)
+
+        if user_matches["Bottom"] != "Select an option":
+            bottom_wavelength = user_matches["Bottom"]
+            color = wavelength_colors.get(bottom_wavelength)
+            if bottom_wavelength == "870 nm":
+                label = "870 nm"
+                plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.', color=color, label=label)
+
+        # Format and display the new plot
+        plt.gcf().autofmt_xdate()
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+        plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+        plt.ylim(AOD_min, AOD_max)
+        plt.legend()
+        st.pyplot(plt.gcf())
