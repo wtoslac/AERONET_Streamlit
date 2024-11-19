@@ -24,10 +24,10 @@ if file is not None:
     datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
     df.set_index(datetime_pac, inplace=True)
 
-    # Plot data
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.k' )
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k' )
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.k' )
+    # Plot data initially in black and white
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.k', label="380 nm")
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.k', label="870 nm")
 
     # Format the plot
     plt.gcf().autofmt_xdate()
@@ -55,8 +55,33 @@ if file is not None:
     if st.button("Submit"):
         st.text("Your selections have been recorded. Take a screenshot and submit your answer!")
 
+        # Create a new plot with the selected colors and labels
+        wavelength_colors = {
+            "380 nm": "r",  # Red
+            "500 nm": "g",  # Green
+            "870 nm": "b"   # Blue
+        }
 
+        # Create a new plot with the user's wavelength-color mappings
+        for pos, selected_wavelength in user_matches.items():
+            if selected_wavelength != "Select an option":
+                # Map user selection to the correct color
+                color = wavelength_colors.get(selected_wavelength)
+                if selected_wavelength == "380 nm":
+                    label = "380 nm"
+                    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.', color=color, label=label)
+                elif selected_wavelength == "500 nm":
+                    label = "500 nm"
+                    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.', color=color, label=label)
+                elif selected_wavelength == "870 nm":
+                    label = "870 nm"
+                    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.', color=color, label=label)
 
-
-       
-    
+        # Format and display the plot with the updated colors and labels
+        plt.gcf().autofmt_xdate()
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+        plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+        plt.ylim(AOD_min, AOD_max)
+        plt.legend()
+        st.pyplot(plt.gcf())
