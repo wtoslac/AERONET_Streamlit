@@ -50,36 +50,6 @@ for pos in positions:
 # Allow user to proceed without showing correctness
 if st.button("Submit"):
     st.text("Your selections have been recorded. Take a screenshot and submit your answer! You can proceed to the next step.")
+}
 
-    # Create the plot with user color preferences based on wavelength
-    colors = {
-        "450 nm": "purple",
-        "500 nm": "green",
-        "870 nm": "red"
-    }
-    
-    # Define wavelength data mapping based on user selections
-    wavelength_map = {
-        "Top": user_matches["Top"],
-        "Middle": user_matches["Middle"],
-        "Bottom": user_matches["Bottom"]
-    }
-    
-    # Plot data with appropriate colors for each wavelength
-    plt.figure(figsize=(10, 6))
-    for position, wavelength in wavelength_map.items():
-        if wavelength != "Select an option":
-            if wavelength == "450 nm":
-                plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_450nm"].resample(SampleRate).mean(), color=colors[wavelength], label=f"AOD {wavelength}")
-            elif wavelength == "500 nm":
-                plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), color=colors[wavelength], label=f"AOD {wavelength}")
-            elif wavelength == "870 nm":
-                plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), color=colors[wavelength], label=f"AOD {wavelength}")
-    
-    plt.gcf().autofmt_xdate()
-    plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-    plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
-    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-    plt.ylim(AOD_min, AOD_max)
-    plt.legend()
-    st.pyplot(plt.gcf())
+   
