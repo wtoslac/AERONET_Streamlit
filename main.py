@@ -24,9 +24,9 @@ if file is not None:
     df.set_index(datetime_pac, inplace=True)
 
     # Plot initial graph in black and white (no color coding)
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.k')
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k' )
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.k')
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_400nm"].resample(SampleRate).mean(), '.k', label="400 nm")
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_779nm"].resample(SampleRate).mean(), '.k', label="779 nm")
 
     # Format the initial plot
     plt.gcf().autofmt_xdate()
@@ -50,23 +50,28 @@ if file is not None:
                                          options=["Select an option", "400 nm", "500 nm", "779 nm"], 
                                          key=pos)
 
-if file is not None:
-    # Read the data
-    df = pd.read_csv(file, skiprows=6, parse_dates={'datetime': [0, 1]})
-    datetime_utc = pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
-    datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-    df.set_index(datetime_pac, inplace=True)
+    # Allow user to submit and display feedback
+    if st.button("Submit"):
+        st.text("Your selections have been recorded. Take a screenshot and submit your answer!")
 
-    # Plot initial graph in black and white (no color coding)
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.b')
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g' )
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.r')
+        # Create a second graph with predefined colors for the wavelengths (independent of user's input)
+        wavelength_colors = {
+            "400 nm": "r",  # Red
+            "500 nm": "g",  # Green
+            "779 nm": "b"   # Blue
+        }
 
-    # Format the initial plot
-    plt.gcf().autofmt_xdate()
-    plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-    plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
-    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-    plt.ylim(AOD_min, AOD_max)
-    plt.legend()
-    st.pyplot(plt.gcf())
+        # Create the second graph independently of user input
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_400nm"].resample(SampleRate).mean(), '.', color=wavelength_colors["400 nm"], label="400 nm")
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.', color=wavelength_colors["500 nm"], label="500 nm")
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_779nm"].resample(SampleRate).mean(), '.', color=wavelength_colors["779 nm"], label="779 nm")
+
+        # Format the second plot
+        plt.gcf().autofmt_xdate()
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+        plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+        plt.ylim(AOD_min, AOD_max)
+        plt.legend()
+        st.pyplot(plt.gcf())
+
