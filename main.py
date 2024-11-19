@@ -9,9 +9,9 @@ import datetime
 siteName = "Turlock CA USA"
 SampleRate = "1h"
 StartDate = st.date_input("StartDate", datetime.date(2024, 10, 1))
-StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0))
+StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0)).astimezone(datetime.timezone.utc).astimezone(datetime.timezone(datetime.timedelta(hours=-8)))  # US/Pacific timezone
 EndDate = st.date_input("EndDate", datetime.date(2024, 10, 7))
-EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59))
+EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59)).astimezone(datetime.timezone.utc).astimezone(datetime.timezone(datetime.timedelta(hours=-8)))  # US/Pacific timezone
 AOD_min = 0.0
 AOD_max = 0.4
 
@@ -29,8 +29,10 @@ if aeronet_file and wind_file:
     # Process Wind Data
     wind_df = pd.read_csv(wind_file, parse_dates={'datetime': [1]}, low_memory=False)
     wind_datetime_utc = pd.to_datetime(wind_df["datetime"], format='%d-%m-%Y %H:%M:%S')
-    wind_datetime_pac = wind_datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
+    wind_datetime_pac = wind_datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')  # Ensure time zone is US/Pacific
     wind_df.set_index(wind_datetime_pac, inplace=True)
+
+    # Slice wind data for the selected date range
     wind_df = wind_df.loc[StartDateTime:EndDateTime]
 
     # Extract wind speed and direction
