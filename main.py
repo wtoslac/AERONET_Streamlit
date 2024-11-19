@@ -25,9 +25,9 @@ if file is not None:
     df.set_index(datetime_pac, inplace=True)
 
     # Plot initial graph in black and white (no color coding)
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_425nm"].resample(SampleRate).mean(), '.k', )
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_412nm"].resample(SampleRate).mean(), '.k', )
     plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k', )
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_750nm"].resample(SampleRate).mean(), '.k', )
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_667nm"].resample(SampleRate).mean(), '.k', )
 
     # Format the initial plot
     plt.gcf().autofmt_xdate()
@@ -63,9 +63,9 @@ if file is not None:
         }
 
         # Create the second graph independently of user input
-        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_435nm"].resample(SampleRate).mean(), '.b', color=wavelength_colors["425 nm"], label="425 nm")
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_412nm"].resample(SampleRate).mean(), '.b', color=wavelength_colors["412 nm"], label="412 nm")
         plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g', color=wavelength_colors["500 nm"], label="500 nm")
-        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_750nm"].resample(SampleRate).mean(), '.r', color=wavelength_colors["750 nm"], label="750 nm")
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_667nm"].resample(SampleRate).mean(), '.r', color=wavelength_colors["667 nm"], label="667 nm")
 
         # Format the second plot
         plt.gcf().autofmt_xdate()
