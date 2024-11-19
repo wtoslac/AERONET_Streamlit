@@ -167,4 +167,3 @@ elif selected_tool == "AOD Analysis":
             plt.ylim(AOD_min, AOD_max)
             plt.legend()
             st.pyplot(plt.gcf())
-
