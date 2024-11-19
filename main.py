@@ -9,9 +9,9 @@ import datetime
 siteName = "Turlock CA USA"
 SampleRate = "1h"
 StartDate = st.date_input("StartDate", datetime.date(2024, 10, 1))
-StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0)).astimezone(datetime.timezone.utc).astimezone(datetime.timezone(datetime.timedelta(hours=-8)))  # US/Pacific timezone
+StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0))
 EndDate = st.date_input("EndDate", datetime.date(2024, 10, 7))
-EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59)).astimezone(datetime.timezone.utc).astimezone(datetime.timezone(datetime.timedelta(hours=-8)))  # US/Pacific timezone
+EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59))
 AOD_min = 0.0
 AOD_max = 0.4
 
@@ -28,31 +28,18 @@ if aeronet_file and wind_file:
 
     # Process Wind Data
     wind_df = pd.read_csv(wind_file, parse_dates={'datetime': [1]}, low_memory=False)
-
-    # Print the column names and inspect the first few rows for debugging
-    st.write(wind_df.columns)
-    st.write(wind_df.head())
-
-    # Ensure 'WND' column exists and contains expected data
-    if 'WND' in wind_df.columns:
-        # Extract wind speed and direction
-        wind_speed = wind_df['WND'].str.split(',', expand=True)[3].astype(float) / 10.0
-        wind_direction = wind_df['WND'].str.split(',', expand=True)[0].astype(float)
-
-        # Convert wind data to Cartesian coordinates
-        wind_x = wind_speed * np.sin(np.radians(wind_direction))
-        wind_y = wind_speed * np.cos(np.radians(wind_direction))
-    else:
-        st.error("The 'WND' column is not found in the wind data file.")
-        wind_x, wind_y = [], []
-
-    # Convert Wind Data index to timezone-aware (US/Pacific)
     wind_datetime_utc = pd.to_datetime(wind_df["datetime"], format='%d-%m-%Y %H:%M:%S')
     wind_datetime_pac = wind_datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
     wind_df.set_index(wind_datetime_pac, inplace=True)
-
-    # Slice wind data for the selected date range
     wind_df = wind_df.loc[StartDateTime:EndDateTime]
+
+    # Extract wind speed and direction
+    wind_speed = wind_df['WND'].str.split(',', expand=True)[3].astype(float) / 10.0
+    wind_direction = wind_df['WND'].str.split(',', expand=True)[0].astype(float)
+
+    # Convert wind data to Cartesian coordinates
+    wind_x = wind_speed * np.sin(np.radians(wind_direction))
+    wind_y = wind_speed * np.cos(np.radians(wind_direction))
 
     # Create the plot
     fig, ax = plt.subplots(figsize=(12, 6))
