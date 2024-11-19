@@ -24,7 +24,7 @@ if file is not None:
     df.set_index(datetime_pac, inplace=True)
 
     # Plot initial graph in black and white (no color coding)
-    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_443nm"].resample(SampleRate).mean(), '.b', label="4443 nm")
+    plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_443nm"].resample(SampleRate).mean(), '.b', label="443 nm")
     plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g', label="500 nm")
     plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_681nm"].resample(SampleRate).mean(), '.r', label="681 nm")
 
