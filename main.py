@@ -62,9 +62,9 @@ if file is not None:
         }
 
         # Create the second graph independently of user input
-        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_370nm"].resample(SampleRate).mean(), '.b', color=wavelength_colors["400 nm"], label="400 nm")
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_370nm"].resample(SampleRate).mean(), '.b', color=wavelength_colors["370 nm"], label="400 nm")
         plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g', color=wavelength_colors["500 nm"], label="500 nm")
-        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.r', color=wavelength_colors["779 nm"], label="779 nm")
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.r', color=wavelength_colors["870 nm"], label="779 nm")
 
         # Format the second plot
         plt.gcf().autofmt_xdate()
