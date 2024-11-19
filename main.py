@@ -54,17 +54,11 @@ if file is not None:
     if st.button("Submit"):
         st.text("Your selections have been recorded. Take a screenshot and submit your answer!")
 
-        # Create a second graph with predefined colors for the wavelengths (independent of user's input)
-        wavelength_colors = {
-            "400 nm": "r",  # Red
-            "500 nm": "g",  # Green
-            "779 nm": "b"   # Blue
-        }
 
         # Create the second graph independently of user input
-        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_400nm"].resample(SampleRate).mean(), '.', color=wavelength_colors["400 nm"], label="400 nm")
-        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.', color=wavelength_colors["500 nm"], label="500 nm")
-        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_779nm"].resample(SampleRate).mean(), '.', color=wavelength_colors["779 nm"], label="779 nm")
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_400nm"].resample(SampleRate).mean(), '.b', color=wavelength_colors["400 nm"], label="400 nm")
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g', color=wavelength_colors["500 nm"], label="500 nm")
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_779nm"].resample(SampleRate).mean(), '.r', color=wavelength_colors["779 nm"], label="779 nm")
 
         # Format the second plot
         plt.gcf().autofmt_xdate()
