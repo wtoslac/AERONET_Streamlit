@@ -18,7 +18,7 @@ AOD_min = st.sidebar.slider("Y-Axis Min", min_value=0.0, max_value=1.0, value=0.
 AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.3, step=0.01)
 
 # File upload
-file = st.file_uploader(" Download https://drive.google.com/file/d/12qSh5UWpL_cfsIQU7pnIUV8vouEgHB-V/view?usp=sharing and Upload the Level 1.5 Data from AERONET")
+file = st.file_uploader(https://drive.google.com/file/d/12qSh5UWpL_cfsIQU7pnIUV8vouEgHB-V/view?usp=sharing )
 if file is not None:
     # Read the data
     df = pd.read_csv(file, skiprows=6, parse_dates={'datetime': [0, 1]})
