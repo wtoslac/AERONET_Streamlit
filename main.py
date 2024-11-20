@@ -59,9 +59,9 @@ if file is not None:
 
         # Create a second graph with predefined colors for the wavelengths (independent of user's input)
         wavelength_colors = {
-            "400 nm": "r",  # Red
+            "380 nm": "r",  # Red
             "500 nm": "g",  # Green
-            "779 nm": "b"   # Blue
+            "870 nm": "b"   # Blue
         }
 
         # Create the second graph independently of user input
