@@ -56,6 +56,10 @@ if file is not None:
     # Allow user to submit and display feedback
     if st.button("Submit"):
         st.text("Your selections have been recorded. Take a screenshot and submit your answer!")
+        st.text("Have your submitted your answer?")
+
+   if st.button("Submit"):
+       
 
         # Create a second graph with predefined colors for the wavelengths (independent of user's input)
         wavelength_colors = {
