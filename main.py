@@ -1,93 +1,148 @@
 import streamlit as st
-import numpy as np 
-import pandas as pd 
-import matplotlib.pyplot as plt 
+import datetime
+import pandas as pd
+import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import numpy as np
 
-# Streamlit interface to upload files
-st.title("AOD and Wind Data Visualization")
+# Set up basic information
+siteName = "Turlock CA USA"
+SampleRate = "1h"
+StartDate = st.date_input("StartDate", datetime.date(2023, 7, 1))
+StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0))
+EndDate = st.date_input("EndDate", datetime.date(2023, 7,7))
+EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59))
 
-# File uploaders for AERONET and Wind Data
-aeronet_file = st.file_uploader("Upload AERONET Data File (CSV)", type=["csv"])
-wind_file = st.file_uploader("Upload Wind Data File (CSV)", type=["csv"])
+# Allow the user to set y-axis limits
+st.sidebar.header("Adjust Y-axis Limits")
+AOD_min = st.sidebar.slider("Y-Axis Min", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
+AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.3, step=0.01)
 
-# Date range picker for the plot
-start_date = st.date_input("Start Date", pd.to_datetime('2023-07-01'))
-end_date = st.date_input("End Date", pd.to_datetime('2023-07-11'))
+# Input GitHub URL for the first repository
+file_url_1 = "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/20230101_20241231_Turlock_CA_USA_part1.lev15"
 
-# Sample rate selection for wind data
-sample_rate = st.selectbox("Select Wind Sample Rate", ['1h', '6h', '12h', '24h'])
-wind_sample_rate = sample_rate
 
-# Check if both files are uploaded
-if aeronet_file and wind_file:
-    # Load AERONET data and convert to US/Pacific time
-    df = pd.read_csv(aeronet_file, skiprows=6, parse_dates={'datetime': [0, 1]})
-    datetime_utc = pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
-    datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-    df.set_index(datetime_pac, inplace=True)
+# Function to load data from the given URL
+def load_data(file_url):
+    try:
+        # Read the data from the provided GitHub raw URL
+        df = pd.read_csv(file_url, skiprows=6, parse_dates={'datetime': [0, 1]})
+        datetime_utc = pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
+        datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
+        df.set_index(datetime_pac, inplace=True)
+        
+        return df
+    except Exception as e:
+        st.error(f"Failed to process the file from {file_url}: {e}")
+        return None
 
-    # Replace -999 values with NaN for AOD columns
-    df['AOD_440nm-Total'].replace(-999.0, np.nan, inplace=True)
-    df['AOD_500nm-Total'].replace(-999.0, np.nan, inplace=True)
-    df['AOD_675nm-Total'].replace(-999.0, np.nan, inplace=True)
+# Load data from the first file
+df_1 = None
+if file_url_1:
+    df_1 = load_data(file_url_1)
 
-    # Load wind data and convert to US/Pacific time
-    Wdf = pd.read_csv(wind_file, parse_dates={'datetime': [1]}, low_memory=False)
-    datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
-    datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-    Wdf.set_index(datetime_pac, inplace=True)
+# Ensure data is loaded and columns are correct
+if df_1 is not None:
+    if 'AOD_400nm' not in df_1.columns or 'AOD_500nm' not in df_1.columns or 'AOD_675nm' not in df_1.columns:
+        st.error(f"Missing expected columns in the dataset. Available columns: {df_1.columns}")
+    
+    # Plot data from the first repository if columns are correct
+    if 'AOD_440nm' in df_1.columns and 'AOD_500nm' in df_1.columns and 'AOD_675nm' in df_1.columns:
+        
+        # Plot AOD_440nm, AOD_500nm, and AOD_675nm as initial plot
+        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.k')
+        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k')
+        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_675nm"].resample(SampleRate).mean(), '.k')
 
-    # Process wind data: split the 'WND' column into components and filter for valid data
-    WNDdf = Wdf.loc[start_date:end_date, 'WND'].str.split(pat=',', expand=True)
-    WNDdf = WNDdf.loc[WNDdf[4] == '5']  # Valid observations
-    WNDdf = WNDdf.loc[WNDdf[1] == '5']  # Further filter
+        # Format the plot
+        plt.gcf().autofmt_xdate()
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+        plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+        plt.ylim(AOD_min, AOD_max)
+        plt.legend()
+        st.pyplot(plt.gcf())
+        
+        # Ask user to match wavelengths to positions
+        st.text("\nMatch the wavelengths to the positions on the graph:")
 
-    # Convert polar coordinates to Cartesian (X, Y components for wind)
-    Xdata, Ydata = [], []
-    for _, row in WNDdf.iterrows():
-        Xdata.append(np.float64(row[3]) * np.sin(np.float64(row[0]) * (np.pi / 180)))  # Magnitude * sin(Theta)
-        Ydata.append(np.float64(row[3]) * np.cos(np.float64(row[0]) * (np.pi / 180)))  # Magnitude * cos(Theta)
+        # Dropdown menus for user input with no default selection
+        positions = ["Top", "Middle", "Bottom"]
 
-    WNDdf[5], WNDdf[6] = Xdata, Ydata  # Append Cartesian coordinates to the DataFrame
+        # Create user input dropdowns for selecting wavelengths
+        user_matches = {}
+        for pos in positions:
+            user_matches[pos] = st.selectbox(f"What Wavelength will be located on the {pos} position on the graph?", 
+                                             options=["Select an option", "400 nm", "500 nm", "779 nm"], 
+                                             key=pos)
 
-    # Create a figure with a single axis
-    fig, ax = plt.subplots(figsize=(16 * 0.65, 9 * 0.65))
+        # Once the user submits, show the second graph (same as the first)
+        if st.button("Submit"):
+            # Plot the second graph (exact same as the first one)
+            plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.b', label="440 nm")
+            plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g', label="500 nm")
+            plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_675nm"].resample(SampleRate).mean(), '.r', label="675 nm")
 
-    # Format the x-axis with dates
-    fig.autofmt_xdate()
-    ax.set_title("Modesto 2019: AOD and Wind Speed")
-    ax.grid(which='both', axis='both')
-    ax.xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-    ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3, tz='US/Pacific'))
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+            # Format the second plot
+            plt.gcf().autofmt_xdate()
+            plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+            plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+            plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+            plt.ylim(AOD_min, AOD_max)
+            plt.legend()
+            st.pyplot(plt.gcf())
+          
 
-    # Plot AOD data (AOD_500nm-Total)
-    ax.set_ylabel("AOD_500nm-Total")
-    ax.plot(df.loc[start_date:end_date, 'AOD_500nm-Total'].resample(wind_sample_rate).mean(), 'ok-', label='AOD_500nm-Total', figure=fig)
+# File URL and parameters
+windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
+StartDate = '2023-07-01 00:00:00'
+EndDate = '2023-07-07 23:59:59'
+windSampleRate = '1h'
 
-    # Add a second y-axis for the wind data
-    ax2 = ax.twinx()
-    ax2.spines['right'].set_position(('axes', 1.05))  # Adjust the position of the second y-axis
-    ax2.set_ylabel('Wind Speed (m/s)')
-    ax2.set_ylim(WNDdf[3].loc[start_date:end_date].astype(float).div(10).min() // 1, WNDdf[3].loc[start_date:end_date].astype(float).div(10).max() // 1)  # Auto scale based on wind speed
-    ax2.set_ylim(1, 8)  # Manual scaling for the wind speed (optional)
+# Read the wind data
+Wdf = pd.read_csv(windfile, parse_dates={'datetime': [1]}, low_memory=False)
+datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
+datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
+Wdf.set_index(datetime_pac, inplace=True)
 
-    ax2.quiver(WNDdf[5].resample(wind_sample_rate).mean().index,
-               np.sqrt((WNDdf[5].loc[start_date:end_date].astype(float).resample(wind_sample_rate).sum() /
-                        WNDdf.loc[start_date:end_date].resample(wind_sample_rate).size()) ** 2 +
-                       (WNDdf[6].loc[start_date:end_date].astype(float).resample(wind_sample_rate).sum() /
-                        WNDdf.loc[start_date:end_date].resample(wind_sample_rate).size()) ** 2) / 10,
-               -WNDdf[5].loc[start_date:end_date].astype(float).resample(wind_sample_rate).mean().div(10),
-               -WNDdf[6].loc[start_date:end_date].astype(float).resample(wind_sample_rate).mean().div(10),
-               color='b', label='Wind Vector')
+# Filter by date range
+Wdf = Wdf.loc[StartDate:EndDate]
 
-    # Display legend and adjust the layout
-    plt.legend(loc='best')
-    plt.tight_layout()  # Ensures everything fits within the plot area
+# Extract wind data (direction and speed) and filter valid observations
+WNDdf = Wdf['WND'].str.split(pat=',', expand=True)
+WNDdf = WNDdf.loc[WNDdf[4] == '5']  # Only valid observations
 
-    # Render the plot in Streamlit
-    st.pyplot(fig)
+# Initialize lists for Cartesian components
+Xdata, Ydata = [], []
 
-else:
-    st.warning("Please upload both the AERONET and Wind Data CSV files.")
+# Calculate Cartesian components of wind vectors
+for _, row in WNDdf.iterrows():
+    magnitude = np.float64(row[3])  # Wind speed
+    direction = np.float64(row[0])  # Wind direction
+    Xdata.append(magnitude * np.sin(direction * (np.pi / 180)))
+    Ydata.append(magnitude * np.cos(direction * (np.pi / 180)))
+
+# Add Cartesian components to the DataFrame
+WNDdf[5], WNDdf[6] = Xdata, Ydata
+
+# Create a plot
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.set_title("Wind Vectors (Magnitude and Direction)")
+ax.set_xlabel("Time")
+ax.set_ylabel("Magnitude (m/s)")
+
+# Resample the data according to the wind sample rate and plot the wind vectors
+ax.quiver(
+    WNDdf[5].resample(windSampleRate).mean().index,  # X-axis (time)
+    np.zeros(WNDdf[5].resample(windSampleRate).mean().shape),  # Y-axis baseline
+    WNDdf[5].resample(windSampleRate).mean().div(10),  # X-component of arrows
+    WNDdf[6].resample(windSampleRate).mean().div(10),  # Y-component of arrows
+    color='b',
+    label='Wind Vector'
+)
+
+ax.legend(loc='best')
+plt.tight_layout()
+
+# Display the plot in Streamlit
+st.pyplot(fig)
