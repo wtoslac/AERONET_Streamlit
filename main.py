@@ -32,19 +32,11 @@ if file_url:
         datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
         df.set_index(datetime_pac, inplace=True)
 
-        # Filter columns to only include relevant wavelengths
-        relevant_columns = [
-            'AOD_380nm', 'AOD_500nm', 'AOD_870nm', 'AOD_1640nm', 'AOD_1020nm', 'AOD_865nm', 'AOD_779nm', 
-            'AOD_675nm', 'AOD_667nm', 'Exact_Wavelengths_of_AOD(um)_380nm', 'Exact_Wavelengths_of_AOD(um)_340nm'
-        ]
-        
-        # Filter the dataframe to only use these relevant columns
-        df_filtered = df[relevant_columns]
-
         # Plot initial graph in black and white (no color coding)
-        plt.plot(df_filtered.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(), '.k', label="380 nm")
-        plt.plot(df_filtered.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
-        plt.plot(df_filtered.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(), '.k', label="870 nm")
+        plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_350nm"].resample(SampleRate).mean(), '.b', label="350 nm")  # Added 350 nm
+        plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(), '.k', label="380 nm")
+        plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
+        plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(), '.k', label="870 nm")
 
         # Format the initial plot
         plt.gcf().autofmt_xdate()
@@ -65,7 +57,7 @@ if file_url:
         user_matches = {}
         for pos in positions:
             user_matches[pos] = st.selectbox(f"What Wavelength will be located on the {pos} position on the graph?", 
-                                             options=["Select an option", "350 nm", "500 nm", "779 nm", "380 nm"], 
+                                             options=["Select an option", "350 nm", "400 nm", "500 nm", "779 nm"], 
                                              key=pos)
 
         # Allow user to submit and display feedback
@@ -74,15 +66,17 @@ if file_url:
 
             # Create a second graph with predefined colors for the wavelengths (independent of user's input)
             wavelength_colors = {
-                "380 nm": "b",  # Blue
-                "500 nm": "g",  # Green
-                "870 nm": "r",  # Red
+                "350 nm": "b",  # Blue
+                "380 nm": "g",  # Green
+                "500 nm": "r",  # Red
+                "870 nm": "y"   # Yellow
             }
 
             # Create the second graph independently of user input
-            plt.plot(df_filtered.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(), '.b', label="380 nm")
-            plt.plot(df_filtered.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(), '.g', label="500 nm")
-            plt.plot(df_filtered.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(), '.r', label="870 nm")
+            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_350nm"].resample(SampleRate).mean(), '.b', label="350 nm")
+            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(), '.g', label="380 nm")
+            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(), '.r', label="500 nm")
+            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(), '.y', label="870 nm")
 
             # Format the second plot
             plt.gcf().autofmt_xdate()
