@@ -91,7 +91,7 @@ if df_1 is not None:
             plt.ylim(AOD_min, AOD_max)
             plt.legend()
             st.pyplot(plt.gcf())
-           windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
+        windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
         Wdf = pd.read_csv(windfile, parse_dates=[1], low_memory=False)  # Fixed line here
         datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
         datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
