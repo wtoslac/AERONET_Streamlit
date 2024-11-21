@@ -95,8 +95,16 @@ if df_1 is not None:
 
 # File URL and parameters
 windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
-StartDate = '2023-07-01 00:00:00'
-EndDate = '2023-07-07 23:59:59'
+StartDate = st.date_input("StartDate", datetime.date(2023, 7, 1))
+StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0))
+EndDate = st.date_input("EndDate", datetime.date(2023, 7,7))
+EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59))
+
+# Allow the user to set y-axis limits
+st.sidebar.header("Adjust Y-axis Limits")
+AOD_min = st.sidebar.slider("Y-Axis Min", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
+AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.3, step=0.01)
+
 windSampleRate = '1h'
 
 # Read the wind data
