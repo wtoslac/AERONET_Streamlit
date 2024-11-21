@@ -95,7 +95,7 @@ if df_1 is not None:
             Wdf = pd.read_csv(windfile, parse_dates=[1], low_memory=False)  # Fixed line here
             datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
             datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-            Wdf.set_index(datetime_pac, inplace=True)Wdf = Wdf.loc[StartDateTime:EndDateTime]
+            Wdf.set_index(datetime_pac, inplace=True) = Wdf.loc[StartDateTime:EndDateTime]
             WNDdf = Wdf['WND'].str.split(pat=',', expand=True)
             WNDdf = WNDdf.loc[WNDdf[4] == '5']  # Only valid observations
             Xdata, Ydata = [], []
