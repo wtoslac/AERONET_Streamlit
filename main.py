@@ -21,7 +21,7 @@ AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.
 st.header("Load Data from GitHub Repository")
 file_url = st.text_input(
     "Enter the raw URL of the .lev15 file from the GitHub repository:",
-    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/20230101_20241231_Turlock_CA_USA_part1.lev15"
+    "https://raw.githubusercontent.com/your_username/your_repository/main/path_to_your_file/20230101_20241231_Turlock_CA_USA_part1.lev15"
 )
 
 if file_url:
@@ -33,7 +33,6 @@ if file_url:
         df.set_index(datetime_pac, inplace=True)
 
         # Plot initial graph in black and white (no color coding)
-        plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_350nm"].resample(SampleRate).mean(), '.b', label="350 nm")  # Added 350 nm
         plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(), '.k', label="380 nm")
         plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
         plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(), '.k', label="870 nm")
@@ -57,7 +56,7 @@ if file_url:
         user_matches = {}
         for pos in positions:
             user_matches[pos] = st.selectbox(f"What Wavelength will be located on the {pos} position on the graph?", 
-                                             options=["Select an option", "350 nm", "400 nm", "500 nm", "779 nm"], 
+                                             options=["Select an option", "400 nm", "500 nm", "779 nm"], 
                                              key=pos)
 
         # Allow user to submit and display feedback
@@ -66,17 +65,15 @@ if file_url:
 
             # Create a second graph with predefined colors for the wavelengths (independent of user's input)
             wavelength_colors = {
-                "350 nm": "b",  # Blue
-                "380 nm": "g",  # Green
-                "500 nm": "r",  # Red
-                "870 nm": "y"   # Yellow
+                "380 nm": "b",  # Blue
+                "500 nm": "g",  # Green
+                "870 nm": "r"   # Red
             }
 
             # Create the second graph independently of user input
-            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_350nm"].resample(SampleRate).mean(), '.b', label="350 nm")
-            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(), '.g', label="380 nm")
-            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(), '.r', label="500 nm")
-            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(), '.y', label="870 nm")
+            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(), '.b', label="380 nm")
+            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(), '.g', label="500 nm")
+            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(), '.r', label="870 nm")
 
             # Format the second plot
             plt.gcf().autofmt_xdate()
