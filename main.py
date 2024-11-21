@@ -54,7 +54,7 @@ if df_1 is not None:
         plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_675nm"].resample(SampleRate).mean(), '.k')
 
         # Format the plot
-        plt.gcf().autofmt_xdate()
+        plt.gcf().autofmt_xdate()  # Corrected here to use plt.gcf()
         plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
         plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
         plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
@@ -91,7 +91,7 @@ if df_1 is not None:
             ax.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_675nm"].resample(SampleRate).mean(), '.r', label="675 nm")
 
             # Format the plot
-            ax.gcf().autofmt_xdate()
+            plt.gcf().autofmt_xdate()  # Corrected here to use plt.gcf()
             ax.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
             ax.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
             ax.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
@@ -124,17 +124,4 @@ if df_1 is not None:
                 Ydata.append(magnitude * np.cos(direction * (np.pi / 180)))
 
             # Add Cartesian components to the DataFrame
-            WNDdf[5], WNDdf[6] = Xdata, Ydata
-
-            # Plot the wind vectors on the top axis (ax2)
-            ax2.quiver(
-                WNDdf[5].resample(SampleRate).mean().index,  # X-axis (time)
-                np.zeros(WNDdf[5].resample(SampleRate).mean().shape),  # Y-axis baseline
-                WNDdf[5].resample(SampleRate).mean().div(10),  # X-component of arrows
-                WNDdf[6].resample(SampleRate).mean().div(10),  # Y-component of arrows
-                color='b',
-                label='Wind Vector'
-            )
-
-            # Display the plot in Streamlit
-            st.pyplot(fig)
+            WNDdf[5],
