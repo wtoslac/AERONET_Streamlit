@@ -74,7 +74,7 @@ if df_1 is not None:
         user_matches = {}
         for pos in positions:
             user_matches[pos] = st.selectbox(f"What Wavelength will be located on the {pos} position on the graph?", 
-                                             options=["Select an option", "400 nm", "500 nm", "779 nm"], 
+                                             options=["Select an option", "400 nm", "500 nm", "675 nm"], 
                                              key=pos)
 
         # Once the user submits, show the second graph (same as the first)
