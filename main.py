@@ -127,8 +127,8 @@ Xdata, Ydata = [], []
 for _, row in WNDdf.iterrows():
     magnitude = np.float64(row[3])  # Wind speed
     direction = np.float64(row[0])  # Wind direction
-    Xdata.append(magnitude * np.sin(direction * (np.pi / 180)))
-    Ydata.append(magnitude * np.cos(direction * (np.pi / 180)))
+    Xdata.append(magnitude * np.sin(direction * (np.pi / 360)))
+    Ydata.append(magnitude * np.cos(direction * (np.pi / 360)))
 
 # Add Cartesian components to the DataFrame
 WNDdf[5], WNDdf[6] = Xdata, Ydata
