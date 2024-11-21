@@ -90,7 +90,7 @@ if df_1 is not None:
             plt.ylim(AOD_min, AOD_max)
             plt.legend()
             st.pyplot(plt.gcf())
- if st.button("submit"):
+
 # File paths and parameters
 windfile = 'Modesto_Wind_2023 (2).csv'
 StartDate = '2023-07-01 00:00:00'
