@@ -21,7 +21,7 @@ AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.
 st.header("Load Data from GitHub Repository")
 file_url_1 = st.text_input(
     "Enter the raw URL of the .lev15 file from the first GitHub repository:",
-    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/20230101_20241231_Turlock_CA_USA_part1.lev15"
+    "https://raw.githubusercontent.com/your_username/your_repository/main/20230101_20241231_Turlock_CA_USA_part1.lev15"
 )
 
 # Function to load data from the given URL
@@ -49,16 +49,16 @@ if file_url_1:
 
 # Ensure data is loaded and columns are correct
 if df_1 is not None:
-    if 'AOD_400nm' not in df_1.columns or 'AOD_500nm' not in df_1.columns or 'AOD_870nm' not in df_1.columns:
+    if 'AOD_380nm' not in df_1.columns or 'AOD_500nm' not in df_1.columns or 'AOD_870nm' not in df_1.columns:
         st.error(f"Missing expected columns in the dataset. Available columns: {df_1.columns}")
     
     # Plot data from the first repository if columns are correct
     if 'AOD_380nm' in df_1.columns and 'AOD_500nm' in df_1.columns and 'AOD_870nm' in df_1.columns:
         
         # Plot AOD_380nm, AOD_500nm, and AOD_870nm
-        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.k', label="380 nm")
-        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
-        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.k', label="870 nm")
+        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.b', label="380 nm")
+        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g', label="500 nm")
+        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.r', label="870 nm")
 
         # Format the plot
         plt.gcf().autofmt_xdate()
