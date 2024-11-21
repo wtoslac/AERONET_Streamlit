@@ -23,10 +23,7 @@ file_url_1 = st.text_input(
     "Enter the raw URL of the .lev15 file from the first GitHub repository:",
     "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/20230101_20241231_Turlock_CA_USA_part1.lev15"
 )
-file_url_2 = st.text_input(
-    "Enter the raw URL of the .lev15 file from the second GitHub repository:",
-    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/20230101_20241231_Turlock_CA_USA_part2.lev15"
-)
+
 
 # Function to load data from the given URL
 def load_data(file_url):
