@@ -17,26 +17,43 @@ st.sidebar.header("Adjust Y-axis Limits")
 AOD_min = st.sidebar.slider("Y-Axis Min", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
 AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.3, step=0.01)
 
-# Input GitHub raw file URL
+# Input GitHub raw file URLs
 st.header("Load Data from GitHub Repository")
-file_url = st.text_input(
-    "Enter the raw URL of the .lev15 file from the GitHub repository:",
-    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/20230101_20241231_Turlock_CA_USA_part1.lev15",
-    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/20230101_20241231_Turlock_CA_USA_part2.lev15"
+file_url_1 = st.text_input(
+    "Enter the raw URL of the first .lev15 file from the GitHub repository:",
+    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/20230101_20241231_Turlock_CA_USA_part1.lev15"  # Default URL
+)
+file_url_2 = st.text_input(
+    "Enter the raw URL of the second .lev15 file from the GitHub repository:",
+    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/20230101_20241231_Turlock_CA_USA_part2.lev15"  # Default URL
 )
 
-if file_url:
+# Check if both URLs are provided
+if file_url_1 and file_url_2:
     try:
-        # Read the data from the provided GitHub raw URL
-        df = pd.read_csv(file_url, skiprows=6, parse_dates={'datetime': [0, 1]})
-        datetime_utc = pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
-        datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-        df.set_index(datetime_pac, inplace=True)
+        # Read the data from the provided GitHub raw URLs
+        df_1 = pd.read_csv(file_url_1, skiprows=6, parse_dates={'datetime': [0, 1]})
+        df_2 = pd.read_csv(file_url_2, skiprows=6, parse_dates={'datetime': [0, 1]})
+
+        # Convert datetime columns to datetime objects
+        datetime_utc_1 = pd.to_datetime(df_1["datetime"], format='%d:%m:%Y %H:%M:%S')
+        datetime_utc_2 = pd.to_datetime(df_2["datetime"], format='%d:%m:%Y %H:%M:%S')
+
+        # Convert to Pacific Time
+        datetime_pac_1 = pd.to_datetime(datetime_utc_1).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
+        datetime_pac_2 = pd.to_datetime(datetime_utc_2).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
+
+        # Set the datetime columns as index
+        df_1.set_index(datetime_pac_1, inplace=True)
+        df_2.set_index(datetime_pac_2, inplace=True)
+
+        # Combine both dataframes into one (if you want to stack them)
+        df_combined = pd.concat([df_1, df_2])
 
         # Plot initial graph in black and white (no color coding)
-        plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(), '.k', label="380 nm")
-        plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
-        plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(), '.k', label="870 nm")
+        plt.plot(df_combined.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(), '.k', label="380 nm")
+        plt.plot(df_combined.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
+        plt.plot(df_combined.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(), '.k', label="870 nm")
 
         # Format the initial plot
         plt.gcf().autofmt_xdate()
@@ -72,9 +89,9 @@ if file_url:
             }
 
             # Create the second graph independently of user input
-            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(), '.b', label="380 nm")
-            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(), '.g', label="500 nm")
-            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(), '.r', label="870 nm")
+            plt.plot(df_combined.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(), '.b', label="380 nm")
+            plt.plot(df_combined.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(), '.g', label="500 nm")
+            plt.plot(df_combined.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(), '.r', label="870 nm")
 
             # Format the second plot
             plt.gcf().autofmt_xdate()
@@ -86,4 +103,4 @@ if file_url:
             st.pyplot(plt.gcf())
 
     except Exception as e:
-        st.error(f"Failed to process the file: {e}")
+        st.error(f"Failed to process the files: {e}")
