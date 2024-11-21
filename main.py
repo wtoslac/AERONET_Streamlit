@@ -19,13 +19,13 @@ AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.
 
 # GitHub raw file URLs (replace with your actual file URLs)
 files = [
-    "https://raw.githubusercontent.com/<your-github-username>/<your-repo-name>/main/20230101_20230630_Turlock_CA_USA.tot_lev15",
-    "https://raw.githubusercontent.com/<your-github-username>/<your-repo-name>/main/20230630_20230831_Turlock_CA_USA.tot_lev15",
-    "https://raw.githubusercontent.com/<your-github-username>/<your-repo-name>/main/20230831_20231231_Turlock_CA_USA.tot_lev15",
-    "https://raw.githubusercontent.com/<your-github-username>/<your-repo-name>/main/20240101_20240531_Turlock_CA_USA.tot_lev15",
-    "https://raw.githubusercontent.com/<your-github-username>/<your-repo-name>/main/20240601_20240731_Turlock_CA_USA.tot_lev15",
-    "https://raw.githubusercontent.com/<your-github-username>/<your-repo-name>/main/20240731_20240930_Turlock_CA_USA.tot_lev15",
-    "https://raw.githubusercontent.com/<your-github-username>/<your-repo-name>/main/20241001_20241231_Turlock_CA_USA.tot_lev15"
+    "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20230101_20230630_Turlock_CA_USA.tot_lev15",
+    "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20230630_20230831_Turlock_CA_USA.tot_lev15",
+    "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20230831_20231231_Turlock_CA_USA.tot_lev15",
+    "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20240101_20240531_Turlock_CA_USA.tot_lev15",
+    "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20240601_20240731_Turlock_CA_USA.tot_lev15",
+    "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20240731_20240930_Turlock_CA_USA.tot_lev15",
+    "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20241001_20241231_Turlock_CA_USA.tot_lev15"
 ]
 
 # Function to load and concatenate the data
