@@ -75,33 +75,18 @@ if df_1 is not None:
                                              options=["Select an option", "400 nm", "500 nm", "779 nm"], 
                                              key=pos)
 
-        # Plot the second graph (with the user-selected wavelengths) automatically
-        # Create the second graph with the wavelengths selected by the user
-        wavelengths = {
-            "Top": user_matches["Top"],
-            "Middle": user_matches["Middle"],
-            "Bottom": user_matches["Bottom"]
-        }
+        # Once the user submits, show the second graph (same as the first)
+        if st.button("Submit"):
+            # Plot the second graph (exact same as the first one)
+            plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.k', label="440 nm")
+            plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
+            plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_675nm"].resample(SampleRate).mean(), '.k', label="675 nm")
 
-        # Define a color mapping for each wavelength
-        wavelength_colors = {
-            "400 nm": "blue",
-            "500 nm": "green",
-            "779 nm": "red"
-        }
-
-        # Create the second graph based on user selection
-        for pos, wavelength in wavelengths.items():
-            if wavelength != "Select an option":
-                # Plot the corresponding wavelength
-                plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), f"AOD_{wavelength.replace(' ', '')}"].resample(SampleRate).mean(), 
-                         '.', color=wavelength_colors.get(wavelength, 'black'), label=f"{wavelength} - {pos}")
-
-        # Format the second plot
-        plt.gcf().autofmt_xdate()
-        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-        plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
-        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-        plt.ylim(AOD_min, AOD_max)
-        plt.legend()
-        st.pyplot(plt.gcf())
+            # Format the second plot
+            plt.gcf().autofmt_xdate()
+            plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+            plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+            plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+            plt.ylim(AOD_min, AOD_max)
+            plt.legend()
+            st.pyplot(plt.gcf())
