@@ -11,7 +11,7 @@ SampleRate = "1h"
 st.title = ("Turlock AOD")
 StartDate = st.date_input("StartDate", datetime.date(2023, 7, 1))
 StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0))
-EndDate = st.date_input("EndDate", datetime.date(2023, 7,7))
+EndDate = st.date_input("EndDate", datetime.date(2023, 7, 7))
 EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59))
 
 # Allow the user to set y-axis limits
@@ -21,7 +21,6 @@ AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.
 
 # Input GitHub URL for the first repository
 file_url_1 = "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/20230101_20241231_Turlock_CA_USA_part1.lev15"
-
 
 # Function to load data from the given URL
 def load_data(file_url):
@@ -62,6 +61,7 @@ if df_1 is not None:
         plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
         plt.ylim(AOD_min, AOD_max)
         plt.legend()
+        plt.title("AOD Turlock")  # Added title for AOD graph
         st.pyplot(plt.gcf())
         
         # Ask user to match wavelengths to positions
@@ -91,10 +91,8 @@ if df_1 is not None:
             plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
             plt.ylim(AOD_min, AOD_max)
             plt.legend()
+            plt.title("AOD Turlock")  # Added title for AOD graph
             st.pyplot(plt.gcf())
-
-
-
 
 # URL for the wind data file
 windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
@@ -107,7 +105,7 @@ datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 Wdf.set_index(datetime_pac, inplace=True)
 
 # Streamlit widgets for dynamic date range selection
-st.title=("Wind Vectors (Magnitude and Direction)")
+st.title = "Wind Vectors (Magnitude and Direction)"  # Fixing title assignment to a string
 start_date = st.date_input("Select Start Date", pd.to_datetime('2023-07-01'))
 end_date = st.date_input("Select End Date", pd.to_datetime('2023-07-07'))
 
@@ -137,7 +135,7 @@ WNDdf[5], WNDdf[6] = Xdata, Ydata
 
 # Create a plot
 fig, ax = plt.subplots(figsize=(10, 6))
-ax.set_title("Wind Vectors (Magnitude and Direction)")
+ax.set_title("Wind Vector")  # Added title for Wind Vector graph
 ax.set_xlabel("Time")
 
 # Resample the data according to the wind sample rate and plot the wind vectors
@@ -159,5 +157,3 @@ plt.tight_layout()
 
 # Display the plot in Streamlit
 st.pyplot(fig)
-
-          
