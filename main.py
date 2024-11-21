@@ -93,10 +93,7 @@ if df_1 is not None:
             st.pyplot(plt.gcf())
 
 
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import streamlit as st
+
 
 # URL for the wind data file
 windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
