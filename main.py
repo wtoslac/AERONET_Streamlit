@@ -92,37 +92,37 @@ if df_1 is not None:
             plt.legend()
             st.pyplot(plt.gcf())
             if st.button("Submit"):
-                 windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
+                windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
                 StartDate = '2023-07-01 00:00:00'
-            EndDate = '2023-07-05 23:59:59'
-            windSampleRate = '1h'
-            Wdf = pd.read_csv(windfile, parse_dates={'datetime': [1]}, low_memory=False)
-            datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
-            datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-            Wdf.set_index(datetime_pac, inplace=True)
-            WNDdf = Wdf.loc[StartDate:EndDate, 'WND'].str.split(pat=',', expand=True)
-            WNDdf = WNDdf.loc[WNDdf[4] == '5']  # Only valid observations
-            Xdata, Ydata = [], []
-            for _, row in WNDdf.iterrows():
-                magnitude = np.float64(row[3])  # Wind speed
-                direction = np.float64(row[0])  # Wind direction
-                Xdata.append(magnitude * np.sin(direction * (np.pi / 180)))
-                Ydata.append(magnitude * np.cos(direction * (np.pi / 180)))
-                WNDdf[5], WNDdf[6] = Xdata, Ydata  # Add Cartesian components to the DataFrame
-                fig, ax = plt.subplots(figsize=(10, 6))
-                ax.set_title("Wind Vectors (Magnitude and Direction)")
-                ax.set_xlabel("Time")
-                ax.set_ylabel("Magnitude (m/s)")
-                ax.quiver(
-                    WNDdf[5].resample(windSampleRate).mean().index,  # X-axis: Time
-                    np.zeros(WNDdf[5].resample(windSampleRate).mean().shape),  # Y-axis baseline
-                    WNDdf[5].resample(windSampleRate).mean().div(10),  # X-component of arrows
-                    WNDdf[6].resample(windSampleRate).mean().div(10),  # Y-component of arrows
-                    color='b',
-                    label='Wind Vector'
-                )
-                ax.legend(loc='best')
-                plt.tight_layout()
-                plt.show()
+                EndDate = '2023-07-05 23:59:59'
+                windSampleRate = '1h'
+                Wdf = pd.read_csv(windfile, parse_dates={'datetime': [1]}, low_memory=False)
+                datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
+                datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
+                Wdf.set_index(datetime_pac, inplace=True)
+                WNDdf = Wdf.loc[StartDate:EndDate, 'WND'].str.split(pat=',', expand=True)
+                WNDdf = WNDdf.loc[WNDdf[4] == '5']  # Only valid observations
+                Xdata, Ydata = [], []
+                for _, row in WNDdf.iterrows():
+                    magnitude = np.float64(row[3])  # Wind speed
+                    direction = np.float64(row[0])  # Wind direction
+                    Xdata.append(magnitude * np.sin(direction * (np.pi / 180)))
+                    Ydata.append(magnitude * np.cos(direction * (np.pi / 180)))
+                    WNDdf[5], WNDdf[6] = Xdata, Ydata  # Add Cartesian components to the DataFrame
+                    fig, ax = plt.subplots(figsize=(10, 6))
+                    ax.set_title("Wind Vectors (Magnitude and Direction)")
+                    ax.set_xlabel("Time")
+                    ax.set_ylabel("Magnitude (m/s)")
+                    ax.quiver(
+                        WNDdf[5].resample(windSampleRate).mean().index,  # X-axis: Time
+                        np.zeros(WNDdf[5].resample(windSampleRate).mean().shape),  # Y-axis baseline
+                        WNDdf[5].resample(windSampleRate).mean().div(10),  # X-component of arrows
+                        WNDdf[6].resample(windSampleRate).mean().div(10),  # Y-component of arrows
+                        color='b',
+                        label='Wind Vector'
+                    )
+                    ax.legend(loc='best')
+                    plt.tight_layout()
+                    plt.show()
 
    
