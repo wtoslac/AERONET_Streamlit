@@ -58,8 +58,4 @@ if file1 and file2:
         plt.ylabel("AOD")
         st.pyplot(plt.gcf())
 
-    except Exception as e:
-        st.error(f"Error processing data: {e}")
-else:
-    st.info("Please upload both CSV files to proceed.")
-
+    
