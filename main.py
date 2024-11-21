@@ -97,7 +97,7 @@ if df_1 is not None:
 windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
 StartDate = '2023-07-01 00:00:00'
 EndDate = '2023-07-07 23:59:59'
-windSampleRate = '1h'
+windSampleRate = '2h'
 
 # Read the wind data
 Wdf = pd.read_csv(windfile, parse_dates={'datetime': [1]}, low_memory=False)
