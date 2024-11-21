@@ -49,7 +49,7 @@ if file_url_1:
 
 # Ensure data is loaded and columns are correct
 if df_1 is not None:
-    if 'AOD_400nm' not in df_1.columns or 'AOD_500nm' not in df_1.columns or 'AOD_681nm' not in df_1.columns:
+    if 'AOD_400nm' not in df_1.columns or 'AOD_500nm' not in df_1.columns or 'AOD_779nm' not in df_1.columns:
         st.error(f"Missing expected columns in the dataset. Available columns: {df_1.columns}")
     
     # Plot data from the first repository if columns are correct
