@@ -122,4 +122,4 @@ if df_1 is not None:
                 )
                 ax.legend(loc='best')
                 plt.tight_layout()
-                plt.show()
+                st.pyplot(plt.gcf())
