@@ -93,30 +93,62 @@ if df_1 is not None:
             st.pyplot(plt.gcf())
 
 
-# URL for the wind data file
+
+
+# Simulated or loaded data
+# wind data (as in the previous example)
 windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
 windSampleRate = '3h'
-
-# Read the wind data
 Wdf = pd.read_csv(windfile, parse_dates={'datetime': [1]}, low_memory=False)
 datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
 datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 Wdf.set_index(datetime_pac, inplace=True)
 
+# AOD Data (simulating with a dataframe, replace with real data)
+df_1 = pd.DataFrame({
+    'datetime': pd.date_range("2023-07-01", periods=100, freq="H"),
+    'AOD_440nm': np.random.rand(100),  # Replace with actual data
+    'AOD_500nm': np.random.rand(100),
+    'AOD_675nm': np.random.rand(100)
+})
+df_1.set_index('datetime', inplace=True)
+
 # Streamlit widgets for dynamic date range selection
-st.title("Wind Vectors (Magnitude and Direction)")
 start_date = st.date_input("Select Start Date", pd.to_datetime('2023-07-01'))
 end_date = st.date_input("Select End Date", pd.to_datetime('2023-07-07'))
+StartDateTime = pd.to_datetime(start_date)
+EndDateTime = pd.to_datetime(end_date)
 
-# Convert selected dates to strings and filter the data
-StartDate = start_date.strftime('%Y-%m-%d 00:00:00')
-EndDate = end_date.strftime('%Y-%m-%d 23:59:59')
+# Sample Rate
+SampleRate = '3h'
 
-# Filter by the user-selected date range
-Wdf_filtered = Wdf.loc[StartDate:EndDate]
+# Creating the plot
+fig, ax1 = plt.subplots(figsize=(10, 6))
+
+# Plot the first (AOD) graph
+ax1.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(),
+         '.b', label="440 nm")
+ax1.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(),
+         '.g', label="500 nm")
+ax1.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_675nm"].resample(SampleRate).mean(),
+         '.r', label="675 nm")
+
+# Format the AOD plot (x-axis and limits)
+ax1.set_title("AOD and Wind Vectors Overlay")
+ax1.set_xlabel("Time")
+ax1.set_ylabel("AOD")
+ax1.gcf().autofmt_xdate()
+ax1.xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+ax1.xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+ax1.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+ax1.set_ylim(AOD_min, AOD_max)  # Adjust based on your AOD data
+ax1.legend(loc='upper left')
+
+# Create a second y-axis for the wind vectors
+ax2 = ax1.twinx()  # Create a second axis sharing the same x-axis
 
 # Extract wind data (direction and speed) and filter valid observations
-WNDdf = Wdf_filtered['WND'].str.split(pat=',', expand=True)
+WNDdf = Wdf.loc[StartDateTime:EndDateTime, 'WND'].str.split(pat=',', expand=True)
 WNDdf = WNDdf.loc[WNDdf[4] == '5']  # Only valid observations
 
 # Initialize lists for Cartesian components
@@ -132,32 +164,22 @@ for _, row in WNDdf.iterrows():
 # Add Cartesian components to the DataFrame
 WNDdf[5], WNDdf[6] = Xdata, Ydata
 
-# Create a plot
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.set_title("Wind Vectors (Magnitude and Direction)")
-ax.set_xlabel("Time")
-
-# Resample the data according to the wind sample rate and plot the wind vectors
-ax.quiver(
+# Resample the wind data according to the wind sample rate and plot the wind vectors on the second y-axis
+ax2.quiver(
     WNDdf[5].resample(windSampleRate).mean().index,  # X-axis (time)
     np.zeros(WNDdf[5].resample(windSampleRate).mean().shape),  # Y-axis baseline
     WNDdf[5].resample(windSampleRate).mean().div(10),  # X-component of arrows
     WNDdf[6].resample(windSampleRate).mean().div(10),  # Y-component of arrows
-    color='b',
-    label='Wind Vector'
+    color='b', label='Wind Vector'
 )
 
-# Hide the Y-axis (but still show the arrows)
-ax.get_yaxis().set_visible(False)
+# Hide the Y-axis for the wind vector plot (optional)
+ax2.get_yaxis().set_visible(False)
 
-# Display the legend and adjust layout
-ax.legend(loc='best')
+# Display the combined plot in Streamlit
 plt.tight_layout()
-
-# Display the plot in Streamlit
 st.pyplot(fig)
 
-          
 
 
 
