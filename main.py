@@ -39,11 +39,11 @@ if file_url_1 and file_url_2:
         datetime_utc_1 = pd.to_datetime(df_1["datetime"], format='%d:%m:%Y %H:%M:%S')
         datetime_utc_2 = pd.to_datetime(df_2["datetime"], format='%d:%m:%Y %H:%M:%S')
 
-        # Convert to Pacific Time
+        # Convert both to Pacific Time, ensuring both are timezone-aware
         datetime_pac_1 = pd.to_datetime(datetime_utc_1).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
         datetime_pac_2 = pd.to_datetime(datetime_utc_2).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 
-        # Set the datetime columns as index
+        # Set the datetime columns as index for both dataframes
         df_1.set_index(datetime_pac_1, inplace=True)
         df_2.set_index(datetime_pac_2, inplace=True)
 
