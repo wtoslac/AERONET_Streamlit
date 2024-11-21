@@ -91,42 +91,31 @@ if df_1 is not None:
             plt.ylim(AOD_min, AOD_max)
             plt.legend()
             st.pyplot(plt.gcf())
-        windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
-        Wdf = pd.read_csv(windfile, parse_dates=[1], low_memory=False)  # Fixed line here
-        datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
-        datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-        Wdf.set_index(datetime_pac, inplace=True)
-        Wdf = Wdf.loc[StartDateTime:EndDateTime]
-
-        # Extract wind data (direction and speed) and filter valid observations
-        WNDdf = Wdf['WND'].str.split(pat=',', expand=True)
-        WNDdf = WNDdf.loc[WNDdf[4] == '5']  # Only valid observations
-        Xdata, Ydata = [], []
-
-        # Calculate Cartesian components of wind vectors
-        for _, row in WNDdf.iterrows():
-            magnitude = np.float64(row[3])  # Wind speed
-            direction = np.float64(row[0])  # Wind direction
-            Xdata.append(magnitude * np.sin(direction * (np.pi / 180)))
-            Ydata.append(magnitude * np.cos(direction * (np.pi / 180)))
-
-        WNDdf[5], WNDdf[6] = Xdata, Ydata
-
-        # Plot wind vectors using ax.quiver
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.set_title("Wind Vectors (Magnitude and Direction)")
-        ax.set_xlabel("Time")
-        ax.set_ylabel("Wind Vector Components (m/s)")
-
-        # Plot wind vectors
-        ax.quiver(
-            WNDdf[5].resample("1h").mean().index,  # X-axis: Time (resampled to hourly intervals)
-            np.zeros_like(WNDdf[5].resample("1h").mean()),  # Y-axis: Baseline (0, as it's a vector)
-            WNDdf[5].resample("1h").mean() / 10,  # X-component (scaled down for visualization)
-            WNDdf[6].resample("1h").mean() / 10,  # Y-component (scaled down for visualization)
-            color='b', label='Wind Vectors'
-        )
-
-        ax.legend(loc='best')
-        plt.tight_layout()
-        st.pyplot(fig)  # Display the Wind Vectors plot
+            windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
+            Wdf = pd.read_csv(windfile, parse_dates=[1], low_memory=False)  # Fixed line here
+            datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
+            datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
+            Wdf.set_index(datetime_pac, inplace=True)Wdf = Wdf.loc[StartDateTime:EndDateTime]
+            WNDdf = Wdf['WND'].str.split(pat=',', expand=True)
+            WNDdf = WNDdf.loc[WNDdf[4] == '5']  # Only valid observations
+            Xdata, Ydata = [], []
+            for _, row in WNDdf.iterrows():
+                magnitude = np.float64(row[3])  # Wind speed
+                direction = np.float64(row[0])  # Wind direction
+                Xdata.append(magnitude * np.sin(direction * (np.pi / 180)))
+                Ydata.append(magnitude * np.cos(direction * (np.pi / 180)))
+                WNDdf[5], WNDdf[6] = Xdata, Ydata
+                fig, ax = plt.subplots(figsize=(10, 6))
+                ax.set_title("Wind Vectors (Magnitude and Direction)")
+                ax.set_xlabel("Time")
+                ax.set_ylabel("Wind Vector Components (m/s)")
+                ax.quiver(
+                    WNDdf[5].resample("1h").mean().index,  # X-axis: Time (resampled to hourly intervals)
+                    np.zeros_like(WNDdf[5].resample("1h").mean()),  # Y-axis: Baseline (0, as it's a vector)
+                    WNDdf[5].resample("1h").mean() / 10,  # X-component (scaled down for visualization)
+                    WNDdf[6].resample("1h").mean() / 10,  # Y-component (scaled down for visualization)
+                    color='b', label='Wind Vectors'
+                )
+                ax.legend(loc='best')
+                plt.tight_layout()
+                st.pyplot(fig)  # Display the Wind Vectors plot
