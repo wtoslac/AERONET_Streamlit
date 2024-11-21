@@ -75,36 +75,33 @@ if df_1 is not None:
                                              options=["Select an option", "400 nm", "500 nm", "779 nm"], 
                                              key=pos)
 
-        # Allow user to submit and display feedback
-        if st.button("Submit"):
-            st.text("Your selections have been recorded. Now plotting the wavelengths in the selected positions...")
+        # Plot the second graph (with the user-selected wavelengths) automatically
+        # Create the second graph with the wavelengths selected by the user
+        wavelengths = {
+            "Top": user_matches["Top"],
+            "Middle": user_matches["Middle"],
+            "Bottom": user_matches["Bottom"]
+        }
 
-            # Now plot the second graph based on user selection
-            wavelengths = {
-                "Top": user_matches["Top"],
-                "Middle": user_matches["Middle"],
-                "Bottom": user_matches["Bottom"]
-            }
+        # Define a color mapping for each wavelength
+        wavelength_colors = {
+            "400 nm": "blue",
+            "500 nm": "green",
+            "779 nm": "red"
+        }
 
-            # Define a color mapping for each wavelength
-            wavelength_colors = {
-                "400 nm": "blue",
-                "500 nm": "green",
-                "779 nm": "red"
-            }
+        # Create the second graph based on user selection
+        for pos, wavelength in wavelengths.items():
+            if wavelength != "Select an option":
+                # Plot the corresponding wavelength
+                plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), f"AOD_{wavelength.replace(' ', '')}"].resample(SampleRate).mean(), 
+                         '.', color=wavelength_colors.get(wavelength, 'black'), label=f"{wavelength} - {pos}")
 
-            # Create the second graph based on user selection
-            for pos, wavelength in wavelengths.items():
-                if wavelength != "Select an option":
-                    # Plot the corresponding wavelength
-                    plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), f"AOD_{wavelength.replace(' ', '')}"].resample(SampleRate).mean(), 
-                             '.', color=wavelength_colors.get(wavelength, 'black'), label=f"{wavelength} - {pos}")
-
-            # Format the second plot
-            plt.gcf().autofmt_xdate()
-            plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-            plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
-            plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-            plt.ylim(AOD_min, AOD_max)
-            plt.legend()
-            st.pyplot(plt.gcf())
+        # Format the second plot
+        plt.gcf().autofmt_xdate()
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+        plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+        plt.ylim(AOD_min, AOD_max)
+        plt.legend()
+        st.pyplot(plt.gcf())
