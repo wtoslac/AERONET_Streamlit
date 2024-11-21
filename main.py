@@ -29,7 +29,7 @@ def load_data(file_url):
         df = pd.read_csv(file_url, skiprows=6, parse_dates={'datetime': [0, 1]})
         
         # Print column names to help with debugging
-        st.write(f"Columns in the dataset: {df.columns}")
+       
         
         datetime_utc = pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
         datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
