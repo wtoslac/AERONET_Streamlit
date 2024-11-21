@@ -93,10 +93,9 @@ if df_1 is not None:
             st.pyplot(plt.gcf())
           
 
-# File URL and parameters
+
+# URL for the wind data file
 windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
-StartDate = '2023-07-01 00:00:00'
-EndDate = '2023-07-07 23:59:59'
 windSampleRate = '3h'
 
 # Read the wind data
@@ -105,11 +104,20 @@ datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
 datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 Wdf.set_index(datetime_pac, inplace=True)
 
-# Filter by date range
-Wdf = Wdf.loc[StartDate:EndDate]
+# Streamlit widgets for dynamic date range selection
+st.title("Wind Vectors (Magnitude and Direction)")
+start_date = st.date_input("Select Start Date", pd.to_datetime('2023-07-01'))
+end_date = st.date_input("Select End Date", pd.to_datetime('2023-07-07'))
+
+# Convert selected dates to strings and filter the data
+StartDate = start_date.strftime('%Y-%m-%d 00:00:00')
+EndDate = end_date.strftime('%Y-%m-%d 23:59:59')
+
+# Filter by the user-selected date range
+Wdf_filtered = Wdf.loc[StartDate:EndDate]
 
 # Extract wind data (direction and speed) and filter valid observations
-WNDdf = Wdf['WND'].str.split(pat=',', expand=True)
+WNDdf = Wdf_filtered['WND'].str.split(pat=',', expand=True)
 WNDdf = WNDdf.loc[WNDdf[4] == '5']  # Only valid observations
 
 # Initialize lists for Cartesian components
@@ -146,3 +154,5 @@ plt.tight_layout()
 
 # Display the plot in Streamlit
 st.pyplot(fig)
+
+
