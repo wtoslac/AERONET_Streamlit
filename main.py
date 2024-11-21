@@ -62,3 +62,4 @@ if file1 and file2:
         st.error(f"Error processing data: {e}")
 else:
     st.info("Please upload both CSV files to proceed.")
+
