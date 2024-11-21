@@ -28,7 +28,6 @@ if aeronet_file and wind_file:
     df.set_index(datetime_pac, inplace=True)
 
     # Replace -999 values with NaN for AOD columns
-    df['AOD_380nm-Total'].replace(-999.0, np.nan, inplace=True)
     df['AOD_440nm-Total'].replace(-999.0, np.nan, inplace=True)
     df['AOD_500nm-Total'].replace(-999.0, np.nan, inplace=True)
     df['AOD_675nm-Total'].replace(-999.0, np.nan, inplace=True)
