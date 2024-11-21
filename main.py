@@ -17,7 +17,7 @@ st.sidebar.header("Adjust Y-axis Limits")
 AOD_min = st.sidebar.slider("Y-Axis Min", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
 AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.3, step=0.01)
 
-# GitHub raw file URLs (replace with your actual raw file URLs)
+# GitHub raw file URLs (replace with your actual file URLs)
 files = [
     "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/main/20230101_20230630_Turlock_CA_USA.tot_lev15",
     "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/main/20230630_20230831_Turlock_CA_USA.tot_lev15",
@@ -34,50 +34,47 @@ def load_data(files):
     for file_url in files:
         try:
             # Read each CSV (tot_lev15 files) from GitHub
-            st.write(f"Attempting to load file from: {file_url}")
             df = pd.read_csv(file_url, skiprows=6, parse_dates={'datetime': [0, 1]})
-            
-            # Check if data is loaded successfully
-            if df.empty:
-                st.warning(f"File {file_url} is empty or not properly formatted.")
-            else:
-                st.write(f"Successfully loaded {file_url}, sample data:")
-                st.write(df.head())
-                all_data.append(df)
-
+            all_data.append(df)
         except Exception as e:
             st.error(f"Error loading {file_url}: {e}")
 
     # Concatenate all data into a single dataframe
-    if all_data:
-        data = pd.concat(all_data, ignore_index=True)
-        data.set_index("datetime", inplace=True)
-        return data
-    else:
-        st.error("No valid data to concatenate.")
-        return pd.DataFrame()  # Return an empty DataFrame if no data was loaded
+    data = pd.concat(all_data, ignore_index=True)
+    
+    # Parse and set datetime as index
+    data["datetime"] = pd.to_datetime(data["datetime"], errors='coerce')
+    data.set_index("datetime", inplace=True)
+    
+    return data
 
 # Load the data
 data = load_data(files)
 
 # Check if the data is loaded successfully
 if not data.empty:
-    # Plot data
-    plt.figure(figsize=(10, 6))
-    plt.plot(data.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(), '.k', label="380 nm")
-    plt.plot(data.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
-    plt.plot(data.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(), '.k', label="870 nm")
+    # Debugging: Display the column names
+    st.write("Loaded columns:", data.columns)
 
-    # Format the plot
-    plt.gcf().autofmt_xdate()
-    plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
-    plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12))
-    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-    plt.ylim(AOD_min, AOD_max)
-    plt.legend()
-    plt.title(f"AOD Measurements for {siteName}")
-    plt.xlabel("Date")
-    plt.ylabel("AOD")
-    st.pyplot(plt.gcf())
+    # Plot data if the columns exist
+    if "AOD_380nm" in data.columns and "AOD_500nm" in data.columns and "AOD_870nm" in data.columns:
+        plt.figure(figsize=(10, 6))
+        plt.plot(data.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(), '.k', label="380 nm")
+        plt.plot(data.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
+        plt.plot(data.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(), '.k', label="870 nm")
+
+        # Format the plot
+        plt.gcf().autofmt_xdate()
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
+        plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12))
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+        plt.ylim(AOD_min, AOD_max)
+        plt.legend()
+        plt.title(f"AOD Measurements for {siteName}")
+        plt.xlabel("Date")
+        plt.ylabel("AOD")
+        st.pyplot(plt.gcf())
+    else:
+        st.error("Missing required columns: AOD_380nm, AOD_500nm, AOD_870nm")
 else:
     st.error("No data loaded, check your file URLs or content.")
