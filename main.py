@@ -23,66 +23,42 @@ raw_file_2 = "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/second_hal
 
 try:
     # Read the data from GitHub
-    df1 = pd.read_csv(raw_file_1, skiprows=6, parse_dates={'datetime': [0, 1]})
-    df2 = pd.read_csv(raw_file_2, skiprows=6, parse_dates={'datetime': [0, 1]})
+    df1 = pd.read_csv(raw_file_1, skiprows=6)
+    df2 = pd.read_csv(raw_file_2, skiprows=6)
+
+    # Debugging: Display sample data
+    st.write("First file sample:")
+    st.write(df1.head())
+    st.write("Second file sample:")
+    st.write(df2.head())
+
+    # Check datetime columns
+    if "datetime" not in df1.columns:
+        st.error("The 'datetime' column is missing. Check the file structure.")
+    else:
+        st.success("The 'datetime' column was found!")
+
+    # Parse dates and set index
+    df1["datetime"] = pd.to_datetime(df1["datetime"], errors='coerce')
+    df2["datetime"] = pd.to_datetime(df2["datetime"], errors='coerce')
+
+    # Concatenate the data
     data = pd.concat([df1, df2], ignore_index=True)
+    data.set_index("datetime", inplace=True)
 
-    # Convert datetime and set as index
-    datetime_utc = pd.to_datetime(data["datetime"], format='%d:%m:%Y %H:%M:%S')
-    datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-    data.set_index(datetime_pac, inplace=True)
+    # Plot initial graph
+    plt.plot(data.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(), '.k', label="380 nm")
+    plt.plot(data.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
+    plt.plot(data.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(), '.k', label="870 nm")
 
-    # Plot initial graph in black and white (no color coding)
-    plt.plot(data.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.k')
-    plt.plot(data.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k')
-    plt.plot(data.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.k')
-
-    # Format the initial plot
+    # Format the plot
     plt.gcf().autofmt_xdate()
-    plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-    plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+    plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
+    plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12))
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
     plt.ylim(AOD_min, AOD_max)
     plt.legend()
     st.pyplot(plt.gcf())
-
-    # Ask user to match wavelengths to positions
-    st.text("\nMatch the wavelengths to the positions on the graph:")
-
-    # Dropdown menus for user input with no default selection
-    positions = ["Top", "Middle", "Bottom"]
-
-    # Create user input dropdowns
-    user_matches = {}
-    for pos in positions:
-        user_matches[pos] = st.selectbox(f"What Wavelength will be located on the {pos} position on the graph?", 
-                                         options=["Select an option", "380 nm", "500 nm", "870 nm"], 
-                                         key=pos)
-
-    # Allow user to submit and display feedback
-    if st.button("Submit"):
-        st.text("Your selections have been recorded. Take a screenshot and submit your answer!")
-
-        # Create a second graph with predefined colors for the wavelengths (independent of user's input)
-        wavelength_colors = {
-            "380 nm": "b",  # Blue
-            "500 nm": "g",  # Green
-            "870 nm": "r"   # Red
-        }
-
-        # Create the second graph independently of user input
-        plt.plot(data.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_380nm"].resample(SampleRate).mean(), '.b', color=wavelength_colors["380 nm"], label="380 nm")
-        plt.plot(data.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g', color=wavelength_colors["500 nm"], label="500 nm")
-        plt.plot(data.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.r', color=wavelength_colors["870 nm"], label="870 nm")
-
-        # Format the second plot
-        plt.gcf().autofmt_xdate()
-        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-        plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
-        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-        plt.ylim(AOD_min, AOD_max)
-        plt.legend()
-        st.pyplot(plt.gcf())
 
 except Exception as e:
     st.error(f"Error loading data: {e}")
