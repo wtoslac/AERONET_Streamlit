@@ -119,7 +119,7 @@ if df_1 is not None:
                     WNDdf[5].resample(windSampleRate).mean().div(10),  # X-component of arrows
                     WNDdf[6].resample(windSampleRate).mean().div(10),  # Y-component of arrows
                     color='b',
-                    label='Wind Vector
+                    label='Wind Vector'
                     )
                 ax.legend(loc='best')
                 plt.tight_layout()
