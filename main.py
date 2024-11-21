@@ -17,17 +17,15 @@ st.sidebar.header("Adjust Y-axis Limits")
 AOD_min = st.sidebar.slider("Y-Axis Min", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
 AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.3, step=0.01)
 
-# File upload
-st.text("Upload both parts of the Level 1.5 Data from AERONET")
-uploaded_files = st.file_uploader("Choose files", accept_multiple_files=True)
+# GitHub raw file URLs
+raw_file_1 = "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/first_half.csv"
+raw_file_2 = "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/second_half.csv"
 
-if uploaded_files and len(uploaded_files) == 2:
-    # Read and combine the data
-    dfs = []
-    for file in uploaded_files:
-        df = pd.read_csv(file, skiprows=6, parse_dates={'datetime': [0, 1]})
-        dfs.append(df)
-    data = pd.concat(dfs, ignore_index=True)
+try:
+    # Read the data from GitHub
+    df1 = pd.read_csv(raw_file_1, skiprows=6, parse_dates={'datetime': [0, 1]})
+    df2 = pd.read_csv(raw_file_2, skiprows=6, parse_dates={'datetime': [0, 1]})
+    data = pd.concat([df1, df2], ignore_index=True)
 
     # Convert datetime and set as index
     datetime_utc = pd.to_datetime(data["datetime"], format='%d:%m:%Y %H:%M:%S')
@@ -85,3 +83,6 @@ if uploaded_files and len(uploaded_files) == 2:
         plt.ylim(AOD_min, AOD_max)
         plt.legend()
         st.pyplot(plt.gcf())
+
+except Exception as e:
+    st.error(f"Error loading data: {e}")
