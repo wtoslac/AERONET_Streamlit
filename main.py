@@ -21,7 +21,7 @@ AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.
 st.header("Load Data from GitHub Repository")
 file_url_1 = st.text_input(
     "Enter the raw URL of the .lev15 file from the first GitHub repository:",
-    "https://raw.githubusercontent.com/your_username/your_repository/main/20230101_20241231_Turlock_CA_USA_part1.lev15"
+    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/20230101_20241231_Turlock_CA_USA_part1.lev15"
 )
 
 # Function to load data from the given URL
