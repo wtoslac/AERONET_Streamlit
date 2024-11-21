@@ -91,7 +91,6 @@ if df_1 is not None:
             plt.ylim(AOD_min, AOD_max)
             plt.legend()
             st.pyplot(plt.gcf())
-          
 
 
 # URL for the wind data file
@@ -137,7 +136,6 @@ WNDdf[5], WNDdf[6] = Xdata, Ydata
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.set_title("Wind Vectors (Magnitude and Direction)")
 ax.set_xlabel("Time")
-ax.set_ylabel("Magnitude (m/s)")
 
 # Resample the data according to the wind sample rate and plot the wind vectors
 ax.quiver(
@@ -149,10 +147,19 @@ ax.quiver(
     label='Wind Vector'
 )
 
+# Hide the Y-axis (but still show the arrows)
+ax.get_yaxis().set_visible(False)
+
+# Display the legend and adjust layout
 ax.legend(loc='best')
 plt.tight_layout()
 
 # Display the plot in Streamlit
 st.pyplot(fig)
+
+          
+
+
+
 
 
