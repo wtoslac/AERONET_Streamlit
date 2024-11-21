@@ -91,7 +91,7 @@ if df_1 is not None:
             plt.ylim(AOD_min, AOD_max)
             plt.legend()
             st.pyplot(plt.gcf())
-if st.button("Submit"):
+            if st.button("Submit"):
     windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
     StartDate = '2023-07-01 00:00:00'
     EndDate = '2023-07-05 23:59:59'
