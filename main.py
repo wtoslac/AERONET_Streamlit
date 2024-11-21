@@ -12,8 +12,8 @@ aeronet_file = st.file_uploader("Upload AERONET Data File (CSV)", type=["csv"])
 wind_file = st.file_uploader("Upload Wind Data File (CSV)", type=["csv"])
 
 # Date range picker for the plot
-start_date = st.date_input("Start Date", pd.to_datetime('2019-06-11'))
-end_date = st.date_input("End Date", pd.to_datetime('2019-06-13'))
+start_date = st.date_input("Start Date", pd.to_datetime('2023-07-01'))
+end_date = st.date_input("End Date", pd.to_datetime('2023-07-11'))
 
 # Sample rate selection for wind data
 sample_rate = st.selectbox("Select Wind Sample Rate", ['1h', '6h', '12h', '24h'])
