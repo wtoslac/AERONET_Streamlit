@@ -35,13 +35,17 @@ if file_url_1 and file_url_2:
         df_1 = pd.read_csv(file_url_1, skiprows=6, parse_dates={'datetime': [0, 1]})
         df_2 = pd.read_csv(file_url_2, skiprows=6, parse_dates={'datetime': [0, 1]})
 
-        # Convert datetime columns to datetime objects
+        # Convert datetime columns to datetime objects (timezone naive)
         datetime_utc_1 = pd.to_datetime(df_1["datetime"], format='%d:%m:%Y %H:%M:%S')
         datetime_utc_2 = pd.to_datetime(df_2["datetime"], format='%d:%m:%Y %H:%M:%S')
 
-        # Convert both to Pacific Time, ensuring both are timezone-aware
-        datetime_pac_1 = pd.to_datetime(datetime_utc_1).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-        datetime_pac_2 = pd.to_datetime(datetime_utc_2).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
+        # Ensure both datetime columns are timezone naive first, then localize to UTC
+        datetime_utc_1 = datetime_utc_1.dt.tz_localize('UTC', ambiguous='NaT')  # Ensure naive datetime becomes UTC aware
+        datetime_utc_2 = datetime_utc_2.dt.tz_localize('UTC', ambiguous='NaT')
+
+        # Convert both to Pacific Time after they are localized to UTC
+        datetime_pac_1 = datetime_utc_1.dt.tz_convert('US/Pacific')
+        datetime_pac_2 = datetime_utc_2.dt.tz_convert('US/Pacific')
 
         # Set the datetime columns as index for both dataframes
         df_1.set_index(datetime_pac_1, inplace=True)
