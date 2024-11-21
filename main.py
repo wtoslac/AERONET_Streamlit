@@ -62,4 +62,20 @@ if df_1 is not None:
         plt.ylim(AOD_min, AOD_max)
         plt.legend()
         st.pyplot(plt.gcf())
-st.text
+        # Ask user to match wavelengths to positions
+    st.text("\nMatch the wavelengths to the positions on the graph:")
+
+    # Dropdown menus for user input with no default selection
+    positions = ["Top", "Middle", "Bottom"]
+
+    # Create user input dropdowns
+    user_matches = {}
+    for pos in positions:
+        user_matches[pos] = st.selectbox(f"What Wavelength will be located on the {pos} position on the graph?", 
+                                         options=["Select an option", "400 nm", "500 nm", "779 nm"], 
+                                         key=pos)
+
+    # Allow user to submit and display feedback
+    if st.button("Submit"):
+        st.text("Your selections have been recorded. Take a screenshot and submit your answer!")
+
