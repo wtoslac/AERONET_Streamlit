@@ -10,7 +10,7 @@ siteName = "Turlock CA USA"
 SampleRate = "1h"
 StartDate = st.date_input("StartDate", datetime.date(2023, 7, 1))
 StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0))
-EndDate = st.date_input("EndDate", datetime.date(2023, 7,7))
+EndDate = st.date_input("EndDate", datetime.date(2023, 7, 7))
 EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59))
 
 # Allow the user to set y-axis limits
@@ -20,7 +20,6 @@ AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.
 
 # Input GitHub URL for the first repository
 file_url_1 = "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/20230101_20241231_Turlock_CA_USA_part1.lev15"
-
 
 # Function to load data from the given URL
 def load_data(file_url):
@@ -83,67 +82,59 @@ if df_1 is not None:
             plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g', label="500 nm")
             plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_675nm"].resample(SampleRate).mean(), '.r', label="675 nm")
 
-            # Format the second plot
-            plt.gcf().autofmt_xdate()
-            plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-            plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
-            plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-            plt.ylim(AOD_min, AOD_max)
-            plt.legend()
-            st.pyplot(plt.gcf())
+            # Create a second y-axis for the wind vectors
+            fig, ax = plt.subplots(figsize=(10, 6))
 
-# File URL and parameters
-windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
-StartDate = '2023-07-01 00:00:00'
-EndDate = '2023-07-05 23:59:59'
-windSampleRate = '1h'
+            # Plot the AOD data
+            ax.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.b', label="440 nm")
+            ax.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g', label="500 nm")
+            ax.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_675nm"].resample(SampleRate).mean(), '.r', label="675 nm")
 
-# Read the wind data
-Wdf = pd.read_csv(windfile, parse_dates={'datetime': [1]}, low_memory=False)
-datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
-datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-Wdf.set_index(datetime_pac, inplace=True)
+            # Format the plot
+            ax.gcf().autofmt_xdate()
+            ax.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+            ax.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+            ax.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+            ax.set_ylim(AOD_min, AOD_max)
+            ax.legend()
 
-# Filter by date range
-Wdf = Wdf.loc[StartDate:EndDate]
+            # Create a secondary y-axis for wind vectors at the top
+            ax2 = ax.twiny()  # Creates a twin axis sharing the same x-axis
 
-# Extract wind data (direction and speed) and filter valid observations
-WNDdf = Wdf['WND'].str.split(pat=',', expand=True)
-WNDdf = WNDdf.loc[WNDdf[4] == '5']  # Only valid observations
+            # Read wind data and calculate Cartesian components
+            windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
+            Wdf = pd.read_csv(windfile, parse_dates={'datetime': [1]}, low_memory=False)
+            datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
+            datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
+            Wdf.set_index(datetime_pac, inplace=True)
+            Wdf = Wdf.loc[StartDate:EndDate]
+            
+            # Extract wind data (direction and speed) and filter valid observations
+            WNDdf = Wdf['WND'].str.split(pat=',', expand=True)
+            WNDdf = WNDdf.loc[WNDdf[4] == '5']  # Only valid observations
 
-# Initialize lists for Cartesian components
-Xdata, Ydata = [], []
+            # Initialize lists for Cartesian components
+            Xdata, Ydata = [], []
 
-# Calculate Cartesian components of wind vectors
-for _, row in WNDdf.iterrows():
-    magnitude = np.float64(row[3])  # Wind speed
-    direction = np.float64(row[0])  # Wind direction
-    Xdata.append(magnitude * np.sin(direction * (np.pi / 180)))
-    Ydata.append(magnitude * np.cos(direction * (np.pi / 180)))
+            # Calculate Cartesian components of wind vectors
+            for _, row in WNDdf.iterrows():
+                magnitude = np.float64(row[3])  # Wind speed
+                direction = np.float64(row[0])  # Wind direction
+                Xdata.append(magnitude * np.sin(direction * (np.pi / 180)))
+                Ydata.append(magnitude * np.cos(direction * (np.pi / 180)))
 
-# Add Cartesian components to the DataFrame
-WNDdf[5], WNDdf[6] = Xdata, Ydata
+            # Add Cartesian components to the DataFrame
+            WNDdf[5], WNDdf[6] = Xdata, Ydata
 
-# Create a plot
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.set_title("Wind Vectors (Magnitude and Direction)")
-ax.set_xlabel("Time")
-ax.set_ylabel("Magnitude (m/s)")
+            # Plot the wind vectors on the top axis (ax2)
+            ax2.quiver(
+                WNDdf[5].resample(SampleRate).mean().index,  # X-axis (time)
+                np.zeros(WNDdf[5].resample(SampleRate).mean().shape),  # Y-axis baseline
+                WNDdf[5].resample(SampleRate).mean().div(10),  # X-component of arrows
+                WNDdf[6].resample(SampleRate).mean().div(10),  # Y-component of arrows
+                color='b',
+                label='Wind Vector'
+            )
 
-# Resample the data according to the wind sample rate and plot the wind vectors
-ax.quiver(
-    WNDdf[5].resample(windSampleRate).mean().index,  # X-axis (time)
-    np.zeros(WNDdf[5].resample(windSampleRate).mean().shape),  # Y-axis baseline
-    WNDdf[5].resample(windSampleRate).mean().div(10),  # X-component of arrows
-    WNDdf[6].resample(windSampleRate).mean().div(10),  # Y-component of arrows
-    color='b',
-    label='Wind Vector'
-)
-
-ax.legend(loc='best')
-plt.tight_layout()
-
-# Display the plot in Streamlit
-st.pyplot(fig)
-
-           
+            # Display the plot in Streamlit
+            st.pyplot(fig)
