@@ -17,13 +17,12 @@ st.sidebar.header("Adjust Y-axis Limits")
 AOD_min = st.sidebar.slider("Y-Axis Min", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
 AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.3, step=0.01)
 
-# Input GitHub URLs for both repositories
-st.header("Load Data from Two GitHub Repositories")
+# Input GitHub URL for the first repository
+st.header("Load Data from GitHub Repository")
 file_url_1 = st.text_input(
     "Enter the raw URL of the .lev15 file from the first GitHub repository:",
-    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/20230101_20241231_Turlock_CA_USA_part1.lev15"
+    "https://raw.githubusercontent.com/your_username/your_repository/main/20230101_20241231_Turlock_CA_USA_part1.lev15"
 )
-
 
 # Function to load data from the given URL
 def load_data(file_url):
@@ -43,31 +42,22 @@ def load_data(file_url):
         st.error(f"Failed to process the file from {file_url}: {e}")
         return None
 
-# Load data from both files
+# Load data from the first file
 df_1 = None
-df_2 = None
 if file_url_1:
     df_1 = load_data(file_url_1)
-if file_url_2:
-    df_2 = load_data(file_url_2)
 
 # Ensure data is loaded and columns are correct
-if df_1 is not None and df_2 is not None:
+if df_1 is not None:
     if 'AOD_500nm' not in df_1.columns or 'AOD_870nm' not in df_1.columns:
-        st.error(f"Missing expected columns in the first dataset. Available columns: {df_1.columns}")
-    if 'AOD_500nm' not in df_2.columns or 'AOD_870nm' not in df_2.columns:
-        st.error(f"Missing expected columns in the second dataset. Available columns: {df_2.columns}")
+        st.error(f"Missing expected columns in the dataset. Available columns: {df_1.columns}")
     
-    # Plot data from both repositories if columns are correct
-    if 'AOD_500nm' in df_1.columns and 'AOD_870nm' in df_1.columns and \
-       'AOD_500nm' in df_2.columns and 'AOD_870nm' in df_2.columns:
+    # Plot data from the first repository if columns are correct
+    if 'AOD_500nm' in df_1.columns and 'AOD_870nm' in df_1.columns:
         
-        # Plot AOD_500nm and AOD_870nm for both datasets
-        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g', label="500 nm (Repo 1)")
-        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.b', label="870 nm (Repo 1)")
-
-        plt.plot(df_2.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g', label="500 nm (Repo 2)")
-        plt.plot(df_2.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.b', label="870 nm (Repo 2)")
+        # Plot AOD_500nm and AOD_870nm
+        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g', label="500 nm")
+        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_870nm"].resample(SampleRate).mean(), '.b', label="870 nm")
 
         # Format the plot
         plt.gcf().autofmt_xdate()
@@ -77,4 +67,3 @@ if df_1 is not None and df_2 is not None:
         plt.ylim(AOD_min, AOD_max)
         plt.legend()
         st.pyplot(plt.gcf())
-
