@@ -96,7 +96,7 @@ if df_1 is not None:
 # File URL and parameters
 windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
 StartDate = '2023-07-01 00:00:00'
-EndDate = '2023-07-08 23:59:59'
+EndDate = '2023-07-07 23:59:59'
 windSampleRate = '1h'
 
 # Read the wind data
