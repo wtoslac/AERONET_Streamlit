@@ -97,7 +97,7 @@ if df_1 is not None:
             ax2 = ax.twiny()  # Creates a twin axis sharing the same x-axis
 
             # Read the wind data
-            windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv')
+            windfile = ('https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv')
             Wdf = pd.read_csv(windfile, parse_dates={'datetime': [1]}, low_memory=False)
             datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
             datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
