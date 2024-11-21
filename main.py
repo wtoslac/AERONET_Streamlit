@@ -104,23 +104,23 @@ if st.button("Submit"):
     WNDdf = WNDdf.loc[WNDdf[4] == '5']  # Only valid observations
     Xdata, Ydata = [], []
     for _, row in WNDdf.iterrows():
-    magnitude = np.float64(row[3])  # Wind speed
-    direction = np.float64(row[0])  # Wind direction
-    Xdata.append(magnitude * np.sin(direction * (np.pi / 180)))
-    Ydata.append(magnitude * np.cos(direction * (np.pi / 180)))
-    WNDdf[5], WNDdf[6] = Xdata, Ydata  # Add Cartesian components to the DataFrame
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.set_title("Wind Vectors (Magnitude and Direction)")
-    ax.set_xlabel("Time")
-    ax.set_ylabel("Magnitude (m/s)")
-    ax.quiver(
-    WNDdf[5].resample(windSampleRate).mean().index,  # X-axis: Time
-    np.zeros(WNDdf[5].resample(windSampleRate).mean().shape),  # Y-axis baseline
-    WNDdf[5].resample(windSampleRate).mean().div(10),  # X-component of arrows
-    WNDdf[6].resample(windSampleRate).mean().div(10),  # Y-component of arrows
-    color='b',
-    label='Wind Vector'
-)
-    ax.legend(loc='best')
-    plt.tight_layout()
-    plt.show()
+        magnitude = np.float64(row[3])  # Wind speed
+        direction = np.float64(row[0])  # Wind direction
+        Xdata.append(magnitude * np.sin(direction * (np.pi / 180)))
+        Ydata.append(magnitude * np.cos(direction * (np.pi / 180)))
+        WNDdf[5], WNDdf[6] = Xdata, Ydata  # Add Cartesian components to the DataFrame
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.set_title("Wind Vectors (Magnitude and Direction)")
+        ax.set_xlabel("Time")
+        ax.set_ylabel("Magnitude (m/s)")
+        ax.quiver(
+            WNDdf[5].resample(windSampleRate).mean().index,  # X-axis: Time
+            np.zeros(WNDdf[5].resample(windSampleRate).mean().shape),  # Y-axis baseline
+            WNDdf[5].resample(windSampleRate).mean().div(10),  # X-component of arrows
+            WNDdf[6].resample(windSampleRate).mean().div(10),  # Y-component of arrows
+            color='b',
+            label='Wind Vector'
+        )
+        ax.legend(loc='best')
+        plt.tight_layout()
+        plt.show()
