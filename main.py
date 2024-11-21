@@ -17,15 +17,15 @@ st.sidebar.header("Adjust Y-axis Limits")
 AOD_min = st.sidebar.slider("Y-Axis Min", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
 AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.3, step=0.01)
 
-# GitHub raw file URLs (replace with your actual file URLs)
+# GitHub raw file URLs (replace with your actual raw file URLs)
 files = [
-    "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20230101_20230630_Turlock_CA_USA.tot_lev15",
-    "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20230630_20230831_Turlock_CA_USA.tot_lev15",
-    "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20230831_20231231_Turlock_CA_USA.tot_lev15",
-    "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20240101_20240531_Turlock_CA_USA.tot_lev15",
-    "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20240601_20240731_Turlock_CA_USA.tot_lev15",
-    "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20240731_20240930_Turlock_CA_USA.tot_lev15",
-    "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20241001_20241231_Turlock_CA_USA.tot_lev15"
+    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/main/20230101_20230630_Turlock_CA_USA.tot_lev15",
+    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/main/20230630_20230831_Turlock_CA_USA.tot_lev15",
+    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/main/20230831_20231231_Turlock_CA_USA.tot_lev15",
+    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/main/20240101_20240531_Turlock_CA_USA.tot_lev15",
+    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/main/20240601_20240731_Turlock_CA_USA.tot_lev15",
+    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/main/20240731_20240930_Turlock_CA_USA.tot_lev15",
+    "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/main/20241001_20241231_Turlock_CA_USA.tot_lev15"
 ]
 
 # Function to load and concatenate the data
@@ -34,19 +34,28 @@ def load_data(files):
     for file_url in files:
         try:
             # Read each CSV (tot_lev15 files) from GitHub
+            st.write(f"Attempting to load file from: {file_url}")
             df = pd.read_csv(file_url, skiprows=6, parse_dates={'datetime': [0, 1]})
-            all_data.append(df)
+            
+            # Check if data is loaded successfully
+            if df.empty:
+                st.warning(f"File {file_url} is empty or not properly formatted.")
+            else:
+                st.write(f"Successfully loaded {file_url}, sample data:")
+                st.write(df.head())
+                all_data.append(df)
+
         except Exception as e:
             st.error(f"Error loading {file_url}: {e}")
 
     # Concatenate all data into a single dataframe
-    data = pd.concat(all_data, ignore_index=True)
-    
-    # Parse and set datetime as index
-    data["datetime"] = pd.to_datetime(data["datetime"], errors='coerce')
-    data.set_index("datetime", inplace=True)
-    
-    return data
+    if all_data:
+        data = pd.concat(all_data, ignore_index=True)
+        data.set_index("datetime", inplace=True)
+        return data
+    else:
+        st.error("No valid data to concatenate.")
+        return pd.DataFrame()  # Return an empty DataFrame if no data was loaded
 
 # Load the data
 data = load_data(files)
