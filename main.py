@@ -17,20 +17,17 @@ st.sidebar.header("Adjust Y-axis Limits")
 AOD_min = st.sidebar.slider("Y-Axis Min", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
 AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.3, step=0.01)
 
-# Predefined file paths for GitHub repository files
-st.header("Select Data File from GitHub Repository")
-file_choice = st.selectbox(
-    "Choose a file to load:",
-    options=[
-        "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20230101_20241231_Turlock_CA_USA_part1.lev15",
-        "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20230101_20241231_Turlock_CA_USA_part2.lev15"
-    ],
+# Input GitHub raw file URL
+st.header("Load Data from GitHub Repository")
+file_url = st.text_input(
+    "Enter the raw URL of the .lev15 file from the GitHub repository:",
+    "https://github.com/Rsaltos7/AERONET_Streamlit/blob/main/20230101_20241231_Turlock_CA_USA_part2.lev15"
 )
 
-if file_choice:
+if file_url:
     try:
-        # Read the data from the GitHub raw URL
-        df = pd.read_csv(file_choice, skiprows=6, parse_dates={'datetime': [0, 1]})
+        # Read the data from the provided GitHub raw URL
+        df = pd.read_csv(file_url, skiprows=6, parse_dates={'datetime': [0, 1]})
         datetime_utc = pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
         datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
         df.set_index(datetime_pac, inplace=True)
@@ -48,6 +45,44 @@ if file_choice:
         plt.ylim(AOD_min, AOD_max)
         plt.legend()
         st.pyplot(plt.gcf())
+
+        # Ask user to match wavelengths to positions
+        st.text("\nMatch the wavelengths to the positions on the graph:")
+
+        # Dropdown menus for user input with no default selection
+        positions = ["Top", "Middle", "Bottom"]
+
+        # Create user input dropdowns
+        user_matches = {}
+        for pos in positions:
+            user_matches[pos] = st.selectbox(f"What Wavelength will be located on the {pos} position on the graph?", 
+                                             options=["Select an option", "400 nm", "500 nm", "779 nm"], 
+                                             key=pos)
+
+        # Allow user to submit and display feedback
+        if st.button("Submit"):
+            st.text("Your selections have been recorded. Take a screenshot and submit your answer!")
+
+            # Create a second graph with predefined colors for the wavelengths (independent of user's input)
+            wavelength_colors = {
+                "380 nm": "b",  # Blue
+                "500 nm": "g",  # Green
+                "870 nm": "r"   # Red
+            }
+
+            # Create the second graph independently of user input
+            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_380nm"].resample(SampleRate).mean(), '.b', label="380 nm")
+            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_500nm"].resample(SampleRate).mean(), '.g', label="500 nm")
+            plt.plot(df.loc[StartDateTime:EndDateTime, "AOD_870nm"].resample(SampleRate).mean(), '.r', label="870 nm")
+
+            # Format the second plot
+            plt.gcf().autofmt_xdate()
+            plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+            plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+            plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+            plt.ylim(AOD_min, AOD_max)
+            plt.legend()
+            st.pyplot(plt.gcf())
+
     except Exception as e:
         st.error(f"Failed to process the file: {e}")
-
