@@ -20,7 +20,7 @@ AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.
 
 # Google Drive file ID (extracted from the URL)
 google_drive_file_id = "12qSh5UWpL_cfsIQU7pnIUV8vouEgHB-V"
-download_url = f"https://drive.google.com/uc?id={google_drive_file_id}"
+download_url = f"https://drive.google.com/file/d/12qSh5UWpL_cfsIQU7pnIUV8vouEgHB-V/view?usp=sharing"
 
 # Function to download the file from Google Drive and load into pandas DataFrame
 def load_data_from_google_drive(url):
