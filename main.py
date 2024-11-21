@@ -18,7 +18,6 @@ AOD_min = st.sidebar.slider("Y-Axis Min", min_value=0.0, max_value=1.0, value=0.
 AOD_max = st.sidebar.slider("Y-Axis Max", min_value=0.0, max_value=1.0, value=0.3, step=0.01)
 
 # Input GitHub URL for the first repository
-
 file_url_1 = "https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/20230101_20241231_Turlock_CA_USA_part1.lev15"
 
 
@@ -49,63 +48,7 @@ if df_1 is not None:
     # Plot data from the first repository if columns are correct
     if 'AOD_440nm' in df_1.columns and 'AOD_500nm' in df_1.columns and 'AOD_675nm' in df_1.columns:
         
-        # Plot AOD_380nm, AOD_500nm, and AOD_870nm
-        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.k')
-        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k')
-        plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_675nm"].resample(SampleRate).mean(), '.k')
-
-        # Format the plot
-        plt.gcf().autofmt_xdate()
-        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-        plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
-        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-        plt.ylim(AOD_min, AOD_max)
-        plt.legend()
-        st.pyplot(plt.gcf())
-        # Ask user to match wavelengths to positions
-    st.text("\nMatch the wavelengths to the positions on the graph:")
-
-    # Dropdown menus for user input with no default selection
-    positions = ["Top", "Middle", "Bottom"]
-
-    # Create user input dropdowns
-    user_matches = {}
-    for pos in positions:
-        user_matches[pos] = st.selectbox(f"What Wavelength will be located on the {pos} position on the graph?", 
-                                         options=["Select an option", "400 nm", "500 nm", "779 nm"], 
-                                         key=pos)
-
-    # Allow user to submit and display feedback
-    if st.button("Submit"):
-        st.text("Your selections have been recorded. Take a screenshot and submit your answer!")
-# Function to load data from the given URL
-def load_data(file_url):
-    try:
-        # Read the data from the provided GitHub raw URL
-        df = pd.read_csv(file_url, skiprows=6, parse_dates={'datetime': [0, 1]})
-        datetime_utc = pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
-        datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-        df.set_index(datetime_pac, inplace=True)
-        
-        return df
-    except Exception as e:
-        st.error(f"Failed to process the file from {file_url}: {e}")
-        return None
-
-# Load data from the first file
-df_1 = None
-if file_url_1:
-    df_1 = load_data(file_url_1)
-
-# Ensure data is loaded and columns are correct
-if df_1 is not None:
-    if 'AOD_400nm' not in df_1.columns or 'AOD_500nm' not in df_1.columns or 'AOD_675nm' not in df_1.columns:
-        st.error(f"Missing expected columns in the dataset. Available columns: {df_1.columns}")
-    
-    # Plot data from the first repository if columns are correct
-    if 'AOD_440nm' in df_1.columns and 'AOD_500nm' in df_1.columns and 'AOD_675nm' in df_1.columns:
-        
-        # Plot AOD_380nm, AOD_500nm, and AOD_870nm
+        # Plot AOD_440nm, AOD_500nm, and AOD_675nm as initial plot
         plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.k', label="440 nm")
         plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k', label="500 nm")
         plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_675nm"].resample(SampleRate).mean(), '.k', label="675 nm")
@@ -118,4 +61,50 @@ if df_1 is not None:
         plt.ylim(AOD_min, AOD_max)
         plt.legend()
         st.pyplot(plt.gcf())
+        
+        # Ask user to match wavelengths to positions
+        st.text("\nMatch the wavelengths to the positions on the graph:")
 
+        # Dropdown menus for user input with no default selection
+        positions = ["Top", "Middle", "Bottom"]
+
+        # Create user input dropdowns for selecting wavelengths
+        user_matches = {}
+        for pos in positions:
+            user_matches[pos] = st.selectbox(f"What Wavelength will be located on the {pos} position on the graph?", 
+                                             options=["Select an option", "400 nm", "500 nm", "779 nm"], 
+                                             key=pos)
+
+        # Allow user to submit and display feedback
+        if st.button("Submit"):
+            st.text("Your selections have been recorded. Now plotting the wavelengths in the selected positions...")
+
+            # Now plot the second graph based on user selection
+            wavelengths = {
+                "Top": user_matches["Top"],
+                "Middle": user_matches["Middle"],
+                "Bottom": user_matches["Bottom"]
+            }
+
+            # Define a color mapping for each wavelength
+            wavelength_colors = {
+                "400 nm": "blue",
+                "500 nm": "green",
+                "779 nm": "red"
+            }
+
+            # Create the second graph based on user selection
+            for pos, wavelength in wavelengths.items():
+                if wavelength != "Select an option":
+                    # Plot the corresponding wavelength
+                    plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), f"AOD_{wavelength.replace(' ', '')}"].resample(SampleRate).mean(), 
+                             '.', color=wavelength_colors.get(wavelength, 'black'), label=f"{wavelength} - {pos}")
+
+            # Format the second plot
+            plt.gcf().autofmt_xdate()
+            plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+            plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))
+            plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+            plt.ylim(AOD_min, AOD_max)
+            plt.legend()
+            st.pyplot(plt.gcf())
