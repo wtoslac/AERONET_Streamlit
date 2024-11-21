@@ -3,6 +3,7 @@ import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+pip install gdown
 import gdown  # This library allows us to download files from Google Drive
 
 # Set up basic information
