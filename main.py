@@ -179,7 +179,7 @@ st.pyplot(fig)
 StartDate='2023-10-07 00:00:00'
 EndDate='2023-10-15 23:59:59'
 # Assuming Wdf is already loaded as a DataFrame with 'TMP' column
-Tdf = WNDdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
+Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
 #Tdf = WNDdf
 #Tdf = Wdf_filtered
 #Replace '+9999' with NaN and convert to numeric
