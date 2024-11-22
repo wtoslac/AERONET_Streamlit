@@ -192,8 +192,8 @@ ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 
 # Prepare temperature data
 temp_data = Tdf.loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10)
-y_min = temp_data.min() - 1  # Add a small buffer below minimum
-y_max = temp_data.max() + 1  # Add a small buffer above maximum
+y_min = 18#temp_data.min() - 1  # Add a small buffer below minimum
+y_max = 40 #temp_data.max() + 1  # Add a small buffer above maximum
 ax.set_ylabel('Temperature (°C)')
 ax.set_ylim(y_min, y_max)
 
