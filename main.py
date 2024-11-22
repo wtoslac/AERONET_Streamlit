@@ -206,3 +206,5 @@ plt.tight_layout()  # Adjust layout to prevent overlaps
 
 # Display the figure
 st.pyplot(fig)
+st.write("Temperature Data:", temp_data)
+
