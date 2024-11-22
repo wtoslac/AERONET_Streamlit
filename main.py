@@ -137,6 +137,7 @@ WNDdf[5], WNDdf[6] = Xdata, Ydata
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.set_title("Wind Vector")  # Added title for Wind Vector graph
 ax.set_xlabel("Time")
+ax.set_ylim(AOD_min,AOD_max)
 
 # Resample the data according to the wind sample rate and plot the wind vectors
 ax.quiver(
