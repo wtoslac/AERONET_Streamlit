@@ -152,7 +152,7 @@ ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 
 # Drawing the Temperature Data onto the graph.
 ax.set_ylabel('Temperature °C')
-ax3.set_ylim(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).min()//1,
+ax.set_ylim(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).min()//1,
             Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).max()//1) # Auto Calculating
 temperatureHandle, = ax.plot(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10), '.r-',label='Temperature',figure=fig) # handle, label = ax2.plot()
 
