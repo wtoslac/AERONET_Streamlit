@@ -103,7 +103,8 @@ datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 Wdf.set_index(datetime_pac, inplace=True)
 
 # Filter the wind data based on the user-selected date range
-StartDate = start_date.strftime('%Y-%m-%d 00:00:00')
+StartDateTime = datetime.datetime.combine(start_date, datetime.time(0, 0, 0))  # Combine date with time
+StartDate = StartDateTime.strftime('%Y-%m-%d %H:%M:%S')  # Now you can use strftime
 EndDate = end_date.strftime('%Y-%m-%d 23:59:59')
 Wdf_filtered = Wdf.loc[StartDate:EndDate]
 
