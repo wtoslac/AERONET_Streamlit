@@ -145,8 +145,8 @@ ax2 = ax.twinx()
 ax.yaxis.set_label_position('right')  # Position the label on the right axis
 
 # Plot the data
-ax2.plot(Wnddf.index, WNDdf[6], 'g-', label='U-Wind Component')
-ax.plot(Wnddf.index, WNDdf[5], 'r-', label="Wind Vector Y")
+ax2.plot(WnDdf.index, WNDdf[6], 'g-', label='U-Wind Component')
+ax.plot(WnDdf.index, WNDdf[5], 'r-', label="Wind Vector Y")
 ax2.legend(loc='best')
 ax.legend(loc='best')
 st.pyplot(fig)
