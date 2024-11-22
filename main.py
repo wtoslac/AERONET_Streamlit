@@ -179,31 +179,33 @@ EndDate='2023-07-07'
 Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
 Tdf.replace('+9999', np.nan, inplace=True)
 
-# Remove obvious outliers (e.g., temperatures greater than 50°C or negative below reasonable thresholds)
-Tdf = temp_data[(temp_data >= -50) & (temp_data <= 50)]
 
-# Re-plot the filtered data
-fig, ax = plt.subplots(figsize=(13, 8))
-fig.autofmt_xdate()
-ax.set_title("Temperature (Filtered)")
+
+# Ensure temp_data is numeric
+temp_data = Tdf.loc[StartDate:EndDate].astype(float, errors='coerce').resample(SampleRate).mean().div(10)
+
+# Filter for valid temperature range
+temp_data = temp_data[(temp_data >= -50) & (temp_data <= 50)]
+
+# Reset index if necessary
+temp_data = temp_data.reset_index(drop=True)
+
+# Plot the data
+fig, ax = plt.subplots(1, 1, figsize=(13, 8))
+ax.set_title("Temperature")
 ax.grid(which='both', axis='both')
 ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))  # Major ticks: 1 day
 ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3))  # Minor ticks: every 3 hours
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d %H:%M:%S'))
-
-# Update y-axis range based on filtered data
-filtered_y_min = filtered_temp_data.min() - 1  # Add a small buffer below minimum
-filtered_y_max = filtered_temp_data.max() + 1  # Add a small buffer above maximum
-ax.set_ylim(filtered_y_min, filtered_y_max)
 ax.set_ylabel('Temperature (°C)')
-
-# Plot the filtered temperature data
-ax.plot(filtered_temp_data, '.r-', label='Filtered Temperature')
-
-# Finalize layout and display
+y_min, y_max = temp_data.min() - 1, temp_data.max() + 1
+ax.set_ylim(y_min, y_max)
+ax.plot(temp_data, '.r-', label='Temperature')
 plt.tight_layout()
-plt.show()
+st.pyplot(fig)
 
+# Display filtered data
+st.write("Filtered Temperature Data:", temp_data)
 
 
 
