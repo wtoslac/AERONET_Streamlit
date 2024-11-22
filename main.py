@@ -135,7 +135,7 @@ WNDdf[5], WNDdf[6] = Xdata, Ydata
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.set_title("Wind Vector")  # Added title for Wind Vector graph
 ax.set_xlabel("Time")
-ax.set_ylim(AOD_min,AOD_max)
+ax.set_ylim(18,24)
 ax.set_ylabel("Magnitude m/s")
 ax2 = ax.twinx()
 ax2.set_ylabel("AOD Total")
@@ -162,7 +162,7 @@ ax.quiver(
 ax3 = ax.twinx()
 ax3.spines.right.set_position(('axes', 1.07))
 ax3.set_ylabel("Temp C")
-ax2.set_ylim(18,41) # Manual Setting
+ax2.set_ylim(AOD_min,AOD_max) # Manual Setting
 
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.b',label="440 nm")
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g',label="500 nm")
