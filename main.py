@@ -189,7 +189,7 @@ ax.set_title("Temperature")
 ax.grid(which='both', axis='both')
 ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))  # Major ticks: 1 day
 ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3))  # Minor ticks: every 3 hours
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%y-%m-%d'))
 
 # Prepare temperature data
 temp_data = Tdf.loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10)
