@@ -178,6 +178,11 @@ st.pyplot(fig)
 #EndDate = pd.to_datetime('2023-07-07')
 StartDate='2023-10-07 00:00:00'
 EndDate='2023-10-15 23:59:59'
+windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
+windSampleRate = '3h'
+StartDate='2023-10-07 00:00:00'
+EndDate='2023-10-15 23:59:59'
+Wdf = pd.read_csv(windfile, parse_dates={'datetime':[1]}, low_memory=False)
 # Assuming Wdf is already loaded as a DataFrame with 'TMP' column
 Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
 #Tdf = WNDdf
