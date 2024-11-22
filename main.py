@@ -8,7 +8,7 @@ import numpy as np
 # Set up basic information
 siteName = "Turlock CA USA"
 SampleRate = "1h"
-
+st.header("Turlock AOD")
 
 # Input for StartDate and EndDate
 StartDate = st.date_input("Start Date", datetime.date(2023, 7, 1))
@@ -107,7 +107,7 @@ datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 Wdf.set_index(datetime_pac, inplace=True)
 
 # Streamlit widgets for dynamic date range selection
-
+st.title("Wind Vectors (Magnitude and Direction)")  # Fixing title assignment to a string
 start_date = st.date_input("Select Start Date", pd.to_datetime('2023-07-01'))
 end_date = st.date_input("Select End Date", pd.to_datetime('2023-07-07'))
 
@@ -135,7 +135,7 @@ for _, row in WNDdf.iterrows():
 # Add Cartesian components to the DataFrame
 WNDdf[5], WNDdf[6] = Xdata, Ydata
 
-# Create a plot
+# Create a plot for wind vectors
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.set_title("Wind Vector")  # Added title for Wind Vector graph
 ax.set_xlabel("Time")
@@ -144,9 +144,13 @@ ax.set_ylabel("Magnitude m/s")
 ax2 = ax.twinx()
 ax.yaxis.set_label_position('right')  # Position the label on the right axis
 
-# Plot the data
-ax2.plot(WnDdf.index, WNDdf[6], 'g-', label='U-Wind Component')
-ax.plot(WnDdf.index, WNDdf[5], 'r-', label="Wind Vector Y")
+# Plot the data for wind vector components (X and Y wind components)
+ax2.plot(WNDdf.index, WNDdf[6], 'g-', label='U-Wind Component')  # Corrected from WnDdf to WNDdf
+ax.plot(WNDdf.index, WNDdf[5], 'r-', label="Wind Vector Y")  # Corrected from WnDdf to WNDdf
+
+# Adding legends
 ax2.legend(loc='best')
 ax.legend(loc='best')
+
+# Display the plot
 st.pyplot(fig)
