@@ -93,17 +93,15 @@ if df_1 is not None:
             plt.legend()
             plt.title("AOD Turlock")  # Added title for AOD graph
             st.pyplot(plt.gcf())
-
-# URL for the wind data file
-windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
-windSampleRate = '3h'
-
-# Read the wind data
+ if st.button("Submit"):
+     # URL for the wind data file
+     windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
+     windSampleRate = '3h'
+     # Read the wind data
 Wdf = pd.read_csv(windfile, parse_dates={'datetime': [1]}, low_memory=False)
 datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
 datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 Wdf.set_index(datetime_pac, inplace=True)
-
 # Streamlit widgets for dynamic date range selection
 st.title = "Wind Vectors (Magnitude and Direction)"  # Fixing title assignment to a string
 start_date = st.date_input("Select Start Date", pd.to_datetime('2023-07-01'))
