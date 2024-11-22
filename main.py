@@ -172,46 +172,16 @@ plt.tight_layout()
 # Display the plot in Streamlit
 st.pyplot(fig)
 
-
-StartDate = start_date.strftime('%Y-%m-%d 00:00:00')
-EndDate = end_date.strftime('%Y-%m-%d 23:59:59')
-# Assuming Wdf, StartDate, EndDate, siteName, filename, SampleRate are defined earlier
+#Temp
+Tdf = Wdf.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
+## Replacing +9999 values with nan, +9999 indicates "missing data"
+Tdf.replace('+9999', np.nan, inplace = True)
+fig, axes = plt.subplots(1,1, figsize=(16*graphScale,9*graphScale)) # plt.subplots(nrows, ncolumns, *args) # axs will be either an individual plot or an array of axes
 try:
-    Tdf = Wdf.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), 'TMP'].str.split(pat=',', expand=True)
-except Exception as e:
-    st.write(e)
-    
-Tdf.replace('+9999', np.nan, inplace=True)
+    ax = axes[0,0] # If axes is a 2D array of axes, then we'll use the first axis for this drawing.
+except:
+    try:
+        ax = axes[0] # If axes is a 1D array of axes, then we'll use the first axis for this drawing.
+    except:
+        ax = axes # If axes is just a single axis then we'll use it directly.
 
-# Create subplots (2x2 layout, adjust as needed)
-fig, axes = plt.subplots(1, 1, figsize=(13, 8))
-#ax = axes[0, 0]  # Use the first subplot for this specific plot
-
-# Format the figure and axis
-fig.autofmt_xdate()
-ax.set_title("Temperature")
-ax.grid(which='both', axis='both')
-ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))  # Major ticks: 1 day
-ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3))  # Minor ticks: every 3 hours
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d %H:%M:%S'))
-
-# Prepare temperature data
-temp_data = Tdf.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S')].astype(float).resample(SampleRate).mean().div(10)
-ax.set_ylabel('Temperature (°C)')
-#temp_data.min() - 1  # Add a small buffer below minimum #y_min =1
-#temp_data.max() + 1  # Add a small buffer above maximum #y_max =24
-#y_min = temp_data.min() - 1  # A small buffer below the minimum value
-#y_max = temp_data.max() + 1  # A small buffer above the maximum value
-#ax.set_ylim(14, 50)
-
-
-# Plot the data
-ax.plot(temp_data, '.r-', label='Temperature')
-
-# Add legend and finalize layout
-#ax.legend(handles=[temperatureHandle], loc='best')
-plt.tight_layout()  # Adjust layout to prevent overlaps
-
-# Display the figure
-st.pyplot(fig)
-st.write("Temperature Data:", temp_data)
