@@ -103,8 +103,19 @@ datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 Wdf.set_index(datetime_pac, inplace=True)
 
 # Filter the wind data based on the user-selected date range
-StartDateTime = datetime.datetime.combine(start_date, datetime.time(0, 0, 0))  # Combine date with time
-StartDate = StartDateTime.strftime('%Y-%m-%d %H:%M:%S')  # Now you can use strftime
+import datetime
+
+# Get the start_date from Streamlit (which is a datetime.date object)
+start_date = st.date_input("StartDate", datetime.date(2023, 7, 1))
+
+# Ensure start_date is a datetime.date object
+if isinstance(start_date, datetime.datetime):
+    start_date = start_date.date()  # If it's a datetime.datetime, convert to datetime.date
+
+# Now combine the date with a time of 00:00:00
+StartDateTime = datetime.datetime.combine(start_date, datetime.time(0, 0))  # Combine date with time
+StartDate = StartDateTime.strftime('%Y-%m-%d %H:%M:%S')  # Format as string
+
 EndDate = end_date.strftime('%Y-%m-%d 23:59:59')
 Wdf_filtered = Wdf.loc[StartDate:EndDate]
 
