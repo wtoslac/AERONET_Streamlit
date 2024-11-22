@@ -138,7 +138,7 @@ ax.set_xlabel("Time")
 ax.set_ylim(AOD_min,AOD_max)
 ax.set_ylabel("Magnitude m/s")
 ax2 = ax.twinx()
-ax.yaxis.set_label_position('right')  # Move label to the right
+ax.yaxis.set_label_position("AOD Total",'right')  # Move label to the right
 ax.yaxis.set_ticks_position('right')  # Move ticks to the right
 ax2.yaxis.set_label_position('left')  # Move label to the left
 ax2.yaxis.set_ticks_position('left')  # Move ticks to the left
