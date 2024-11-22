@@ -176,7 +176,11 @@ st.pyplot(fig)
 StartDate='%Y-%m-%d 00:00:00'
 EndDate='%Y-%m-%d 23:59:59'
 # Assuming Wdf, StartDate, EndDate, siteName, filename, SampleRate are defined earlier
-Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
+try:
+    Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
+except Exception as e:
+    print(e)
+    
 Tdf.replace('+9999', np.nan, inplace=True)
 
 # Create subplots (2x2 layout, adjust as needed)
