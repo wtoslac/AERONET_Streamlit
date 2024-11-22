@@ -202,4 +202,6 @@ temperatureHandle, = ax.plot(temp_data, '.r-', label='Temperature')
 # Add legend and finalize layout
 ax.legend(handles=[temperatureHandle], loc='best')
 plt.tight_layout()  # Adjust layout to prevent overlaps
-plt.pyplot(fig)
+
+# Display the figure
+plt.show()
