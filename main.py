@@ -148,7 +148,7 @@ ax.quiver(
     -WNDdf[5].resample(windSampleRate).mean().div(10),  # X-component of arrows
     -WNDdf[6].resample(windSampleRate).mean().div(10),  # Y-component of arrows
     color='b',
-    label='Wind Vector'
+    label left ='Wind Vector'
 )
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.b',label="440 nm")
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g',label="500 nm")
