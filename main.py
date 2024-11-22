@@ -147,7 +147,7 @@ fig.autofmt_xdate() ## Note: With multiple plots, this removes the x-axis identi
 ax.set_title('Modesto Temperature')
 ax.grid(which='both',axis='both')
 ax.xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-ax3.xaxis.set_minor_locator(mdates.HourLocator(interval=3, tz='US/Pacific'))
+ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3, tz='US/Pacific'))
 ax3.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 
 # Drawing the Temperature Data onto the graph.
