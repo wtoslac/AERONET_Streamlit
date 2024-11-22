@@ -135,6 +135,7 @@ WNDdf[5], WNDdf[6] = Xdata, Ydata
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.set_title("Wind Vector")  # Added title for Wind Vector graph
 ax.set_xlabel("Time")
+ax.spines.left.set_position(('axes', 1.05))
 ax.set_ylabel("AOD Total")
 ax.set_ylim(AOD_min,AOD_max)
 ax2 = ax.twinx()
