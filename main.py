@@ -147,7 +147,7 @@ ax2.set_ylabel("Magnitude m/s")
 
 maxWind = np.sqrt((WNDdf[6].loc[StartDate:EndDate].astype(float).max()/10)**2+
                   (WNDdf[5].loc[StartDate:EndDate].astype(float).max()/10)**2)
-ax.set_ylim(0,maxWind)
+ax.set_ylim(AOD_min, AOD_max)
 # Resample the data according to the wind sample rate and plot the wind vectors
 ax.quiver(
     WNDdf[5].resample(windSampleRate).mean().index,maxWind-1,  # X-axis (time)
