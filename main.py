@@ -172,10 +172,6 @@ plt.tight_layout()
 # Display the plot in Streamlit
 st.pyplot(fig)
 
-import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-import streamlit as st
 
 # Convert StartDate and EndDate to datetime objects
 StartDate = pd.to_datetime('2023-07-01')
@@ -183,7 +179,7 @@ EndDate = pd.to_datetime('2023-07-07')
 
 # Assuming Wdf is already loaded as a DataFrame with 'TMP' column
 #Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
-
+Tdf = Wdf_filtered['WND'].str.split(pat=',', expand=True)
 # Replace '+9999' with NaN and convert to numeric
 Tdf.replace('+9999', np.nan, inplace=True)
 Tdf = Tdf.apply(pd.to_numeric, errors='coerce')  # Convert to numeric, errors to NaN
