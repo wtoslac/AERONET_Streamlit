@@ -171,37 +171,57 @@ plt.tight_layout()
 # Display the plot in Streamlit
 st.pyplot(fig)
 
-#Temp
-#Tdf = Wdf.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
-## Replacing +9999 values with nan, +9999 indicates "missing data"
-#Tdf.replace('+9999', np.nan, inplace = True)
-#fig, axes = plt.subplots(1,1, figsize=(16,9)) # plt.subplots(nrows, ncolumns, *args) # axs will be either an individual plot or an array of axes
-#try:
-#    ax = axes[0,0] # If axes is a 2D array of axes, then we'll use the first axis for this drawing.
-#except:
-#    try:
-#        ax = axes[0] # If axes is a 1D array of axes, then we'll use the first axis for this drawing.
-#    except:
-      #  ax = axes # If axes is just a single axis then we'll use it directly.
-# Initializing main Axis and plot
-#fig.autofmt_xdate() ## Note: With multiple plots, this removes the x-axis identifiers for plots not in the bottom row
-#ax3.set_title('Modesto Temperature')
-#ax3.grid(which='both',axis='both')
-#ax3.xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-#ax3.xaxis.set_minor_locator(mdates.HourLocator(interval=3, tz='US/Pacific'))
-#ax3.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 
-# Drawing the Temperature Data onto the graph.
-#ax.set_ylabel('Temperature °C')
-#ax3.set_ylim(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).min()//1,
-          #  Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).max()//1) # Auto Calculating
-#temperatureHandle, = ax.plot(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10), '.r-',label='Temperature',figure=fig) # handle, label = ax2.plot()
+
+#Temp
+Tdf = Wdf.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
+# Replacing +9999 values with nan, +9999 indicates "missing data"
+Tdf.replace('+9999', np.nan, inplace = True)
+fig, axes = plt.subplots(1,1, figsize=(16*graphScale,9*graphScale)) # plt.subplots(nrows, ncolumns, *args) # axs will be either an individual plot or an array of axes
+try:
+    ax = axes[0,0] # If axes is a 2D array of axes, then we'll use the first axis for this drawing.
+except:
+    try:
+        ax = axes[0] # If axes is a 1D array of axes, then we'll use the first axis for this drawing.
+    except:
+        ax = axes # If axes is just a single axis then we'll use it directly.
+
+# Initializing main Axis and plot
+fig.autofmt_xdate() ## Note: With multiple plots, this removes the x-axis identifiers for plots not in the bottom row
+ax.set_title(siteName + ' ' + filename[0:4] + ' ' + selectedWavelength + ', Wind Speed, and Temperature ')
+ax.grid(which='both',axis='both')
+ax.xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3, tz='US/Pacific'))
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+
+# Drawing the first pieces of data (AOD_500nm-Total) onto the graph
+ax.set_ylabel(selectedWavelength)
+aodHandle, = ax.plot(df.loc[StartDate:EndDate,selectedWavelength].resample(SampleRate).mean(),'ok-',label=selectedWavelength, figure=fig) # handle, label = ax.plot()
+ax.set_ylim(AOD_min,AOD_max) # Manually set the values for the y-limit of the plot
+
+# Adding a new Axis sharing the same xaxis as before and drawing the second piece of data.
+ax2 = ax.twinx()
+ax2.spines.right.set_position(('axes', 1.05)) # Adjusting the position of the "spine" or y-axis to not overlap with the next pieces of data
+ax2.set_ylabel('Temperature °C')
+ax2.set_ylim(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).min()//1,
+            Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).max()//1) # Auto Calculatingtemperature
+Handle, = ax2.plot(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10), '.r-',label='Temperature',figure=fig) # handle, label = ax2.plot()
+
+# Adding a new Axis sharing the same xaxis as the previous two and drawing the thrid piece of data
+ax3 = ax.twinx()
+ax3.set_ylabel("Wind Mag m/s")
+ax3.set_ylim(0,maxWind)
+windHandle = ax3.quiver(WNDdf[5].resample(WindSampleRate).mean().index,maxWind-1,
+                -WNDdf[5].loc[StartDate:EndDate].astype(float).resample(WindSampleRate).mean().div(10),
+                -WNDdf[6].loc[StartDate:EndDate].astype(float).resample(WindSampleRate).mean().div(10),
+                color='b',label='Wind Vector',width=0.005)
 
 # Displaying the legend and Reorganizing everything to fit nicely
-## Note: temperatureHandle is the handle for the data plot we created.
-#ax3.plt.legend(handles = [temperatureHandle], loc = 'best')
-#ax3.plt.tight_layout() # Adjusts the boundaries of the figures to ensure everything fits nicely. Can define pads as we we see fit.
+## Note: plot1 and plot2 are the handles for the data we created and plot3, the quiver, is handled differently.
+plt.legend(handles = [aodHandle, temperatureHandle, windHandle], loc = 'best')
+plt.tight_layout() # Adjusts the boundaries of the figures to ensure everything fits nicely. Can define pads as we we see fit.
 
-# Display the plot in Streamlit
-#st.pyplot(fig)
+
+#Display the plot in Streamlit
+st.pyplot(fig)
 
