@@ -173,58 +173,40 @@ plt.tight_layout()
 st.pyplot(fig)
 
 
-# Convert StartDate and EndDate to datetime objects
-#StartDate = pd.to_datetime('2023-07-01')
-#EndDate = pd.to_datetime('2023-07-07')
-
-StartDate='2023-10-07 00:00:00'
-EndDate='2023-10-15 23:59:59'
-# Assuming Wdf is already loaded as a DataFrame with 'TMP' column
+StartDate='2023-07-01'
+EndDate='2023-07-07'
+# Assuming Wdf, StartDate, EndDate, siteName, filename, SampleRate are defined earlier
 Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
-#Tdf = WNDdf
-#Tdf = Wdf_filtered
-#Replace '+9999' with NaN and convert to numeric
-#Tdf.replace('+9999', np.nan, inplace=True)
-#Tdf = Tdf.apply(pd.to_numeric, errors='coerce')  # Convert to numeric, errors to NaN
+Tdf.replace('+9999', np.nan, inplace=True)
 
-# Check the first few rows to confirm
-st.write("First few rows of Tdf:", Tdf.head())
-
-# Create subplots (1x1 layout)
-#fig, ax = plt.subplots(figsize=(10, 6))
+# Create subplots (2x2 layout, adjust as needed)
+fig, axes = plt.subplots(1, 1, figsize=(10, 6))
+#ax = axes[0, 0]  # Use the first subplot for this specific plot
 
 # Format the figure and axis
-#fig.autofmt_xdate()
-#ax.set_title("Temperature")
-#ax.grid(which='both', axis='both')
-#ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))  # Major ticks: 1 day
-#ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3))  # Minor ticks: every 3 hours
-#ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+fig.autofmt_xdate()
+ax.set_title("Temperature")
+ax.grid(which='both', axis='both')
+ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))  # Major ticks: 1 day
+ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3))  # Minor ticks: every 3 hours
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 
-# Prepare temperature data (resampling if needed)
-#temp_data = Tdf.loc[StartDate:EndDate].astype(float).resample('1H').mean().div(10)
-
-# Check temp_data before plotting
-#st.write("First few rows of temp_data:", temp_data.head())
-
-# Drop NaN values from temp_data if necessary
-#temp_data = temp_data.dropna()
+# Prepare temperature data
+temp_data = Tdf.loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10)
+#y_min =17 #temp_data.min() - 1  # Add a small buffer below minimum
+#y_max =24 #temp_data.max() + 1  # Add a small buffer above maximum
+ax.set_ylabel('Temperature (°C)')
+ax.set_ylim(14,50)
 
 # Plot the data
-#ax.plot(temp_data, '.r-', label='Temperature')
-
-# Set axis labels and limits
-#ax.set_ylabel('Temperature (°C)')
-#ax.set_ylim(14, 50)
+ax.plot(temp_data, '.r-', label='Temperature')
 
 # Add legend and finalize layout
-#ax.legend(loc='best')
-#plt.tight_layout()
+#ax.legend(handles=[temperatureHandle], loc='best')
+plt.tight_layout()  # Adjust layout to prevent overlaps
 
 # Display the figure
-#st.pyplot(fig)
-
-# Optionally, show the raw temperature data
-#st.write("Temperature Data:", temp_data)
+st.pyplot(fig)
+st.write("Temperature Data:", temp_data)
 
 
