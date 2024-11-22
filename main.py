@@ -182,3 +182,8 @@ except:
     except:
         ax = axes # If axes is just a single axis then we'll use it directly.
 fig.autofmt_xdate()
+ax.set_title(siteName + ' ' + filename[0:4] + ' Temperature')
+ax.grid(which='both',axis='both')
+ax.xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3, tz='US/Pacific'))
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
