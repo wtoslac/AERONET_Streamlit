@@ -178,50 +178,50 @@ StartDate = pd.to_datetime('2023-07-01')
 EndDate = pd.to_datetime('2023-07-07')
 
 # Assuming Wdf is already loaded as a DataFrame with 'TMP' column
-#Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
-Tdf = Wdf_filtered
+Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
+#Tdf = Wdf_filtered
 # Replace '+9999' with NaN and convert to numeric
-Tdf.replace('+9999', np.nan, inplace=True)
-Tdf = Tdf.apply(pd.to_numeric, errors='coerce')  # Convert to numeric, errors to NaN
+#Tdf.replace('+9999', np.nan, inplace=True)
+#Tdf = Tdf.apply(pd.to_numeric, errors='coerce')  # Convert to numeric, errors to NaN
 
 # Check the first few rows to confirm
 st.write("First few rows of Tdf:", Tdf.head())
 
 # Create subplots (1x1 layout)
-fig, ax = plt.subplots(figsize=(10, 6))
+#fig, ax = plt.subplots(figsize=(10, 6))
 
 # Format the figure and axis
-fig.autofmt_xdate()
-ax.set_title("Temperature")
-ax.grid(which='both', axis='both')
-ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))  # Major ticks: 1 day
-ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3))  # Minor ticks: every 3 hours
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+#fig.autofmt_xdate()
+#ax.set_title("Temperature")
+#ax.grid(which='both', axis='both')
+#ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))  # Major ticks: 1 day
+#ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3))  # Minor ticks: every 3 hours
+#ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 
 # Prepare temperature data (resampling if needed)
-temp_data = Tdf.loc[StartDate:EndDate].astype(float).resample('1H').mean().div(10)
+#temp_data = Tdf.loc[StartDate:EndDate].astype(float).resample('1H').mean().div(10)
 
 # Check temp_data before plotting
-st.write("First few rows of temp_data:", temp_data.head())
+#st.write("First few rows of temp_data:", temp_data.head())
 
 # Drop NaN values from temp_data if necessary
-temp_data = temp_data.dropna()
+#temp_data = temp_data.dropna()
 
 # Plot the data
-ax.plot(temp_data, '.r-', label='Temperature')
+#ax.plot(temp_data, '.r-', label='Temperature')
 
 # Set axis labels and limits
-ax.set_ylabel('Temperature (°C)')
-ax.set_ylim(14, 50)
+#ax.set_ylabel('Temperature (°C)')
+#ax.set_ylim(14, 50)
 
 # Add legend and finalize layout
-ax.legend(loc='best')
-plt.tight_layout()
+#ax.legend(loc='best')
+#plt.tight_layout()
 
 # Display the figure
-st.pyplot(fig)
+#st.pyplot(fig)
 
 # Optionally, show the raw temperature data
-st.write("Temperature Data:", temp_data)
+#st.write("Temperature Data:", temp_data)
 
 
