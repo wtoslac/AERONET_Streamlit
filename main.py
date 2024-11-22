@@ -173,10 +173,8 @@ plt.tight_layout()
 st.pyplot(fig)
 
 
-StartDate = st.date_input("StartDate", datetime.date(2023, 7, 1))
-StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0))
-EndDate = st.date_input("EndDate", datetime.date(2023, 7, 7))
-EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59))
+StartDate = start_date.strftime('%Y-%m-%d 00:00:00')
+EndDate = end_date.strftime('%Y-%m-%d 23:59:59')
 # Assuming Wdf, StartDate, EndDate, siteName, filename, SampleRate are defined earlier
 try:
     Tdf = Wdf.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), 'TMP'].str.split(pat=',', expand=True)
