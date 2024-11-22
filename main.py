@@ -130,36 +130,6 @@ for _, row in WNDdf.iterrows():
 # Add Cartesian components to the DataFrame
 WNDdf[5], WNDdf[6] = Xdata, Ydata
 
-
-# Create a plot
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.set_title("Wind Vector")  # Added title for Wind Vector graph
-ax.set_xlabel("Time")
-ax.set_ylim(AOD_min,AOD_max)
-ax2 = ax.twinx()
-ax.yaxis.set_label_position('right')  # Move label to the right
-ax.yaxis.set_ticks_position('right')  # Move ticks to the right
-ax2.yaxis.set_label_position('left')  # Move label to the left
-ax2.yaxis.set_ticks_position('left')  # Move ticks to the left
-
-
-maxWind = np.sqrt((WNDdf[6].loc[StartDate:EndDate].astype(float).max()/10)**2+
-                  (WNDdf[5].loc[StartDate:EndDate].astype(float).max()/10)**2)
-ax.set_ylim(0,maxWind)
-# Resample the data according to the wind sample rate and plot the wind vectors
-ax.quiver(
-    WNDdf[5].resample(windSampleRate).mean().index,maxWind-1,  # X-axis (time)
-    -WNDdf[5].resample(windSampleRate).mean().div(10),  # X-component of arrows
-    -WNDdf[6].resample(windSampleRate).mean().div(10),  # Y-component of arrows
-    color='b',
-    label ='Wind Vector'
-   
-   
-
-)
-
-
-
 #Temp
 Tdf = Wdf.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
 ## Replacing +9999 values with nan, +9999 indicates "missing data"
@@ -193,7 +163,37 @@ plt.tight_layout() # Adjusts the boundaries of the figures to ensure everything 
 
 # Display the plot in Streamlit
 #st.pyplot(fig)
-  #end of temp code that was added    
+  #end of what was added last
+# Create a plot
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.set_title("Wind Vector")  # Added title for Wind Vector graph
+ax.set_xlabel("Time")
+ax.set_ylim(AOD_min,AOD_max)
+ax2 = ax.twinx()
+ax.yaxis.set_label_position('right')  # Move label to the right
+ax.yaxis.set_ticks_position('right')  # Move ticks to the right
+ax2.yaxis.set_label_position('left')  # Move label to the left
+ax2.yaxis.set_ticks_position('left')  # Move ticks to the left
+
+
+maxWind = np.sqrt((WNDdf[6].loc[StartDate:EndDate].astype(float).max()/10)**2+
+                  (WNDdf[5].loc[StartDate:EndDate].astype(float).max()/10)**2)
+ax.set_ylim(0,maxWind)
+# Resample the data according to the wind sample rate and plot the wind vectors
+ax.quiver(
+    WNDdf[5].resample(windSampleRate).mean().index,maxWind-1,  # X-axis (time)
+    -WNDdf[5].resample(windSampleRate).mean().div(10),  # X-component of arrows
+    -WNDdf[6].resample(windSampleRate).mean().div(10),  # Y-component of arrows
+    color='b',
+    label ='Wind Vector'
+   
+   
+
+)
+
+
+
+
 
 
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.b',label="AOD 440nm")
