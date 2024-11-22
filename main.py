@@ -179,12 +179,12 @@ Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
 Tdf.replace('+9999', np.nan, inplace=True)
 
 # Create subplots (2x2 layout, adjust as needed)
-fig, axes = plt.subplots(2, 2, figsize=(10, 6))
+fig, axes = plt.subplots(1, 1, figsize=(10, 6))
 ax = axes[0, 0]  # Use the first subplot for this specific plot
 
 # Format the figure and axis
 fig.autofmt_xdate()
-ax.set_title(f"Temperature")
+ax.set_title("Temperature")
 ax.grid(which='both', axis='both')
 ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))  # Major ticks: 1 day
 ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3))  # Minor ticks: every 3 hours
