@@ -154,7 +154,7 @@ plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strfti
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g',label="500 nm")
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_675nm"].resample(SampleRate).mean(), '.r',label="675 nm")
 #plt.legend()
-plt.legend(handles=[temperatureHandle], loc='upper left', bbox_to_anchor=(-0.2, 1))
+plt.legend(handles= loc='upper left', bbox_to_anchor=(-0.2, 1))
 ax.get_yaxis().set_visible(True)
 
 # Display the legend and adjust layout
