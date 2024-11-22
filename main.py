@@ -160,7 +160,7 @@ ax.quiver(
 
 )
 ax3 = ax.twinx()
-ax3.spines.right.set_position(('axes', 1.07))
+ax3.spines.right.set_position(('axes', 1.09))
 ax3.set_ylabel("Temp C")
 ax2.set_ylim(AOD_min,AOD_max) # Manual Setting
 
