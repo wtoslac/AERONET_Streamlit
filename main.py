@@ -157,7 +157,7 @@ ax.quiver(
    
 
 )
-#Tdf = windfile.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
+Tdf = Wdf.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
 ## Replacing +9999 values with nan, +9999 indicates "missing data"
 #Tdf.replace('+9999', np.nan, inplace = True)
 
