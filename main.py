@@ -177,7 +177,7 @@ st.pyplot(fig)
 #StartDate = pd.to_datetime('2023-07-01')
 #EndDate = pd.to_datetime('2023-07-07')
 windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
-windSampleRate = '3h'
+windSampleRate = '1h'
 StartDate='2023-10-07 00:00:00'
 EndDate='2023-10-15 23:59:59'
 Wdf = pd.read_csv(windfile, parse_dates={'datetime':[1]}, low_memory=False)
