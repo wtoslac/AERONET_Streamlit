@@ -159,7 +159,14 @@ ax.quiver(
 
 )
 Tdf = Wdf.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
-
+fig, axes = plt.subplots(1,1, figsize=(16*.65,9*.65)) # plt.subplots(nrows, ncolumns, *args) # axs will be either an individual plot or an array of axes
+try:
+    ax = axes[0,0] # If axes is a 2D array of axes, then we'll use the first axis for this drawing.
+except:
+    try:
+        ax = axes[0] # If axes is a 1D array of axes, then we'll use the first axis for this drawing.
+    except:
+        ax = axes # If axes is just a single axis then we'll use it directly.
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.b',label="AOD 440nm")
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g',label="500nm")
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_675nm"].resample(SampleRate).mean(), '.r',label="675nm")
