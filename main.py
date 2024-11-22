@@ -202,4 +202,7 @@ temperatureHandle, = ax.plot(Tdf[0].loc[StartDate:EndDate].astype(float).resampl
 ## Note: temperatureHandle is the handle for the data plot we created.
 plt.legend(handles = [temperatureHandle], loc = 'best')
 plt.tight_layout() # Adjusts the boundaries of the figures to ensure everything fits nicely. Can define pads as we we see fit.
-plt.show()
+
+# Display the plot in Streamlit
+st.pyplot(fig)
+
