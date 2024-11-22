@@ -8,7 +8,7 @@ import numpy as np
 # Set up basic information
 siteName = "Turlock CA USA"
 SampleRate = "1h"
-st.header = "Turlock AOD"
+st.header("Turlock AOD")  # Fix header assignment
 StartDate = st.date_input("StartDate", datetime.date(2023, 7, 1))
 StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0))
 EndDate = st.date_input("EndDate", datetime.date(2023, 7, 7))
@@ -28,7 +28,7 @@ def load_data(file_url):
         # Read the data from the provided GitHub raw URL
         df = pd.read_csv(file_url, skiprows=6, parse_dates={'datetime': [0, 1]})
         datetime_utc = pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
-        datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
+        datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
         df.set_index(datetime_pac, inplace=True)
         
         return df
@@ -43,7 +43,7 @@ if file_url_1:
 
 # Ensure data is loaded and columns are correct
 if df_1 is not None:
-    if 'AOD_400nm' not in df_1.columns or 'AOD_500nm' not in df_1.columns or 'AOD_675nm' not in df_1.columns:
+    if 'AOD_440nm' not in df_1.columns or 'AOD_500nm' not in df_1.columns or 'AOD_675nm' not in df_1.columns:
         st.error(f"Missing expected columns in the dataset. Available columns: {df_1.columns}")
     
     # Plot data from the first repository if columns are correct
@@ -94,24 +94,17 @@ if df_1 is not None:
             plt.title("AOD Turlock")  # Added title for AOD graph
             st.pyplot(plt.gcf())
 
-     # URL for the wind data file
+# Wind Data and Temperature Data Processing
 windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
 windSampleRate = '3h'
-     # Read the wind data
 Wdf = pd.read_csv(windfile, parse_dates={'datetime': [1]}, low_memory=False)
 datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
 datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 Wdf.set_index(datetime_pac, inplace=True)
-# Streamlit widgets for dynamic date range selection
-st.title = "Wind Vectors (Magnitude and Direction)"  # Fixing title assignment to a string
-start_date = st.date_input("Select Start Date", pd.to_datetime('2023-07-01'))
-end_date = st.date_input("Select End Date", pd.to_datetime('2023-07-07'))
 
-# Convert selected dates to strings and filter the data
+# Filter the wind data based on the user-selected date range
 StartDate = start_date.strftime('%Y-%m-%d 00:00:00')
 EndDate = end_date.strftime('%Y-%m-%d 23:59:59')
-
-# Filter by the user-selected date range
 Wdf_filtered = Wdf.loc[StartDate:EndDate]
 
 # Extract wind data (direction and speed) and filter valid observations
@@ -131,43 +124,33 @@ for _, row in WNDdf.iterrows():
 # Add Cartesian components to the DataFrame
 WNDdf[5], WNDdf[6] = Xdata, Ydata
 
+# Temperature data processing
+Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
+Tdf.replace('+9999', np.nan, inplace=True)
 
-# Create a plot
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.set_title("Wind Vector")  # Added title for Wind Vector graph
-ax.set_xlabel("Time")
-ax.set_ylim(AOD_min,AOD_max)
+# Create figure for temperature and wind plot
+graphScale = 1
+fig, ax = plt.subplots(figsize=(16*graphScale, 9*graphScale))  # Adjust size with graphScale
+ax.set_title(f"{siteName} Temperature and Wind Vectors")
+ax.set_xlabel("Date")
+ax.set_ylabel("Temperature (°C)")
+
+# Plot the Temperature Data
+temperature_handle, = ax.plot(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10), '.r-', label='Temperature')
+
+# Create a second y-axis for Wind Vectors
 ax2 = ax.twinx()
-ax.yaxis.set_label_position('right')  # Move label to the right
-ax.yaxis.set_ticks_position('right')  # Move ticks to the right
-ax2.yaxis.set_label_position('left')  # Move label to the left
-ax2.yaxis.set_ticks_position('left')  # Move ticks to the left
+maxWind = np.sqrt((WNDdf[6].loc[StartDate:EndDate].astype(float).max()/10)**2 + (WNDdf[5].loc[StartDate:EndDate].astype(float).max()/10)**2)
+ax2.set_ylim(0, maxWind)
 
+# Resample and plot the wind vectors
+ax2.quiver(WNDdf[5].resample(windSampleRate).mean().index, maxWind-1, 
+           -WNDdf[5].resample(windSampleRate).mean().div(10), 
+           -WNDdf[6].resample(windSampleRate).mean().div(10), color='b', label="Wind Vector")
 
-maxWind = np.sqrt((WNDdf[6].loc[StartDate:EndDate].astype(float).max()/10)**2+
-                  (WNDdf[5].loc[StartDate:EndDate].astype(float).max()/10)**2)
-ax.set_ylim(0,maxWind)
-# Resample the data according to the wind sample rate and plot the wind vectors
-ax.quiver(
-    WNDdf[5].resample(windSampleRate).mean().index,maxWind-1,  # X-axis (time)
-    -WNDdf[5].resample(windSampleRate).mean().div(10),  # X-component of arrows
-    -WNDdf[6].resample(windSampleRate).mean().div(10),  # Y-component of arrows
-    color='b',
-    label ='Wind Vector'
-   
-   
-
-)
-
-plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.b',label="440 nm")
-plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g',label="500 nm")
-plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_675nm"].resample(SampleRate).mean(), '.r',label="675 nm")
-#plt.legend()
-plt.legend(loc='upper left', bbox_to_anchor=(-0.2, 1))
-ax.get_yaxis().set_visible(True)
-
-# Display the legend and adjust layout
-ax.legend(loc='best')
+# Add legends and show plot
+ax.legend(loc='upper left')
+ax2.legend(loc='upper right')
 plt.tight_layout()
 
 # Display the plot in Streamlit
