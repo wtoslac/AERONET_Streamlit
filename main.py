@@ -204,7 +204,7 @@ ax2 = ax.twinx()
 ax2.spines.right.set_position(('axes', 1.05)) # Adjusting the position of the "spine" or y-axis to not overlap with the next pieces of data
 ax2.set_ylabel('Temperature °C')
 ax2.set_ylim(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).min()//1,
-            Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).max()//1) # Auto Calculatingtemperature
+            Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).max()//1+3) # Auto Calculatingtemperature
 temperatureHandle, = ax2.plot(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10), '.r-',label='Temperature',figure=fig) # handle, label = ax2.plot()
 
 # Adding a new Axis sharing the same xaxis as the previous two and drawing the thrid piece of data
