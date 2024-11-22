@@ -150,7 +150,7 @@ ax.quiver(
     color='b',
     #label ='Wind Vector'
     # Assuming you're plotting the wind vector as an example
-    wind_vector_handle = plt.plot(x_data, y_data, label='Wind Vector')
+    wind_vector_handle = plt(x_data, y_data, label='Wind Vector')
 plt.legend(loc='upper left', bbox_to_anchor=(-0.2, 1))
 plt.tight_layout()
 plt.show()
