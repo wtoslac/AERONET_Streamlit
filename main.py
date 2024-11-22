@@ -130,6 +130,22 @@ for _, row in WNDdf.iterrows():
 # Add Cartesian components to the DataFrame
 WNDdf[5], WNDdf[6] = Xdata, Ydata
 
+
+# Create a plot
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.set_title("Wind Vector")  # Added title for Wind Vector graph
+ax.set_xlabel("Time")
+ax.set_ylim(AOD_min,AOD_max)
+
+ax.yaxis.set_label_position('right')  # Move label to the right
+ax.yaxis.set_ticks_position('right')  # Move ticks to the right
+ax2 = ax.twinx()
+ax2.yaxis.set_label_position('left')  # Move label to the left
+ax2.yaxis.set_ticks_position('left')  # Move ticks to the left
+
+
+
+ax3= ax.twinx()
 #Temp
 Tdf = Wdf.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
 ## Replacing +9999 values with nan, +9999 indicates "missing data"
@@ -144,17 +160,17 @@ except:
         ax = axes # If axes is just a single axis then we'll use it directly.
 # Initializing main Axis and plot
 fig.autofmt_xdate() ## Note: With multiple plots, this removes the x-axis identifiers for plots not in the bottom row
-ax.set_title('Modesto Temperature')
-ax.grid(which='both',axis='both')
-ax.xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3, tz='US/Pacific'))
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+ax3.set_title('Modesto Temperature')
+ax3.grid(which='both',axis='both')
+ax3.xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
+ax3.xaxis.set_minor_locator(mdates.HourLocator(interval=3, tz='US/Pacific'))
+ax3.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 
 # Drawing the Temperature Data onto the graph.
-ax.set_ylabel('Temperature °C')
-ax.set_ylim(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).min()//1,
+ax3.set_ylabel('Temperature °C')
+ax3.set_ylim(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).min()//1,
             Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).max()//1) # Auto Calculating
-temperatureHandle, = ax3.plot(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10), '.r-',label='Temperature',figure=fig) # handle, label = ax2.plot()
+temperatureHandle, = ax.plot(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10), '.r-',label='Temperature',figure=fig) # handle, label = ax2.plot()
 
 # Displaying the legend and Reorganizing everything to fit nicely
 ## Note: temperatureHandle is the handle for the data plot we created.
@@ -163,18 +179,8 @@ plt.tight_layout() # Adjusts the boundaries of the figures to ensure everything 
 
 # Display the plot in Streamlit
 #st.pyplot(fig)
-  #end of what was added last
-# Create a plot
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.set_title("Wind Vector")  # Added title for Wind Vector graph
-ax.set_xlabel("Time")
-ax.set_ylim(AOD_min,AOD_max)
+  #end of what was added last 
 
-ax.yaxis.set_label_position('right')  # Move label to the right
-ax.yaxis.set_ticks_position('right')  # Move ticks to the right
-ax2 = ax.twinx()
-ax2.yaxis.set_label_position('left')  # Move label to the left
-ax2.yaxis.set_ticks_position('left')  # Move ticks to the left
 
 
 maxWind = np.sqrt((WNDdf[6].loc[StartDate:EndDate].astype(float).max()/10)**2+
