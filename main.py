@@ -172,14 +172,14 @@ plt.tight_layout()
 # Display the plot in Streamlit
 st.pyplot(fig)
 
-StartDate='2023-07-01 00:00:00'
-EndDate='2023-07-07 23:59:59'
+StartDate='2023-7-1 00:00:00'
+EndDate='2023-7-7 23:59:59'
 # Assuming Wdf, StartDate, EndDate, siteName, filename, SampleRate are defined earlier
 Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
 Tdf.replace('+9999', np.nan, inplace=True)
 
 # Create subplots (2x2 layout, adjust as needed)
-fig, axes = plt.subplots(2, 2, figsize=(10, 6))
+fig, axes = plt.subplots(1, 1, figsize=(10, 6))
 #ax = axes[0, 0]  # Use the first subplot for this specific plot
 
 # Format the figure and axis
