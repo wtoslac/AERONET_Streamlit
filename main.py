@@ -211,9 +211,9 @@ Handle, = ax2.plot(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRa
 ax3 = ax.twinx()
 ax3.set_ylabel("Wind Mag m/s")
 ax3.set_ylim(0,maxWind)
-windHandle = ax3.quiver(WNDdf[5].resample(WindSampleRate).mean().index,maxWind-1,
-                -WNDdf[5].loc[StartDate:EndDate].astype(float).resample(WindSampleRate).mean().div(10),
-                -WNDdf[6].loc[StartDate:EndDate].astype(float).resample(WindSampleRate).mean().div(10),
+windHandle = ax3.quiver(WNDdf[5].resample(windSampleRate).mean().index,maxWind-1,
+                -WNDdf[5].loc[StartDate:EndDate].astype(float).resample(windSampleRate).mean().div(10),
+                -WNDdf[6].loc[StartDate:EndDate].astype(float).resample(windSampleRate).mean().div(10),
                 color='b',label='Wind Vector',width=0.005)
 
 # Displaying the legend and Reorganizing everything to fit nicely
