@@ -154,7 +154,7 @@ ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 ax.set_ylabel('Temperature °C')
 ax.set_ylim(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).min()//1,
             Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).max()//1) # Auto Calculating
-temperatureHandle, = ax.plot(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10), '.r-',label='Temperature',figure=fig) # handle, label = ax2.plot()
+temperatureHandle, = ax3.plot(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10), '.r-',label='Temperature',figure=fig) # handle, label = ax2.plot()
 
 # Displaying the legend and Reorganizing everything to fit nicely
 ## Note: temperatureHandle is the handle for the data plot we created.
