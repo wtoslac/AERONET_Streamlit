@@ -163,7 +163,7 @@ Tdf = windfile.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
 
 #fig, axes = plt.subplots(1,1, figsize=(16*graphScale,9*graphScale)) # plt.subplots(nrows, ncolumns, *args) # axs will be either an individual plot or an array of axes
 #try:
-    ax = axes[0,0] # If axes is a 2D array of axes, then we'll use the first axis for this drawing.
+    #ax = axes[0,0] # If axes is a 2D array of axes, then we'll use the first axis for this drawing.
 #except:
     #try:
         #ax = axes[0] # If axes is a 1D array of axes, then we'll use the first axis for this drawing.
