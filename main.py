@@ -201,7 +201,7 @@ ax.set_ylim(y_min, y_max)
 temperatureHandle = ax.plot(temp_data, '.r-', label='Temperature')
 
 # Add legend and finalize layout
-ax.legend(handles=[temperatureHandle], loc='best')
+#ax.legend(handles=[temperatureHandle], loc='best')
 plt.tight_layout()  # Adjust layout to prevent overlaps
 
 # Display the figure
