@@ -151,8 +151,8 @@ ax.quiver(
     label='Wind Vector'
 )
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.k')
-# Hide the Y-axis (but still show the arrows)
-ax.get_yaxis().set_visible(False)
+
+ax.get_yaxis().set_visible(True)
 
 # Display the legend and adjust layout
 ax.legend(loc='best')
