@@ -180,9 +180,9 @@ windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/he
 windSampleRate = '1h'
 StartDate='2023-10-07 00:00:00'
 EndDate='2023-10-15 23:59:59'
-Wdf = pd.read_csv(windfile, parse_dates={'datetime':[1]}, low_memory=False)
+Wdf1 = pd.read_csv(windfile, parse_dates={'datetime':[1]}, low_memory=False)
 # Assuming Wdf is already loaded as a DataFrame with 'TMP' column
-Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
+Tdf = Wdf1.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
 #Tdf = WNDdf
 #Tdf = Wdf_filtered
 #Replace '+9999' with NaN and convert to numeric
