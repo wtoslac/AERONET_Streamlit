@@ -172,8 +172,8 @@ plt.tight_layout()
 # Display the plot in Streamlit
 st.pyplot(fig)
 
-StartDate='2023-07-01 00:00:00-07:00'
-EndDate='2023-07-07 23:00:00-7:00'
+StartDate='2023-07-01'
+EndDate='2023-07-07'
 # Assuming Wdf, StartDate, EndDate, siteName, filename, SampleRate are defined earlier
 Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
 Tdf.replace('+9999', np.nan, inplace=True)
