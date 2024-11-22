@@ -132,7 +132,7 @@ WNDdf[5], WNDdf[6] = Xdata, Ydata
 
 graphScale = 1
 # Create a plot
-fig, ax = plt.subplots(figsize=(12*graphScale, 5*graphScale))
+fig, ax = plt.subplots(figsize=(12, 5))
 ax.set_title("Wind Vector")  # Added title for Wind Vector graph
 ax.set_xlabel("Time")
 ax.set_ylim(AOD_min,AOD_max)
