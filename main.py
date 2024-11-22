@@ -166,10 +166,10 @@ ax.get_yaxis().set_visible(True)
 
 # Display the legend and adjust layout
 ax.legend(loc='best')
-plt.tight_layout()
+#plt.tight_layout()
 
 # Display the plot in Streamlit
-st.pyplot(fig)
+#st.pyplot(fig)
 
 
 
