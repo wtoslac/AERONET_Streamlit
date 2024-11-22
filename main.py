@@ -130,7 +130,7 @@ for _, row in WNDdf.iterrows():
 # Add Cartesian components to the DataFrame
 WNDdf[5], WNDdf[6] = Xdata, Ydata
 
-graphScale = 1
+
 # Create a plot
 fig, ax = plt.subplots(figsize=(12, 5))
 ax.set_title("Wind Vector")  # Added title for Wind Vector graph
