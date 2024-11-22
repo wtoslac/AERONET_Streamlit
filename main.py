@@ -158,7 +158,7 @@ ax.quiver(
    
 
 )
-Tdf = Wdf.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
+
 
 # Display the legend and adjust layout
 ax.legend(loc='best')
