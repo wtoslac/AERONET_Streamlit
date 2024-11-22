@@ -132,7 +132,7 @@ WNDdf[5], WNDdf[6] = Xdata, Ydata
 
 graphScale = 1
 # Create a plot
-fig, ax = plt.subplots(1,1,figsize=(14*graphScale, 7*graphScale))
+fig, ax = plt.subplots(figsize=(14*graphScale, 7*graphScale))
 ax.set_title("Wind Vector")  # Added title for Wind Vector graph
 ax.set_xlabel("Time")
 ax.set_ylim(AOD_min,AOD_max)
@@ -160,7 +160,7 @@ ax.quiver(
 Tdf = Wdf.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
 # Replacing +9999 values with nan, +9999 indicates "missing data"
 Tdf.replace('+9999', np.nan, inplace = True)
-fig, axes = plt.subplots(2,2, figsize=(14*graphScale,7*graphScale)) # plt.subplots(nrows, ncolumns, *args) # axs will be either an individual plot or an array of axes
+fig, axes = plt.subplots(figsize=(14*graphScale,7*graphScale)) # plt.subplots(nrows, ncolumns, *args) # axs will be either an individual plot or an array of axes
 try:
     ax = axes[0,0] # If axes is a 2D array of axes, then we'll use the first axis for this drawing.
 except:
