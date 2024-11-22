@@ -198,7 +198,7 @@ ax.set_ylabel('Temperature (°C)')
 ax.set_ylim(y_min, y_max)
 
 # Plot the data
-temperatureHandle, = ax.plot(temp_data, '.r-', label='Temperature')
+temperatureHandle = ax.plot(temp_data, '.r-', label='Temperature')
 
 # Add legend and finalize layout
 ax.legend(handles=[temperatureHandle], loc='best')
