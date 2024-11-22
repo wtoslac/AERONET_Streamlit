@@ -178,8 +178,8 @@ StartDate = pd.to_datetime('2023-07-01')
 EndDate = pd.to_datetime('2023-07-07')
 
 # Assuming Wdf is already loaded as a DataFrame with 'TMP' column
-#Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
-Tdf = WNDdf
+Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
+#Tdf = WNDdf
 #Tdf = Wdf_filtered
 #Replace '+9999' with NaN and convert to numeric
 Tdf.replace('+9999', np.nan, inplace=True)
