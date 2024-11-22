@@ -8,7 +8,6 @@ import numpy as np
 # Set up basic information
 siteName = "Turlock CA USA"
 SampleRate = "1h"
-st.header("Turlock AOD")
 StartDate = st.date_input("Start Date", datetime.date(2023, 7, 1))
 StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0))
 EndDate = st.date_input("End Date", datetime.date(2023, 7, 7))
