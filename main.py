@@ -94,7 +94,7 @@ if df_1 is not None:
             #plt.title("AOD Turlock")  # Added title for AOD graph
             #st.pyplot(plt.gcf())
             #URL for the wind data file
-            windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
+    windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
             windSampleRate = '3h'
             #Read the wind data
             Wdf = pd.read_csv(windfile, parse_dates={'datetime': [1]}, low_memory=False)
