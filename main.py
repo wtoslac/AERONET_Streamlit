@@ -183,7 +183,7 @@ ax = axes[0, 0]  # Use the first subplot for this specific plot
 
 # Format the figure and axis
 fig.autofmt_xdate()
-ax.set_title(f"{siteName} {filename[:4]} Temperature")
+ax.set_title(f"Temperature")
 ax.grid(which='both', axis='both')
 ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))  # Major ticks: 1 day
 ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3))  # Minor ticks: every 3 hours
