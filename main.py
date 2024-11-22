@@ -135,10 +135,9 @@ WNDdf[5], WNDdf[6] = Xdata, Ydata
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.set_title("Wind Vector")  # Added title for Wind Vector graph
 ax.set_xlabel("Time")
-
 ax.set_ylim(AOD_min,AOD_max)
 ax2 = ax.twinx()
-#ax.yaxis.set_label_position('right')  # Move label to the right
+ax.yaxis.set_label_position('right')  # Move label to the right
 ax.yaxis.set_ticks_position('right')  # Move ticks to the right
 ax2.yaxis.set_label_position('left')  # Move label to the left
 ax2.yaxis.set_ticks_position('left')  # Move ticks to the left
@@ -159,6 +158,12 @@ ax.quiver(
 
 )
 
+plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.b',label="440 nm")
+plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g',label="500 nm")
+plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_675nm"].resample(SampleRate).mean(), '.r',label="675 nm")
+#plt.legend()
+plt.legend(loc='upper left', bbox_to_anchor=(-0.2, 1))
+ax.get_yaxis().set_visible(True)
 
 # Display the legend and adjust layout
 ax.legend(loc='best')
