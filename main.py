@@ -176,7 +176,7 @@ st.pyplot(fig)
 Tdf = Wdf.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
 ## Replacing +9999 values with nan, +9999 indicates "missing data"
 Tdf.replace('+9999', np.nan, inplace = True)
-fig, axes = plt.subplots(1,1, figsize=(16*graphScale,9*graphScale)) # plt.subplots(nrows, ncolumns, *args) # axs will be either an individual plot or an array of axes
+fig, axes = plt.subplots(1,1, figsize=(16,9)) # plt.subplots(nrows, ncolumns, *args) # axs will be either an individual plot or an array of axes
 try:
     ax = axes[0,0] # If axes is a 2D array of axes, then we'll use the first axis for this drawing.
 except:
