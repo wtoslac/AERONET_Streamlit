@@ -196,7 +196,7 @@ ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 
 # Drawing the first pieces of data (AOD_500nm-Total) onto the graph
 ax.set_ylabel('AOD_500nm')
-aodHandle, = ax.plot(df.loc[StartDate:EndDate, 'AOD_500nm'].resample(SampleRate).mean(),'ok-',label= 'AOD_500nm', figure=fig) # handle, label = ax.plot()
+aodHandle, = ax.plot(df_1.loc[StartDate:EndDate, 'AOD_500nm'].resample(SampleRate).mean(),'ok-',label= 'AOD_500nm', figure=fig) # handle, label = ax.plot()
 ax.set_ylim(AOD_min,AOD_max) # Manually set the values for the y-limit of the plot
 
 # Adding a new Axis sharing the same xaxis as before and drawing the second piece of data.
