@@ -181,16 +181,23 @@ Tdf.replace('+9999', np.nan, inplace=True)
 
 
 
-# Ensure temp_data is numeric
-temp_data = Tdf.loc[StartDate:EndDate].astype(float, errors='coerce').resample(SampleRate).mean().div(10)
+# Ensure Tdf has a datetime index
+Tdf.index = pd.to_datetime(Tdf.index, errors='coerce')  # Ensure index is datetime
+Tdf = Tdf.dropna(subset=['TMP'])  # Drop rows with invalid datetime or temperature data
 
-# Filter for valid temperature range
-temp_data = temp_data[(temp_data >= -50) & (temp_data <= 50)]
+# Filter the date range
+filtered_Tdf = Tdf.loc[StartDate:EndDate, 'TMP']
 
-# Reset index if necessary
-temp_data = temp_data.reset_index(drop=True)
+# Split and clean temperature data
+temp_data = filtered_Tdf.str.split(pat=',', expand=True).astype(float, errors='coerce')  # Convert to float
+temp_data = temp_data.replace({+9999: np.nan})  # Replace invalid temperature with NaN
+temp_data = temp_data.dropna()  # Drop rows with NaN
 
-# Plot the data
+# Resample and compute mean temperatures
+temp_data = temp_data.resample(SampleRate).mean().div(10)  # Resample and scale
+temp_data = temp_data[(temp_data >= -50) & (temp_data <= 50)]  # Filter valid temperatures
+
+# Plot the filtered temperature data
 fig, ax = plt.subplots(1, 1, figsize=(13, 8))
 ax.set_title("Temperature")
 ax.grid(which='both', axis='both')
@@ -198,11 +205,17 @@ ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))  # Major ticks: 1 day
 ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3))  # Minor ticks: every 3 hours
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d %H:%M:%S'))
 ax.set_ylabel('Temperature (°C)')
-y_min, y_max = temp_data.min() - 1, temp_data.max() + 1
+
+y_min, y_max = temp_data.min().min() - 1, temp_data.max().max() + 1  # Handle edge cases
 ax.set_ylim(y_min, y_max)
+
 ax.plot(temp_data, '.r-', label='Temperature')
 plt.tight_layout()
 st.pyplot(fig)
+
+# Display filtered data
+st.write("Filtered Temperature Data:", temp_data)
+
 
 # Display filtered data
 st.write("Filtered Temperature Data:", temp_data)
