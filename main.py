@@ -147,7 +147,7 @@ ax.quiver(
     color='b',
     label='Wind Vector'
 )
-
+plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.k')
 # Hide the Y-axis (but still show the arrows)
 ax.get_yaxis().set_visible(False)
 
