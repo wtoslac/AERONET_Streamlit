@@ -176,16 +176,11 @@ st.pyplot(fig)
 # Convert StartDate and EndDate to datetime objects
 #StartDate = pd.to_datetime('2023-07-01')
 #EndDate = pd.to_datetime('2023-07-07')
-windfile = 'https://raw.githubusercontent.com/Rsaltos7/AERONET_Streamlit/refs/heads/main/Modesto_Wind_2023%20(2).csv'
-windSampleRate = '1h'
+
 StartDate='2023-10-07 00:00:00'
 EndDate='2023-10-15 23:59:59'
-Wdf1 = pd.read_csv(windfile, parse_dates={'datetime':[1]}, low_memory=False)
-datetime_utc = pd.to_datetime(Wdf["datetime"], format='%d-%m-%Y %H:%M:%S')
-datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
-Wdf.set_index(datetime_pac, inplace=True)
 # Assuming Wdf is already loaded as a DataFrame with 'TMP' column
-Tdf = Wdf1.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
+Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
 #Tdf = WNDdf
 #Tdf = Wdf_filtered
 #Replace '+9999' with NaN and convert to numeric
