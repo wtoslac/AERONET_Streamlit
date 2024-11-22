@@ -196,7 +196,7 @@ temp_data = Tdf.loc[StartDate:EndDate].astype(float).resample(SampleRate).mean()
 #y_min =17 #temp_data.min() - 1  # Add a small buffer below minimum
 #y_max =24 #temp_data.max() + 1  # Add a small buffer above maximum
 ax.set_ylabel('Temperature (°C)')
-ax.set_ylim(14,50)
+ax.set_ylim(14,60)
 
 # Plot the data
 ax.plot(temp_data, '.r-', label='Temperature')
