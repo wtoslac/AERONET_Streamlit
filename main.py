@@ -139,8 +139,8 @@ ax.set_ylim(18,24)
 ax.set_ylabel("Magnitude m/s")
 ax2 = ax.twinx()
 ax2.set_ylabel("Temp Celsius")
-ax.yaxis.set_label_position('right')  # Move label to the right
-#ax.yaxis.set_ticks_position('right')  # Move ticks to the right
+#ax.yaxis.set_label_position('right')  # Move label to the right
+ax.yaxis.set_ticks_position('right')  # Move ticks to the right
 #ax2.yaxis.set_label_position('left')  # Move label to the left
 #ax2.yaxis.set_ticks_position('left')  # Move ticks to the left
 
