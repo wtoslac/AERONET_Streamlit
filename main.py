@@ -173,11 +173,14 @@ plt.tight_layout()
 st.pyplot(fig)
 Tdf = Wdf.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
 Tdf.replace('+9999', np.nan, inplace = True)
-fig, ax = plt.subplots(figsize=(10, 6)) # plt.subplots(nrows, ncolumns, *args) # axs will be either an individual plot or an array of axes
-if not isinstance(axes, (list, np.ndarray)):
-    ax = axes  # Single axis
-else:
-    ax = axes[0]  # Adjust this based on your specific case
+fig, axes = plt.subplots(2,2, figsize=(10,6)) # plt.subplots(nrows, ncolumns, *args) # axs will be either an individual plot or an array of axes
+try:
+    ax = axes[0,0] # If axes is a 2D array of axes, then we'll use the first axis for this drawing.
+except:
+    try:
+        ax = axes[0] # If axes is a 1D array of axes, then we'll use the first axis for this drawing.
+    except:
+        ax = axes # If axes is just a single axis then we'll use it directly.
 
 fig.autofmt_xdate()
 ax.set_title(siteName + ' ' + filename[0:4] + ' Temperature')
