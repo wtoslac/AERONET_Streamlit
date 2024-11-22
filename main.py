@@ -197,7 +197,7 @@ temp_data = Tdf.loc[StartDate:EndDate].astype(float).resample(SampleRate).mean()
 #y_max =24 #temp_data.max() + 1  # Add a small buffer above maximum
 ax.set_ylabel('Temperature (°C)')
 ax.set_ylim(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).min())#//1)
-            Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).max())#//1) # Auto Calculating
+Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).max())#//1) # Auto Calculating
 temperatureHandle,=ax.plot(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10), '.r-',label='Temperature',figure=fig) # handle, label = ax2.plot()
 
 
