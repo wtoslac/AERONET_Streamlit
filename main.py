@@ -196,7 +196,7 @@ ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3))  # Minor ticks: every
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d %H:%M:%S'))
 
 # Prepare temperature data
-temp_data = Tdf.loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10)
+temp_data = Tdf.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S')].astype(float).resample(SampleRate).mean().div(10)
 ax.set_ylabel('Temperature (°C)')
 #temp_data.min() - 1  # Add a small buffer below minimum #y_min =1
 #temp_data.max() + 1  # Add a small buffer above maximum #y_max =24
