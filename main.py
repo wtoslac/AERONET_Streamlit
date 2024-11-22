@@ -138,7 +138,10 @@ fig, ax = plt.subplots(figsize=(10, 6))
 ax.set_title("Wind Vector")  # Added title for Wind Vector graph
 ax.set_xlabel("Time")
 ax.set_ylim(AOD_min,AOD_max)
-
+ax2 = ax.twinx()
+maxWind = np.sqrt((WNDdf[6].loc[StartDate:EndDate].astype(float).max()/10)**2+
+                  (WNDdf[5].loc[StartDate:EndDate].astype(float).max()/10)**2)
+ax.set_ylim(0,maxWind)
 # Resample the data according to the wind sample rate and plot the wind vectors
 ax.quiver(
     WNDdf[5].resample(windSampleRate).mean().index,  # X-axis (time)
