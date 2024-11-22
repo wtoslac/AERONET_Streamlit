@@ -184,8 +184,8 @@ Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
 #Tdf = WNDdf
 #Tdf = Wdf_filtered
 #Replace '+9999' with NaN and convert to numeric
-Tdf.replace('+9999', np.nan, inplace=True)
-Tdf = Tdf.apply(pd.to_numeric, errors='coerce')  # Convert to numeric, errors to NaN
+#Tdf.replace('+9999', np.nan, inplace=True)
+#Tdf = Tdf.apply(pd.to_numeric, errors='coerce')  # Convert to numeric, errors to NaN
 
 # Check the first few rows to confirm
 st.write("First few rows of Tdf:", Tdf.head())
