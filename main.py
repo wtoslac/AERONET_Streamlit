@@ -171,3 +171,4 @@ plt.tight_layout()
 
 # Display the plot in Streamlit
 st.pyplot(fig)
+Tdf = Wdf.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
