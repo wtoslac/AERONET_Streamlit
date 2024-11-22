@@ -231,15 +231,15 @@ ax3.xaxis.set_minor_locator(mdates.HourLocator(interval=3, tz='US/Pacific'))
 ax3.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 
 # Drawing the Temperature Data onto the graph.
-ax.set_ylabel('Temperature °C')
-ax.set_ylim(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).min()//1,
+ax3.set_ylabel('Temperature °C')
+ax3.set_ylim(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).min()//1,
             Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).max()//1) # Auto Calculating
 temperatureHandle, = ax.plot(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10), '.r-',label='Temperature',figure=fig) # handle, label = ax2.plot()
 
 # Displaying the legend and Reorganizing everything to fit nicely
 ## Note: temperatureHandle is the handle for the data plot we created.
-plt.legend(handles = [temperatureHandle], loc = 'best')
-plt.tight_layout() # Adjusts the boundaries of the figures to ensure everything fits nicely. Can define pads as we we see fit.
+ax3.plt.legend(handles = [temperatureHandle], loc = 'best')
+ax3.plt.tight_layout() # Adjusts the boundaries of the figures to ensure everything fits nicely. Can define pads as we we see fit.
 
 # Display the plot in Streamlit
 #st.pyplot(fig)
