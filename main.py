@@ -177,7 +177,7 @@ st.pyplot(fig)
 Tdf = Wdf.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
 # Replacing +9999 values with nan, +9999 indicates "missing data"
 Tdf.replace('+9999', np.nan, inplace = True)
-fig, axes = plt.subplots(1,1, figsize=(16*graphScale,9*graphScale)) # plt.subplots(nrows, ncolumns, *args) # axs will be either an individual plot or an array of axes
+fig, axes = plt.subplots(1,1, figsize=(16,9)) # plt.subplots(nrows, ncolumns, *args) # axs will be either an individual plot or an array of axes
 try:
     ax = axes[0,0] # If axes is a 2D array of axes, then we'll use the first axis for this drawing.
 except:
@@ -188,7 +188,7 @@ except:
 
 # Initializing main Axis and plot
 fig.autofmt_xdate() ## Note: With multiple plots, this removes the x-axis identifiers for plots not in the bottom row
-ax.set_title(siteName + ' ' + filename[0:4] + ' ' + selectedWavelength + ', Wind Speed, and Temperature ')
+ax.set_title('Turlock AOD Modesto Wind Speed, and Temperature ')
 ax.grid(which='both',axis='both')
 ax.xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
 ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3, tz='US/Pacific'))
