@@ -177,7 +177,7 @@ StartDate='%Y-%m-%d 00:00:00'
 EndDate='%Y-%m-%d 23:59:59'
 # Assuming Wdf, StartDate, EndDate, siteName, filename, SampleRate are defined earlier
 try:
-    Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
+    Tdf = Wdf.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), 'TMP'].str.split(pat=',', expand=True)
 except Exception as e:
     st.write(e)
     
