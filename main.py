@@ -135,19 +135,17 @@ WNDdf[5], WNDdf[6] = Xdata, Ydata
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.set_title("Wind Vector")  # Added title for Wind Vector graph
 ax.set_xlabel("Time")
-ax.set_ylim(18,20)
-ax.set_ylabel("AOD Total")
+ax.set_ylim(AOD_min,AOD_max)
 ax2 = ax.twinx()
-ax2.set_ylabel("Magnitude m/s")
-#ax.yaxis.set_label_position('right')  # Move label to the right
-#ax.yaxis.set_ticks_position('right')  # Move ticks to the right
-#ax2.yaxis.set_label_position('left')  # Move label to the left
-#ax2.yaxis.set_ticks_position('left')  # Move ticks to the left
+ax.yaxis.set_label_position('right')  # Move label to the right
+ax.yaxis.set_ticks_position('right')  # Move ticks to the right
+ax2.yaxis.set_label_position('left')  # Move label to the left
+ax2.yaxis.set_ticks_position('left')  # Move ticks to the left
 
 
 maxWind = np.sqrt((WNDdf[6].loc[StartDate:EndDate].astype(float).max()/10)**2+
                   (WNDdf[5].loc[StartDate:EndDate].astype(float).max()/10)**2)
-ax.set_ylim(0,Maxwind)
+ax.set_ylim(0,maxWind)
 # Resample the data according to the wind sample rate and plot the wind vectors
 ax.quiver(
     WNDdf[5].resample(windSampleRate).mean().index,maxWind-1,  # X-axis (time)
@@ -159,10 +157,6 @@ ax.quiver(
    
 
 )
-ax3 = ax.twinx()
-ax3.spines.right.set_position(('axes', 1.09))
-ax3.set_ylabel("Temp C")
-ax2.set_ylim(1,7) # Manual Setting
 
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.b',label="440 nm")
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g',label="500 nm")
