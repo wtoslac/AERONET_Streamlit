@@ -138,7 +138,7 @@ ax.set_xlabel("Time")
 ax.set_ylim(18,24)
 ax.set_ylabel("Magnitude m/s")
 ax2 = ax.twinx()
-ax2.set_ylabel("AOD Total")
+ax2.set_ylabel("Temp Celsius")
 #ax.yaxis.set_label_position('right')  # Move label to the right
 #ax.yaxis.set_ticks_position('right')  # Move ticks to the right
 #ax2.yaxis.set_label_position('left')  # Move label to the left
@@ -161,8 +161,8 @@ ax.quiver(
 )
 ax3 = ax.twinx()
 ax3.spines.right.set_position(('axes', 1.09))
-ax3.set_ylabel("Temp C")
-ax2.set_ylim(18,14) # Manual Setting
+ax3.set_ylabel("AOD Total")
+ax2.set_ylim(14,18) # Manual Setting
 
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.b',label="440 nm")
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g',label="500 nm")
