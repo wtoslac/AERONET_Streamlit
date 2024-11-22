@@ -160,6 +160,7 @@ ax.quiver(
 
 )
 ax3 = ax.twinx()
+ax3.spines.right.set_position(('axes', 1.05))
 ax3.set_ylabel("Temp C")
 
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.b',label="440 nm")
