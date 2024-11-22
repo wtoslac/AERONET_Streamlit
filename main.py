@@ -157,37 +157,6 @@ ax.quiver(
    
 
 )
-Tdf = Wdf.loc[StartDate:EndDate,'TMP'].str.split(pat=',', expand = True)
-# Replacing +9999 values with nan, +9999 indicates "missing data"
-Tdf.replace('+9999', np.nan, inplace = True)
-fig, axes = plt.subplots(figsize=(12,5)) # plt.subplots(nrows, ncolumns, *args) # axs will be either an individual plot or an array of axes
-try:
-    ax = axes[0,0] # If axes is a 2D array of axes, then we'll use the first axis for this drawing.
-except:
-    try:
-        ax = axes[0] # If axes is a 1D array of axes, then we'll use the first axis for this drawing.
-    except:
-        ax = axes # If axes is just a single axis then we'll use it directly.
-
-# Initializing main Axis and plot
-#fig.autofmt_xdate() ## Note: With multiple plots, this removes the x-axis identifiers for plots not in the bottom row
-#ax.set_title(siteName + ' ' + filename[0:4] + ' Temperature')
-#ax.grid(which='both',axis='both')
-#ax.xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
-#ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3, tz='US/Pacific'))
-#ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-
-# Drawing the Temperature Data onto the graph.
-#ax.set_ylabel('Temperature °C')
-#ax.set_ylim(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).min()//1,
-            #Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).max()//1) # Auto Calculating
-#temperatureHandle, = ax.plot(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10), '.r-',label='Temperature',figure=fig) # handle, label = ax2.plot()
-
-# Displaying the legend and Reorganizing everything to fit nicely
-## Note: temperatureHandle is the handle for the data plot we created.
-#plt.legend(handles = [temperatureHandle], loc = 'best')
-#plt.tight_layout() # Adjusts the boundaries of the figures to ensure everything fits nicely. Can define pads as we we see fit.
-plt.show()
 
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_440nm"].resample(SampleRate).mean(), '.b',label="440 nm")
 plt.plot(df_1.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.g',label="500 nm")
