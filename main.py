@@ -180,7 +180,7 @@ Tdf.replace('+9999', np.nan, inplace=True)
 
 # Create subplots (2x2 layout, adjust as needed)
 fig, axes = plt.subplots(1, 1, figsize=(10, 6))
-ax = axes[0, 0]  # Use the first subplot for this specific plot
+#ax = axes[0, 0]  # Use the first subplot for this specific plot
 
 # Format the figure and axis
 fig.autofmt_xdate()
