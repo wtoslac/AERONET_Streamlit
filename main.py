@@ -148,11 +148,11 @@ ax.set_title('Modesto Temperature')
 ax.grid(which='both',axis='both')
 ax.xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))
 ax.xaxis.set_minor_locator(mdates.HourLocator(interval=3, tz='US/Pacific'))
-ax3.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 
 # Drawing the Temperature Data onto the graph.
-ax.set_ylabel('Temperature °C')
-ax.set_ylim(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).min()//1,
+ax3.set_ylabel('Temperature °C')
+ax3.set_ylim(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).min()//1,
             Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10).max()//1) # Auto Calculating
 temperatureHandle, = ax.plot(Tdf[0].loc[StartDate:EndDate].astype(float).resample(SampleRate).mean().div(10), '.r-',label='Temperature',figure=fig) # handle, label = ax2.plot()
 
