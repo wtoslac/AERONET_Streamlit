@@ -202,7 +202,7 @@ ax.set_ylabel('Temperature (°C)')
 #temp_data.max() + 1  # Add a small buffer above maximum #y_max =24
 #y_min = temp_data.min() - 1  # A small buffer below the minimum value
 #y_max = temp_data.max() + 1  # A small buffer above the maximum value
-ax.set_ylim(14, 50)
+#ax.set_ylim(14, 50)
 
 
 # Plot the data
