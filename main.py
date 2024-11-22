@@ -179,7 +179,7 @@ EndDate='%Y-%m-%d 23:59:59'
 try:
     Tdf = Wdf.loc[StartDate:EndDate, 'TMP'].str.split(pat=',', expand=True)
 except Exception as e:
-    print(e)
+    st.write(e)
     
 Tdf.replace('+9999', np.nan, inplace=True)
 
