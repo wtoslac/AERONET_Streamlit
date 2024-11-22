@@ -107,7 +107,7 @@ datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 Wdf.set_index(datetime_pac, inplace=True)
 
 # Streamlit widgets for dynamic date range selection
-st.title("Wind Vectors (Magnitude and Direction)")  # Fixed title assignment
+
 start_date = st.date_input("Select Start Date", pd.to_datetime('2023-07-01'))
 end_date = st.date_input("Select End Date", pd.to_datetime('2023-07-07'))
 
