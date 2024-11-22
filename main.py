@@ -127,8 +127,8 @@ Xdata, Ydata = [], []
 for _, row in WNDdf.iterrows():
     magnitude = np.float64(row[3])  # Wind speed
     direction = np.float64(row[0])  # Wind direction
-    Xdata.append(magnitude * np.sin(direction * (np.pi / 360)))
-    Ydata.append(magnitude * np.cos(direction * (np.pi / 360)))
+    Xdata.append(magnitude * np.sin(direction * (np.pi / 180)))
+    Ydata.append(magnitude * np.cos(direction * (np.pi / 180)))
 
 # Add Cartesian components to the DataFrame
 WNDdf[5], WNDdf[6] = Xdata, Ydata
@@ -144,10 +144,9 @@ maxWind = np.sqrt((WNDdf[6].loc[StartDate:EndDate].astype(float).max()/10)**2+
 ax.set_ylim(0,maxWind)
 # Resample the data according to the wind sample rate and plot the wind vectors
 ax.quiver(
-    WNDdf[5].resample(windSampleRate).mean().index,  # X-axis (time)
-    np.zeros(WNDdf[5].resample(windSampleRate).mean().shape),  # Y-axis baseline
-    WNDdf[5].resample(windSampleRate).mean().div(10),  # X-component of arrows
-    WNDdf[6].resample(windSampleRate).mean().div(10),  # Y-component of arrows
+    WNDdf[5].resample(windSampleRate).mean().index,maxWind-1,  # X-axis (time)
+    -WNDdf[5].resample(windSampleRate).mean().div(10),  # X-component of arrows
+    -WNDdf[6].resample(windSampleRate).mean().div(10),  # Y-component of arrows
     color='b',
     label='Wind Vector'
 )
