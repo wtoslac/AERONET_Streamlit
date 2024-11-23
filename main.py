@@ -105,6 +105,8 @@ Wdf.set_index(datetime_pac, inplace=True)
 st.title = "Wind Vectors (Magnitude and Direction)"  # Fixing title assignment to a string
 #start_date = st.date_input("Select Start Date", pd.to_datetime('2023-07-07'))
 #end_date = st.date_input("Select End Date", pd.to_datetime('2023-07-14'))
+StartDate = StartDate
+EndDate = EndDate
 
 # Convert selected dates to strings and filter the data
 StartDate = start_date.strftime('%Y-%m-%d 00:00:00')
