@@ -90,7 +90,7 @@ if df_1 is not None:
             plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
             plt.ylim(AOD_min, AOD_max)
             plt.legend()
-            plt.title("AOD Turlock")  # Added title for AOD graph
+            #plt.title("AOD Turlock")  # Added title for AOD graph
             st.pyplot(plt.gcf())
 
      # URL for the wind data file
