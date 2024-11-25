@@ -108,8 +108,8 @@ end_date = st.date_input("Select End Date", pd.to_datetime('2023-07-14'))
 
 
 # Convert selected dates to strings and filter the data
-StartDtae = StartDateTime.strftime('%Y-%m-%d %H:%M:%S')
-ENdDate = EndDateTime.strftime('%Y-%m-%d %H:%M:%S')
+StartDate = StartDateTime.strftime('%Y-%m-%d %H:%M:%S')
+EndDate = EndDateTime.strftime('%Y-%m-%d %H:%M:%S')
 #StartDate = start_date.strftime('%Y-%m-%d 00:00:00')
 #EndDate = end_date.strftime('%Y-%m-%d 23:59:59')
 
