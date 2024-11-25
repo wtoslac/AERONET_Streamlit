@@ -103,15 +103,15 @@ datetime_pac = datetime_utc.dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
 Wdf.set_index(datetime_pac, inplace=True)
 # Streamlit widgets for dynamic date range selection
 st.title = "Wind Vectors (Magnitude and Direction)"  # Fixing title assignment to a string
-start_date = st.date_input("Select Start Date", pd.to_datetime('2023-07-07'))
-end_date = st.date_input("Select End Date", pd.to_datetime('2023-07-14'))
-
+#start_date = st.date_input("Select Start Date", pd.to_datetime('2023-07-07'))
+#end_date = st.date_input("Select End Date", pd.to_datetime('2023-07-14'))
+start_date = StartDateTime
+end_date = EndDateTime
 
 # Convert selected dates to strings and filter the data
-#StartDate = start_date.strftime('%Y-%m-%d 00:00:00')
-#EndDate = end_date.strftime('%Y-%m-%d 23:59:59')
-StartDate = StartDateTime
-EndDate = EndDateTime
+StartDate = start_date.strftime('%Y-%m-%d 00:00:00')
+EndDate = end_date.strftime('%Y-%m-%d 23:59:59')
+
 
 # Filter by the user-selected date range
 Wdf_filtered = Wdf.loc[StartDate:EndDate]
