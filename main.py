@@ -108,8 +108,10 @@ end_date = st.date_input("Select End Date", pd.to_datetime('2023-07-14'))
 
 
 # Convert selected dates to strings and filter the data
-StartDate = start_date.strftime('%Y-%m-%d 00:00:00')
-EndDate = end_date.strftime('%Y-%m-%d 23:59:59')
+StartDtae = StartDateTime.strftime('%Y-%m-%d %H:%M:%S')
+ENdDate = EndDateTime.strftime('%Y-%m-%d %H:%M:%S')
+#StartDate = start_date.strftime('%Y-%m-%d 00:00:00')
+#EndDate = end_date.strftime('%Y-%m-%d 23:59:59')
 
 # Filter by the user-selected date range
 Wdf_filtered = Wdf.loc[StartDate:EndDate]
