@@ -1,0 +1,53 @@
+import streamlit as st  # Importing Streamlit for web app functionality
+import datetime  # For handling date and time
+import numpy as np  # For numerical operations
+import pandas as pd  # For data manipulation
+import matplotlib.pyplot as plt  # For plotting data
+import matplotlib.dates as mdates  # For handling date formatting in plots
+import openpyxl
+import mitosheet
+
+# Setting the site name and sample rate
+siteName = "Turlock CA USA"
+SampleRate = "1h"
+
+# Streamlit date input for start and end dates
+StartDate = st.date_input("Start Date", datetime.date(2024, 10, 1))
+StartDateTime = datetime.datetime.combine(StartDate, datetime.time(0, 0))  # Combining date with time
+EndDate = st.date_input("End Date", datetime.date(2024, 10, 7))
+EndDateTime = datetime.datetime.combine(EndDate, datetime.time(23, 59))  # Combining date with time
+
+# AOD (Aerosol Optical Depth) range settings
+AOD_min = 0.0
+AOD_max = 0.3
+
+# File uploader for the Level 1.5 data
+file = st.file_uploader("20230101_20241231_Turlock_CA_USA.zip")
+
+if file is not None:  # Check if a file has been uploaded
+    try:
+        # Reading the CSV file and parsing dates
+        df = pd.read_csv(file, skiprows=6, parse_dates={'datetime':[0,1]})
+        
+        # Convert to UTC and then to Pacific Time
+        datetime_utc = pd.to_datetime(df["datetime"], format='%d:%m:%Y %H:%M:%S')
+        datetime_pac = pd.to_datetime(datetime_utc).dt.tz_localize('UTC').dt.tz_convert('US/Pacific')
+        df.set_index(datetime_pac, inplace=True)  # Setting the datetime as the index
+        
+        # Plotting AOD data for the specified date range
+        plt.plot(df.loc[StartDateTime.strftime('%Y-%m-%d %H:%M:%S'):EndDateTime.strftime('%Y-%m-%d %H:%M:%S'), "AOD_500nm"].resample(SampleRate).mean(), '.k', label="AOD_500nm")
+
+        # Formatting the plot
+        plt.gcf().autofmt_xdate()  # Auto-format the x-axis date labels
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1, tz='US/Pacific'))  # Major ticks every day
+        plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=12, tz='US/Pacific'))  # Minor ticks every 12 hours
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))  # Format for the major ticks
+
+        # Set y-axis limits
+        plt.ylim(AOD_min, AOD_max)
+        plt.legend()  # Show legend
+        
+        # Display the plot in Streamlit
+        st.pyplot(plt.gcf())  # Render the plot
+    except Exception as e:  # Catch any errors that occur during file processing
+        st.error(f"An error occurred: {e}")  # Display error message in Streamlit
