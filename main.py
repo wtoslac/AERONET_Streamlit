@@ -67,12 +67,12 @@ if df_1 is not None:
         # Ask user to match wavelengths to positions
         st.text("\nMatch the wavelengths to the positions on the graph:")
         # Dropdown menus for user input with no default selection
-        positions = ["Top", "Middle", "Bottom"]
+        positions = ["Highest", "Medium", "Lowest"]
 
         # Create user input dropdowns for selecting wavelengths
         user_matches = {}
         for pos in positions:
-            user_matches[pos] = st.selectbox(f"What Wavelength will be located on the {pos} position on the graph?", 
+            user_matches[pos] = st.selectbox(f"What Wavelength will have the {pos} measurment on the graph?", 
                                              options=["Select an option", "400 nm", "500 nm", "675 nm"], 
                                              key=pos)
 
